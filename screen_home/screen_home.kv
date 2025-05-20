@@ -1,0 +1,78 @@
+
+<HomeScreen>:
+ 
+        
+    ScrollView:
+        size_hint: (1, 1)
+
+        MDGridLayout:
+            size_hint: (1 , None)
+            adaptive_height: True
+            cols: 1 
+
+            AccountHeader:
+                size_hint: ( 1, None)
+                height: 230
+
+            MDBoxLayout:
+                size_hint: (1 , None)
+                orientation: 'vertical'
+                adaptive_height: True
+                canvas.before:
+                    Color:
+                        rgba: chex("#B9B4C7")
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [16 , 16 , 0 , 0]
+                
+
+
+<AccountHeader>:
+    logout_icon : logout_icon
+    edit_icon : edit_icon
+    refresh_icon : refresh_icon
+    
+    Label:
+        size_hint: None, None
+        font_size: '34px'
+        font_name: 'p_extrabold'
+        text: "N"
+        size: 120, 120
+        pos_hint: {'center_x': 0.5,'center_y': 0.4}
+
+        canvas.before:
+            Color:
+                rgba: chex("#5C5470")
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [16]
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        adaptive_size: True
+        pos: (0, 34)  # X position stays fixed
+        pos_hint: {'top': 0.95}  # Only affect vertical positioning
+        spacing: 3
+
+
+        TappableImage:
+            id: logout_icon
+            size_hint: (None , None)
+            allow_stretch: True
+
+        
+        TappableImage:
+            id: edit_icon
+            size_hint: (None , None)
+            allow_stretch: True
+
+        
+        TappableImage:
+            id: refresh_icon
+            size_hint: (None , None)
+            allow_stretch: True
+
+    
+

@@ -8,6 +8,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen
+from screen_home.screen_home import HomeScreen
 from screen_components import text_input
 from variables import *
 import os
@@ -152,13 +153,17 @@ class SubscriberApp(MDApp):
 
         Builder.load_string(text_input.text_input_kv)
 
-        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        # Builder.load_file(login_kv_path)
+        # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
         Builder.load_file(login_kv_path)
-        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+        self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
 
         def change_to_login_screen(*args):
             print("this happen hehehee")
-            self.root_screen_manager.change_screen(LOGIN_SCREEN)
+            # self.root_screen_manager.change_screen(LOGIN_SCREEN)
+            self.root_screen_manager.change_screen(HOME_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
         return sm
