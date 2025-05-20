@@ -97,7 +97,10 @@ class LoginScreen(Screen):
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
         self.adaptive_radius = [r, r, 0, 0]
 
-
+    def on_enter(self, *args):
+        main_app  = MDApp.get_running_app()
+        main_app.process_modal.open()
+        return super().on_enter(*args)
 
 
 

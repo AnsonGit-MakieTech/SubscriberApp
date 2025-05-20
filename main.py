@@ -8,7 +8,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen
-from screen_components import text_input
+from screen_components import text_input, process_modal
 from variables import *
 import os
 import json
@@ -115,12 +115,14 @@ class SubscriberApp(MDApp):
     communications : dict = None
     done_load_modal : ImageModal = ObjectProperty(None)
     root_screen_manager : ScreenHandler = ObjectProperty(None)
+    process_modal = ObjectProperty(None)
 
 
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens, 0.1)
+        # self.process_modal.open()
 
     def on_stop(self):
         try:
@@ -142,6 +144,8 @@ class SubscriberApp(MDApp):
         splash_image = os.path.join(os.path.dirname(__file__), 'assets', 'splash.png')
 
         self.done_load_modal = ImageModal(splash_image)
+        self.process_modal = process_modal.ProcessingLayout()
+        
         # Set App Communications
         self.communications = Communications()
 
@@ -151,13 +155,13 @@ class SubscriberApp(MDApp):
 
 
         Builder.load_string(text_input.text_input_kv)
+        Builder.load_string(process_modal.kv_process_modal)
 
         login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         Builder.load_file(login_kv_path)
         self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
 
         def change_to_login_screen(*args):
-            print("this happen hehehee")
             self.root_screen_manager.change_screen(LOGIN_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
