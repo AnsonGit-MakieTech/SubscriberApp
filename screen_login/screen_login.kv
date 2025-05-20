@@ -1,22 +1,146 @@
 
 
 <LoginScreen>:
-    
     BoxLayout:
         orientation: 'vertical'
 
-        BoxLayout:
-            size_hint: (1, 0.4)
+        LogoLocation:
+            size_hint: (1, 0.45)
 
-        BoxLayout:
-            size_hint: (1 , 0.6)
+        FormLayout:
+            id: container_box
+            size_hint: (1 , 0.55)
 
             canvas.before:
                 Color:
                     rgba: chex("#B9B4C7")
                 RoundedRectangle:
+                    id: background_rect
                     pos: self.pos
                     size: self.size
-                    radius: [8, 8, 0, 0]
+                    radius: root.adaptive_radius  # Dynamically bind to a property
 
 
+<FormLayout>:
+    orientation: 'vertical'
+    
+    Widget:
+        size_hint: (1, 0.03)
+    
+    Label:
+        text: "Username"
+        size_hint: (1, 0.1)
+        font_name: 'p_bold'
+        font_size: root.adaptive_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+    
+    OneLineInput:
+        size_hint: (1, 0.1)
+        hint_text: "Please provide your username here . . ."
+    
+    
+    Label:
+        text: "Password"
+        size_hint: (1, 0.1)
+        font_name: 'p_bold'
+        font_size: root.adaptive_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+    
+    
+    OneLineInput:
+        size_hint: (1, 0.1)
+        hint_text: "Please provide your password here . . ."
+        password: True
+
+    Widget:
+        size_hint: (1, 0.02)
+
+    BoxLayout:
+        size_hint: (1, 0.1)
+        orientation: 'horizontal'
+        
+        Widget:
+            size_hint: (0.5, 1)
+        Button:
+            size_hint: (0.5, 1)
+            background_down: ''
+            background_color: (0 , 0 , 0 , 0)
+            text: 'Login Account'
+            font_name: 'p_bold'
+            font_size: root.login_button_font_size
+            canvas.before:
+                Color:
+                    rgba: chex("#352F44")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: root.login_button_radius  # Dynamically bind to a property
+                
+    BoxLayout:
+        size_hint: (1, 0.4)
+        orientation: 'horizontal'
+
+        Image:
+            allow_stretch: True
+            keep_ratio: True
+            source: root.login_logo
+            size_hint: (0.5, 1)
+        
+        BoxLayout:
+            size_hint: (0.5, 1)
+            orientation: 'vertical'
+            spacing: 0
+            
+            Widget:
+                size_hint: (1, 0.2)
+            Label:
+                size_hint: (1 , 0.2)
+                font_size: root.info_title_font_size
+                halign: 'left'
+                valign: 'middle'  # optional, keeps vertical centering
+                text_size: self.size
+                font_name: 'p_regular'
+                text: 'Your Connection, Your Control'
+            Widget:
+                size_hint: (1, 0.05)
+            Label:
+                size_hint: (1, 0.55)
+                font_size: root.info_content_font_size
+                halign: 'left'
+                valign: 'top'
+                text_size: self.size
+                font_name: 'p_extralight'
+                text: 'Stay in the loop—track your router issues, monitor ticket updates, and manage your account, all in one smart app designed to keep your internet running smoothly.'
+                
+    
+    Widget:
+        size_hint: (1, 0.05)
+
+
+
+
+<LogoLocation>:
+    orientation: 'vertical'
+
+    Widget:
+        size_hint: (1 , 0.1)
+    
+    Image:
+        allow_stretch: True
+        keep_ratio: True
+        source: root.login_logo
+        size_hint: (1 , 0.7)
+    
+    Label:
+        id : title_label
+        text: "Charles Connect App"
+        size_hint: (1 , 0.1)
+        font_name: 'p_extrabold'
+        font_size: root.title_font_size
+    
+    Widget:
+        size_hint: (1 , 0.1)

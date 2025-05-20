@@ -8,6 +8,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen
+from screen_components import text_input
 from variables import *
 import os
 import json
@@ -117,44 +118,9 @@ class SubscriberApp(MDApp):
 
 
     def on_start(self):
-        """ Check and request storage permission on Android """
-
-        if platform == "android":
-            if self.check_permissions():
-                # print("✅ Storage permission already granted.")
-                pass
-            else:
-                # print("❌ Storage permission NOT granted. Requesting now...")
-                request_permissions([
-                    Permission.INTERNET,
-                    Permission.ACCESS_FINE_LOCATION,
-                    Permission.ACCESS_COARSE_LOCATION,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_AUDIO,
-                    Permission.READ_EXTERNAL_STORAGE,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                ])
+        """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens, 0.1)
-
-
-    def check_permissions(self):
-        """ Check if READ/WRITE storage permissions are granted """
-        if platform == "android":
-            perms = [
-                Permission.INTERNET,
-                Permission.ACCESS_FINE_LOCATION,
-                Permission.ACCESS_COARSE_LOCATION,
-                Permission.READ_MEDIA_IMAGES,
-                Permission.READ_MEDIA_VIDEO,
-                Permission.READ_MEDIA_AUDIO,
-                Permission.READ_EXTERNAL_STORAGE,
-                Permission.WRITE_EXTERNAL_STORAGE,
-            ] 
-            return all(check_permission(p) for p in perms)
-        return True  # ✅ Assume granted on other platforms
-    
 
     def on_stop(self):
         try:
@@ -182,6 +148,12 @@ class SubscriberApp(MDApp):
         Builder.load_file("main.kv")
         sm = ScreenHandler()
         self.root_screen_manager = sm
+
+
+        Builder.load_string(text_input.text_input_kv)
+
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        Builder.load_file(login_kv_path)
         self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
 
         def change_to_login_screen(*args):
@@ -198,6 +170,10 @@ class SubscriberApp(MDApp):
         Clock.schedule_once(close_popup, 1)
 
     def load_screens(self, *args):
+        # Load home screen
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        
+        # Builder.load_file(login_kv_path)
         pass
 
 if __name__ == '__main__':
