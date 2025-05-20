@@ -7,6 +7,7 @@ from kivy.lang.builder import Builder
 from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
+from screen_login.screen_login import LoginScreen
 from variables import *
 import os
 import json
@@ -101,6 +102,12 @@ class ImageModal(ModalView):
 class ScreenHandler(BoxLayout):  # Acts as ScreenManager
     handler : MDScreenManager = ObjectProperty(None)
 
+    def add_handler_screen(self, screen_name, screen_class):
+        self.handler.add_widget(screen_class(name=screen_name))
+    
+    def change_screen(self, screen_name):
+        self.handler.current = screen_name
+
 
 class SubscriberApp(MDApp):
  
@@ -175,10 +182,11 @@ class SubscriberApp(MDApp):
         Builder.load_file("main.kv")
         sm = ScreenHandler()
         self.root_screen_manager = sm
+        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
 
         def change_to_login_screen(*args):
             print("this happen hehehee")
-            # self.root_screen_manager.current = LOGIN_SCREEN
+            self.root_screen_manager.change_screen(LOGIN_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
         return sm
@@ -193,7 +201,10 @@ class SubscriberApp(MDApp):
         pass
 
 if __name__ == '__main__':
-    # LabelBase.register(name="roboto_extrabolditalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Roboto-ExtraBoldItalic.ttf'))
+    LabelBase.register(name="p_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraBold.ttf'))
+    LabelBase.register(name="p_bold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Bold.ttf'))
+    LabelBase.register(name="p_extralight", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraLight.ttf'))
+    LabelBase.register(name="p_regular", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Regular.ttf'))
     try:
         SubscriberApp().run()
     except KeyboardInterrupt:

@@ -1,0 +1,22 @@
+
+
+<LoginScreen>:
+    
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint: (1, 0.4)
+
+        BoxLayout:
+            size_hint: (1 , 0.6)
+
+            canvas.before:
+                Color:
+                    rgba: chex("#B9B4C7")
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8, 8, 0, 0]
+
+
