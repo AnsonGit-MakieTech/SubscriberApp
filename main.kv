@@ -1,0 +1,13 @@
+#:import chex kivy.utils.get_color_from_hex
+
+
+<ScreenHandler>:
+    handler : handler
+    canvas.before:
+        Color:
+            rgba: chex("#352F44")
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    MDScreenManager:
+        id: handler

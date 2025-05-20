@@ -19,6 +19,7 @@ from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from communications  import Communications
 from kivy.logger import Logger
+from kivy.animation import Animation
 
 if platform == "android": 
     from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
@@ -48,7 +49,7 @@ class TappableImage(Image):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            self.modal_ref.dismiss()
+            self.modal_ref.animate_closing()
             return True
         return super().on_touch_down(touch)
 
@@ -58,6 +59,7 @@ class ImageModal(ModalView):
         super().__init__(**kwargs)
         self.auto_dismiss = False
         self.background_color = (0, 0, 0, 0)  # Transparent modal background
+        self.opacity = 0
 
         # Main container with canvas background
         self.container = BoxLayout()
@@ -82,13 +84,22 @@ class ImageModal(ModalView):
     def update_bg_rect(self, *args):
         self.bg_rect.pos = self.container.pos
         self.bg_rect.size = self.container.size
+ 
+    def animate_opening(self): 
+        animation = Animation(opacity= 1, duration=0.3)
+        animation.start(self)
+        self.open()
+
+
+    def animate_closing(self):
+        animation = Animation(opacity= 0, duration=0.3)
+        animation.bind(on_complete=self.dismiss)
+        animation.start(self) 
 
 
 
-
-
-class ScreenHandler(MDScreenManager):  # Acts as ScreenManager
-    pass
+class ScreenHandler(BoxLayout):  # Acts as ScreenManager
+    handler : MDScreenManager = ObjectProperty(None)
 
 
 class SubscriberApp(MDApp):
@@ -96,6 +107,7 @@ class SubscriberApp(MDApp):
     communications : dict = None
     done_load_modal : ImageModal = ObjectProperty(None)
     root_screen_manager : ScreenHandler = ObjectProperty(None)
+
 
     def on_start(self):
         """ Check and request storage permission on Android """
@@ -172,9 +184,9 @@ class SubscriberApp(MDApp):
         return sm
 
     def show_welcome_popup(self, *args):
-        self.done_load_modal.open()
+        self.done_load_modal.animate_opening()
         def close_popup(*args):
-            self.done_load_modal.dismiss()
+            self.done_load_modal.animate_closing()
         Clock.schedule_once(close_popup, 1)
 
     def load_screens(self, *args):
