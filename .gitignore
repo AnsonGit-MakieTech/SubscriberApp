@@ -1,0 +1,24 @@
+venv/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+# .gitignore file to ignore unnecessary files
+
+# Byte-compiled Python files
+*.py[cod]
+
+# Python 3.8+ byte-compiled files
+__pycache__/
+
+# Log files
+*.log
+
+# Virtual environment directory
+venv/
+
+# IDE and editor files
+.vscode/
+.idea/
+
+ 
