@@ -8,7 +8,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal 
+from screen_components import text_input, process_modal , section_icon
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout
 from screen_components import text_input 
@@ -36,9 +36,9 @@ from kivy.core.window import Window
 Window.show_cursor = True
 
 
-# Set Window Size Before App Starts if platform is 
 if platform == "win":
-    Window.size = (320, 568)
+    # Simulate a mid-sized Android phone
+    Window.size = (360, 780)
 
 
 
@@ -69,7 +69,7 @@ class ImageModal(ModalView):
         # Main container with canvas background
         self.container = BoxLayout()
         with self.container.canvas.before:
-            Color(*get_color_from_hex('#ABCFE3'))  # Light blue background
+            Color(*get_color_from_hex('#352F44'))  # Light blue background
             self.bg_rect = Rectangle(pos=self.container.pos, size=self.container.size)
 
         # Update rectangle when container resizes or moves
@@ -151,7 +151,7 @@ class SubscriberApp(MDApp):
         
         # Set App Communications
         self.communications = Communications()
-        
+
         Builder.load_file("main.kv")
         sm = ScreenHandler()
         self.root_screen_manager = sm
@@ -161,21 +161,22 @@ class SubscriberApp(MDApp):
         self.process_modal = process_modal.ProcessingLayout()
 
 
+        Builder.load_string(section_icon.kv_section_layout)
         Builder.load_string(text_input.text_input_kv)
         Builder.load_string(process_modal.kv_process_modal)
 
-        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
-        Builder.load_file(login_kv_path)
-        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
-        # Builder.load_string(headline_layout.kv_headline_layout)
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         # Builder.load_file(login_kv_path)
-        # self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
+        # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+        Builder.load_string(headline_layout.kv_headline_layout)
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        Builder.load_file(login_kv_path)
+        self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
 
         def change_to_login_screen(*args): 
             print("this happen hehehee")
-            self.root_screen_manager.change_screen(LOGIN_SCREEN)
-            # self.root_screen_manager.change_screen(HOME_SCREEN)
+            # self.root_screen_manager.change_screen(LOGIN_SCREEN)
+            self.root_screen_manager.change_screen(HOME_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
         return sm

@@ -4,6 +4,10 @@
         
     ScrollView:
         size_hint: (1, 1)
+        effect_cls: 'ScrollEffect'
+        do_scroll_x: False
+        bar_width: 0  # Optional: hide bar
+        scroll_type: ['content']  # No overscroll bar effects
 
         MDGridLayout:
             size_hint: (1 , None)
@@ -18,6 +22,7 @@
                 size_hint: (1 , None)
                 orientation: 'vertical'
                 adaptive_height: True
+                padding: [20 , 20 , 20 , 20]
                 canvas.before:
                     Color:
                         rgba: chex("#B9B4C7")
@@ -26,6 +31,11 @@
                         size: self.size
                         radius: [16 , 16 , 0 , 0]
                 
+                Widget:
+                    size_hint: (1, None)
+                    height: 20
+                    
+                HeadlineLayout:
 
 
 <AccountHeader>:
@@ -54,6 +64,7 @@
         adaptive_size: True
         pos_hint: {'top': 0.95 , 'x' : 0.005}  # Only affect vertical positioning
         spacing: 5
+        
 
 
         TappableImage:
