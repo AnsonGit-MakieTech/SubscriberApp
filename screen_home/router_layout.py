@@ -1,8 +1,4 @@
-from kivy.uix.filechooser import string_types
-from kivy.uix.actionbar import Label
-from kivy.uix.accordion import FloatLayout
-from kivy.uix.accordion import Widget
-from kivymd.uix.gridlayout import MDGridLayout
+
 from kivy.uix.dropdown import ScrollView
 
 
@@ -253,13 +249,14 @@ kv_router_layout = '''
 
             Label:
                 size_hint: 1, 1
-                font_name: "p_regular"
+                font_name: "p_light"
                 font_size: 7
                 color: chex("#352F44")
-                text: "    Monthly: P 1,500"
+                text: "    [font=p_regular]Monthly:[/font] P 1,500"
                 halign: "left"
                 valign: "middle" 
                 text_size: self.size
+                markup: True
         
     PlanClickableImage:
         id: view_icon

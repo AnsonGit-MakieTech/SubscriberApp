@@ -14,7 +14,7 @@ class HeadlineLayout(MDBoxLayout):
     wallet_icon : section_icon.SectionIconLayout = ObjectProperty(None)
     has_pending_ticket = BooleanProperty(False)
 
-    ticket_number = StringProperty("EMPTY")
+    ticket_number = StringProperty("It's Empty!")
     ticket_type = StringProperty("EMPTY")
     ticket_status = StringProperty("EMPTY")
     wallet_balance = StringProperty("P 0.00")
