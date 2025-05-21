@@ -4,6 +4,7 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.image import Image
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
 
 import os
 
@@ -96,6 +97,28 @@ class ProcessingLayout(ModalView):
     spinner : CustomSpinner = ObjectProperty(None)
     proccess_text : str = StringProperty('')
     is_open : bool = BooleanProperty(False)
+    setup_font_size = NumericProperty(14)
+    main_layout : BoxLayout = ObjectProperty(None)
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.setup_font_size = 14
+        
+        Clock.schedule_once(self.update_sizing, 0.1)
+        self.bind(size=self.update_sizing)
+        
+    
+    def update_sizing(self, *args):
+        width, height = self.size
+        self.setup_font_size = min(width, height) * 0.035
+        
+        padding_x = int(width * 0.08)
+        padding_y = int(height * 0.05)
+    
+        # Set padding as (left, top, right, bottom)
+        self.main_layout.padding = [padding_x, padding_y, padding_x, padding_y]
+        self.main_layout.spacing = int(height * 0.005)
+        
     
     def on_pre_open(self):
         self.auto_dismiss = False
@@ -133,11 +156,13 @@ kv_process_modal = '''
     background: ""  # Removes default dim background
     background_color: 0, 0, 0, 0
     spinner : spinner
+    main_layout : main_layout
 
     BoxLayout:
+        id: main_layout
         orientation:'vertical'
-        padding: sp(20)
-        spacing: sp(10)
+        padding: 20
+        spacing: 10
         size_hint: 0.85 , 0.3
         pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
 
@@ -174,7 +199,7 @@ kv_process_modal = '''
             valign: 'middle'  # Or 'center'
             halign: 'center'  # 'left', 'right', or 'center' depending on your goal
             font_name: 'p_regular'
-            font_size: sp(12)
+            font_size: root.setup_font_size
             color: chex("#014367")
 
 
