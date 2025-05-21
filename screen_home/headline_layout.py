@@ -1,4 +1,3 @@
-from kivy.uix.accordion import Widget
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout

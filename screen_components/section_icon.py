@@ -29,6 +29,8 @@ class ClickableImage(FloatLayout):
 class SectionIconLayout(BoxLayout):
     sec_icon = StringProperty("")
     clickable_image : ClickableImage = ObjectProperty(None)
+    display_additional = BooleanProperty(True)
+    is_half_padding_left = BooleanProperty(False) 
 
     def setup_additional(self, main_text , additional_event, has_comming_soon):
         if main_text:
@@ -46,7 +48,7 @@ kv_section_layout = '''
     clickable_image : clickable_image
 
     Widget:
-        size_hint: 0.1, 1
+        size_hint: (0.1, 1) if not root.is_half_padding_left else (0.05 , 1)
     
     Image:
         source: root.sec_icon
@@ -56,12 +58,13 @@ kv_section_layout = '''
         width: 20
     
     Widget:
-        size_hint: 0.8, 1
+        size_hint: (0.8, 1) if not root.is_half_padding_left else (0.85 , 1)
 
     ClickableImage:
         id: clickable_image
         size_hint: None, 1
         width: 40
+        opacity: 1 if root.display_additional else 0
     
     Widget:
         size_hint: 0.1, 1
