@@ -90,7 +90,7 @@ kv_account_layout = '''
     
     Widget:
         size_hint: 1, None
-        height: 5
+        height: 15
 
     SectionIconLayout:
         id: account_icon

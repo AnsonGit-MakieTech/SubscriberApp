@@ -6,6 +6,7 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty , Li
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors import BackgroundColorBehavior, CommonElevationBehavior
 from kivymd.uix.widget import MDWidget
+from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
@@ -26,6 +27,27 @@ from kivy.uix.behaviors import ButtonBehavior
 
 
 
+class TicketWidget(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    ButtonBehavior,
+    MDBoxLayout
+    ):
+    
+    content_background_radius = ListProperty([ 16 , 16, 16 , 16 ])
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#FAF0E6")
+        
+        self.bind(size=self.update_sizing)
+        Clock.schedule_once(self.update_sizing, 0.1)
+        
+    def update_sizing(self, *args):
+        width, height = self.size
+        r = min(width, height) * 0.2  # You can change 0.05 to any fraction
+        self.content_background_radius = [r, r, r, r]
+        print("update_sizing <====")
 
 class TicketList(ScrollView):
     def __init__(self, **kwargs):
@@ -68,7 +90,6 @@ class TicketsLayout(MDBoxLayout):
 
     def update_sizing(self, *args):
         width, height = self.size
-        self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
 
@@ -90,12 +111,16 @@ kv_tickets_layout = '''
     
     Widget:
         size_hint: 1, None
-        height: 5
+        height: 15
 
     SectionIconLayout:
         id: router_icon
         size_hint: 1, None 
-    
+ 
+    Widget:
+        size_hint: 1, None
+        height: 5
+           
     BoxLayout:
         size_hint: 1, None
         height: 15
@@ -131,7 +156,9 @@ kv_tickets_layout = '''
         Widget:
             size_hint: 0.05, 1
 
-            
+    Widget:
+        size_hint: 1, None
+        height: 15
 
     BoxLayout:
         size_hint: 1, None
@@ -141,7 +168,7 @@ kv_tickets_layout = '''
         Widget:
             size_hint: 0.1, 1
 
-        Button:
+        TicketList:
             size_hint: 0.3, 1
         
         Widget:
@@ -157,10 +184,47 @@ kv_tickets_layout = '''
     
     Widget:
         size_hint: 1, None
-        height: 5 
+        height: 15 
 
+
+<TicketWidget>:
+    size_hint: 1, None
+    height: 20
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+
+    Label:
+        size_hint: 1, 1
+        text : "023432434"
+        font_name: "p_bold"
+        font_size: 10
+        color: chex("#5C5470")
+        
+        
 
 <TicketList>:
+    do_scroll_x: False
+    do_scroll_y: True
+    bar_width: 0  # Optional: hide bar
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint: (1, None)
+        adaptive_height: True
+        spacing: 5
+        
+        TicketWidget:
+        
+        TicketWidget:
+        
+            
 
 
 
