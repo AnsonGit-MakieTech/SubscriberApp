@@ -174,7 +174,7 @@ kv_router_layout = '''
 
         Label:
             size_hint: 0.95, 1
-            font_size: 7
+            font_size: 10
             color: chex("#FFFFFF")
             text: "All Plans Subscribed"
             font_name: "p_bold"

@@ -1,3 +1,4 @@
+from kivy.uix.actionbar import Label
 
 from kivy.uix.dropdown import ScrollView
 
@@ -24,6 +25,26 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 from kivy.uix.image import Image
 
 
+class AccountInfoWidget(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    ButtonBehavior,
+    MDBoxLayout
+):
+    content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
+
+    info_1 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
+    info_2 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
+    info_3 = StringProperty("[font=p_regular]Account No. :[/font] 1063889sdfasdffffffff fffffffffffffffffff ffffffffffffffffffffff9")
+    info_4 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#FAF0E6")
+
+
+    
+
 
 class AccountLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
@@ -46,7 +67,6 @@ class AccountLayout(MDBoxLayout):
 
     def update_sizing(self, *args):
         width, height = self.size
-        self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
 
@@ -86,12 +106,134 @@ kv_account_layout = '''
 
         Label:
             size_hint: 0.95, 1
-            font_size: 7
+            font_size: 10
             color: chex("#FFFFFF")
             text: "Account Information"
             font_name: "p_bold"
             text_size: self.size
             halign: "left"
             valign: "center"
+
+    Widget:
+        size_hint: 1, None
+        height: 10
+
+    MDBoxLayout:
+        size_hint: 1, None
+        orientation: 'horizontal'
+        adaptive_height: True
+        # md_bg_color: chex("#FFFFFF")
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+        AccountInfoWidget:
+            size_hint: 0.8, None
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+        
+    MDBoxLayout:
+        size_hint: 1, None
+        orientation: 'horizontal'
+        adaptive_height: True
+        # md_bg_color: chex("#FFFFFF")
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+        AccountInfoWidget:
+            size_hint: 0.8, None
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+
+
+
+
+
+
+
+<AccountInfoWidget>:
+    orientation: "vertical" 
+    
+    adaptive_height: True
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 10, 10
+    spacing: 4
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_1
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+    
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_2
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+        
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_3
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+        
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_4
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
 
 '''
