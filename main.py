@@ -146,33 +146,36 @@ class SubscriberApp(MDApp):
         self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
         splash_image = os.path.join(os.path.dirname(__file__), 'assets', 'splash.png')
 
+        # Load Splash Image
         self.done_load_modal = ImageModal(splash_image)
-        self.process_modal = process_modal.ProcessingLayout()
         
         # Set App Communications
         self.communications = Communications()
-
+        
         Builder.load_file("main.kv")
         sm = ScreenHandler()
         self.root_screen_manager = sm
 
 
+        Builder.load_string(process_modal.kv_process_modal)
+        self.process_modal = process_modal.ProcessingLayout()
+
+
         Builder.load_string(text_input.text_input_kv)
         Builder.load_string(process_modal.kv_process_modal)
 
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
-        # Builder.load_file(login_kv_path)
-        # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
-        Builder.load_string(headline_layout.kv_headline_layout)
-        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         Builder.load_file(login_kv_path)
-        self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
+        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+        # Builder.load_string(headline_layout.kv_headline_layout)
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        # Builder.load_file(login_kv_path)
+        # self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
 
         def change_to_login_screen(*args): 
-            # self.root_screen_manager.change_screen(LOGIN_SCREEN) 
             print("this happen hehehee")
-            # self.root_screen_manager.change_screen(LOGIN_SCREEN)
-            self.root_screen_manager.change_screen(HOME_SCREEN)
+            self.root_screen_manager.change_screen(LOGIN_SCREEN)
+            # self.root_screen_manager.change_screen(HOME_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
         return sm

@@ -98,8 +98,11 @@ class LoginScreen(Screen):
         self.adaptive_radius = [r, r, 0, 0]
 
     def on_enter(self, *args):
-        main_app  = MDApp.get_running_app()
-        main_app.process_modal.open()
+        # main_app  = MDApp.get_running_app()
+        # Clock.schedule_once( lambda *args : main_app.process_modal.open() , 2)
+        # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
+        
+        # print("entering logoin")
         return super().on_enter(*args)
 
 

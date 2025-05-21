@@ -44,7 +44,7 @@ class AccountHeader(FloatLayout):
     
     def update_sizing(self, *args):
         width , height = self.size
-        multiplier = 0.15
+        multiplier = 0.1
         self.edit_icon.size = (width * multiplier, height * multiplier)
         self.logout_icon.size = (width * multiplier, height * multiplier)
         self.refresh_icon.size = (width * multiplier, height * multiplier)

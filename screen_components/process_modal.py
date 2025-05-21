@@ -100,7 +100,7 @@ class ProcessingLayout(ModalView):
     def on_pre_open(self):
         self.auto_dismiss = False
         parent_dir = os.path.dirname(os.path.dirname(__file__)) 
-        # self.spinner.source = os.path.join(parent_dir, 'assets', 'loading_icon.png')
+        self.spinner.source = os.path.join(parent_dir, 'assets', 'loading_icon.png')
         return super().on_pre_open()
     def on_open(self):
         self.auto_dismiss = False
@@ -132,7 +132,6 @@ kv_process_modal = '''
     auto_dismiss: False
     background: ""  # Removes default dim background
     background_color: 0, 0, 0, 0
-
     spinner : spinner
 
     BoxLayout:
@@ -151,7 +150,7 @@ kv_process_modal = '''
                 size: self.size
                 radius: [10]
             Color:
-                rgba: chex("#014367")
+                rgba: chex("#352F44")
             Line:
                 width: 2
                 rounded_rectangle: (*self.pos, *self.size, 10)
@@ -174,7 +173,7 @@ kv_process_modal = '''
             height: self.texture_size[1]
             valign: 'middle'  # Or 'center'
             halign: 'center'  # 'left', 'right', or 'center' depending on your goal
-            font_name: 'roboto_light'
+            font_name: 'p_regular'
             font_size: sp(12)
             color: chex("#014367")
 
