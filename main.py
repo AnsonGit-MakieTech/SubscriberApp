@@ -10,7 +10,7 @@ from kivy.utils import platform, get_color_from_hex
 from screen_login.screen_login import LoginScreen 
 from screen_components import text_input, process_modal , section_icon
 from screen_home.screen_home import HomeScreen
-from screen_home import headline_layout, router_layout, account_layout
+from screen_home import headline_layout, router_layout, account_layout, tickets_layout
 from screen_components import text_input 
 from variables import *
 import os
@@ -171,6 +171,7 @@ class SubscriberApp(MDApp):
 
         Builder.load_string(headline_layout.kv_headline_layout)
         Builder.load_string(router_layout.kv_router_layout)
+        Builder.load_string(tickets_layout.kv_tickets_layout)
         Builder.load_string(account_layout.kv_account_layout)
         login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
         Builder.load_file(login_kv_path)
