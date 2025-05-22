@@ -1,3 +1,4 @@
+from kivy.uix.actionbar import Label
 
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
@@ -7,7 +8,7 @@ from kivymd.uix.widget import MDWidget
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
-
+from kivy.animation import Animation
 from kivy.clock import Clock
 import os
 
@@ -21,6 +22,64 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
+
+
+
+
+
+
+class PlansAddsOnsWidget(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    ButtonBehavior,
+    MDBoxLayout
+):
+    content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
+    widget_type = StringProperty("addons") 
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#FAF0E6")
+        self.opacity = 0
+        self.elevation = 0
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
+
+class PlansInstallmentWidget(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    ButtonBehavior,
+    MDBoxLayout
+):
+    content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
+    widget_type = StringProperty("addons") 
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#FAF0E6")
+        self.opacity = 0
+        self.elevation = 0
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
+
+class AdditionalPlanList(ScrollView):
+    
+    plan_list_container : MDBoxLayout = ObjectProperty(None)
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+    
+    
 
 
 class PlanClickableImage(ButtonBehavior, Image):
@@ -111,10 +170,29 @@ class ListOfPlans(ScrollView):
     container_layout : BoxLayout = ObjectProperty(None)
 
 
+
+
+class AdditionalPlansList(MDBoxLayout):
+
+
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+
+
+
+
+
+
+
 class RouterLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
 
     router_icon : section_icon.SectionIconLayout = ObjectProperty(None)
+    selected_plan_layout : MDBoxLayout = ObjectProperty(None)
+    additional_plans_list : AdditionalPlansList = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -123,6 +201,7 @@ class RouterLayout(MDBoxLayout):
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
         Clock.schedule_once(self.setup_image, 1)
+        Clock.schedule_once(self.open_selected_layout, 8)
 
     def setup_image(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
@@ -136,7 +215,16 @@ class RouterLayout(MDBoxLayout):
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
 
- 
+    def open_selected_layout(self, *args):
+        anime = Animation(height=150,  duration=0.3)
+        anime.bind(on_complete=self.on_animation_complete)
+        anime.start(self.selected_plan_layout)
+    
+    def on_animation_complete(self, *args):
+        if len(self.selected_plan_layout.children) < 1:
+            self.additional_plans_list = AdditionalPlansList()
+            self.selected_plan_layout.add_widget(self.additional_plans_list)
+
 
 kv_router_layout = '''
 <RouterLayout>:
@@ -145,6 +233,7 @@ kv_router_layout = '''
     adaptive_height: True
 
     router_icon : router_icon
+    selected_plan_layout : selected_plan_layout
 
     canvas.before:
         Color:
@@ -194,6 +283,240 @@ kv_router_layout = '''
         size_hint: 1, None
         height: 10
 
+    
+    MDBoxLayout:
+        id: selected_plan_layout
+        size_hint: 1, None
+        # height: 150
+        height: 0
+
+
+        # AdditionalPlansList:
+
+
+
+
+
+
+<AdditionalPlansList>:
+    size_hint: 1, None
+    orientation: "vertical"
+    height: 180
+    
+    Widget:
+        size_hint: 1, 0.05
+
+    BoxLayout:
+        size_hint: 1, 0.10
+        orientation: "horizontal"
+        Widget:
+            size_hint: 0.05, 1
+        Label:
+            size_hint: 0.95, 1
+            font_name: "p_light"
+            font_size: 8
+            color: chex("#FFFFFF")
+            text: "[font=p_bold]Selected Plan :[/font]   Home Plan"
+            halign: "left"
+            valign : "center"
+            text_size: self.size
+            markup: True
+    
+    Widget:
+        size_hint: 1, 0.05
+
+    BoxLayout:
+        size_hint: 1, 0.7
+
+        Widget:
+            size_hint: 0.05, 1
+
+        AdditionalPlanList:
+            size_hint: 0.44, 1
+
+
+        Widget:
+            size_hint: 0.02, 1
+
+        AdditionalPlanList:
+            size_hint: 0.44, 1
+
+
+        Widget:
+            size_hint: 0.05, 1
+
+    Widget:
+        size_hint: 1, 0.1
+
+
+<AdditionalPlanList>:
+    do_scroll_x: False
+    do_scroll_y: True
+    bar_width: 0  # Optional: hide bar
+
+    plan_list_container: plan_list_container
+
+    MDBoxLayout:
+        id: plan_list_container
+        orientation: "vertical"
+        size_hint: (1, None)
+        adaptive_height: True
+        spacing: 5
+
+        PlansInstallmentWidget:
+        PlansAddsOnsWidget:
+        
+
+<PlansAddsOnsWidget>:
+    size_hint: 1, None
+    adaptive_height: True
+    orientation: "vertical"
+    opacity: 0
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 15, 5
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "Home Plan Add Ons"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Monthly:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+
+
+<PlansInstallmentWidget>:
+    size_hint: 1, None
+    adaptive_height: True
+    orientation: "vertical"
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 15, 5
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "Home Plan Add Ons"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Monthly:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Months To Pay:[/font] 11"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Months Remaining[/font] 11"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Total Amount:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+
 
     
 
@@ -214,7 +537,7 @@ kv_router_layout = '''
 
     BoxLayout:
         size_hint: 1, 1
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        pos_hint: {"center_x": 0.5,"center_y": 0.5}
         orientation: "vertical"
 
         Label:
@@ -261,7 +584,7 @@ kv_router_layout = '''
         size_hint: None, None
         height: 13
         width: 13
-        pos_hint: {'right': 0.95,'y': 0.05}
+        pos_hint: {"right": 0.95,"y": 0.05}
         opacity: 1 if not root.is_viewing else 0.7
 
         on_release: root.is_viewing = True
