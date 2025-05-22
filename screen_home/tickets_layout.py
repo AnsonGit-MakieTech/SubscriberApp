@@ -10,7 +10,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
-
+from kivy.animation import Animation
 from kivy.clock import Clock
 import os
 
@@ -35,6 +35,7 @@ class TicketWidget(
     ):
     
     content_background_radius = ListProperty([ 16 , 16, 16 , 16 ])
+    ticket_number = StringProperty("123456789")
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -42,12 +43,19 @@ class TicketWidget(
         
         self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)
+        self.opacity = 0
+        self.elevation = 0
         
     def update_sizing(self, *args):
         width, height = self.size
         r = min(width, height) * 0.2  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
-        print("update_sizing <====")
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
 
 class TicketList(ScrollView):
     def __init__(self, **kwargs):
@@ -202,7 +210,7 @@ kv_tickets_layout = '''
 
     Label:
         size_hint: 1, 1
-        text : "023432434"
+        text : root.ticket_number
         font_name: "p_bold"
         font_size: 10
         color: chex("#5C5470")

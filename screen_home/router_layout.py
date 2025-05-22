@@ -105,6 +105,14 @@ class PlanWidget(
         Clock.schedule_once(self.update_sizing, 0.1)
         
         Clock.schedule_once(self.update_image, 0.1)
+        self.opacity = 0
+        self.elevation = 0
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
     
     def update_image(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
@@ -135,6 +143,14 @@ class AddPlanWidget(
         self.bind(size=self.update_sizing)
 
         Clock.schedule_once(self.update_sizing, 0.1)
+        self.opacity = 0
+        self.elevation = 0
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
     
     def on_parent(self, instance, value):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
@@ -159,6 +175,14 @@ class EmptyPlanWidget(
         self.md_bg_color = get_color_from_hex("#FAF0E6")
         self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)
+        self.opacity = 0
+        self.elevation = 0
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
 
     def update_sizing(self, *args):
         width, height = self.size
@@ -216,7 +240,7 @@ class RouterLayout(MDBoxLayout):
         self.content_background_radius = [r, r, r, r]
 
     def open_selected_layout(self, *args):
-        anime = Animation(height=150,  duration=0.3)
+        anime = Animation(height=180,  duration=0.3)
         anime.bind(on_complete=self.on_animation_complete)
         anime.start(self.selected_plan_layout)
     
@@ -287,7 +311,6 @@ kv_router_layout = '''
     MDBoxLayout:
         id: selected_plan_layout
         size_hint: 1, None
-        # height: 150
         height: 0
 
 
@@ -331,15 +354,51 @@ kv_router_layout = '''
         Widget:
             size_hint: 0.05, 1
 
-        AdditionalPlanList:
+        BoxLayout:
             size_hint: 0.44, 1
+            orientation: "vertical"
+            
+            Label:
+                size_hint: 1, 0.1
+                font_name: "p_bold"
+                font_size: 6
+                color: chex("#FFFFFF")
+                text: "Available Add-ons Plan"
+                halign: "left"
+                valign : "center"
+                text_size: self.size
+                markup: True
+            
+            Widget:
+                size_hint: 1, 0.05
+
+            AdditionalPlanList:
+                size_hint: 1, 0.85
 
 
         Widget:
             size_hint: 0.02, 1
 
-        AdditionalPlanList:
+        BoxLayout:
             size_hint: 0.44, 1
+            orientation: "vertical"
+
+            Label:
+                size_hint: 1, 0.1
+                font_name: "p_bold"
+                font_size: 6
+                color: chex("#FFFFFF")
+                text: "Available Add-ons Plan"
+                halign: "left"
+                valign : "center"
+                text_size: self.size
+                markup: True
+            
+            Widget:
+                size_hint: 1, 0.05
+
+            AdditionalPlanList:
+                size_hint: 1, 0.85
 
 
         Widget:
