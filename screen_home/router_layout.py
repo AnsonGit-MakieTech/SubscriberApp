@@ -22,6 +22,7 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
+from kivymd.app import MDApp 
 
 
 
@@ -101,12 +102,22 @@ class PlanWidget(
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
-        self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)
         
         Clock.schedule_once(self.update_image, 0.1)
         self.opacity = 0
         self.elevation = 0
+
+    
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
 
     def on_parent(self, instance, value):
         # Widget is now attached to the tree
@@ -139,22 +150,26 @@ class AddPlanWidget(
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.md_bg_color = get_color_from_hex("#FAF0E6")
-        self.bind(size=self.update_sizing)
+        self.md_bg_color = get_color_from_hex("#FAF0E6") 
 
         Clock.schedule_once(self.update_sizing, 0.1)
         self.opacity = 0
         self.elevation = 0
 
-    def on_parent(self, instance, value):
-        # Widget is now attached to the tree
-        if value:
-            # Animate appearance
-            Animation(opacity=1, elevation=4, d=0.3).start(self)
     
-    def on_parent(self, instance, value):
+    def on_parent(self, instance, parent):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.add_plan_icon = os.path.join(parent_dir, 'assets', 'add_plan.png')
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
+            
 
     def update_sizing(self, *args):
         width, height = self.size 
@@ -172,16 +187,20 @@ class EmptyPlanWidget(
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.md_bg_color = get_color_from_hex("#FAF0E6")
-        self.bind(size=self.update_sizing)
+        self.md_bg_color = get_color_from_hex("#FAF0E6") 
         Clock.schedule_once(self.update_sizing, 0.1)
         self.opacity = 0
         self.elevation = 0
 
-    def on_parent(self, instance, value):
-        # Widget is now attached to the tree
-        if value:
-            # Animate appearance
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
             Animation(opacity=1, elevation=4, d=0.3).start(self)
 
     def update_sizing(self, *args):
@@ -221,11 +240,22 @@ class RouterLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
         Clock.schedule_once(self.setup_image, 1)
         Clock.schedule_once(self.open_selected_layout, 8)
+    
+    
+    
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
 
     def setup_image(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))

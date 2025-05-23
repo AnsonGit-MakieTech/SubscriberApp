@@ -1,3 +1,4 @@
+from kivy.uix.accordion import ListProperty
 __version__ = "1.0.0"
 
 from kivy.uix.accordion import ObjectProperty
@@ -120,11 +121,14 @@ class SubscriberApp(MDApp):
     root_screen_manager : ScreenHandler = ObjectProperty(None)
     process_modal = ObjectProperty(None)
 
+    on_size_events_of_all_widgets = ListProperty([])
+
 
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens, 0.1)
+        Clock.schedule_once(self.on_window_resize, 1)
         # self.process_modal.open()
 
     def on_stop(self):
@@ -167,9 +171,9 @@ class SubscriberApp(MDApp):
         Builder.load_string(section_icon.kv_section_layout)
         Builder.load_string(text_input.text_input_kv)
 
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
-        # Builder.load_file(login_kv_path)
-        # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        Builder.load_file(login_kv_path)
+        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
 
         Builder.load_string(headline_layout.kv_headline_layout)
         Builder.load_string(router_layout.kv_router_layout)
@@ -181,10 +185,12 @@ class SubscriberApp(MDApp):
 
         def change_to_login_screen(*args): 
             print("this happen hehehee")
-            # self.root_screen_manager.change_screen(LOGIN_SCREEN)
-            self.root_screen_manager.change_screen(HOME_SCREEN)
+            self.root_screen_manager.change_screen(LOGIN_SCREEN)
+            # self.root_screen_manager.change_screen(HOME_SCREEN)
         Clock.schedule_once(self.show_welcome_popup, 0.5)
         Clock.schedule_once(change_to_login_screen, 1)
+
+        Window.bind(size=self.on_window_resize) # bind the on_window_resize method to the window size event
         return sm
 
     def show_welcome_popup(self, *args):
@@ -199,6 +205,10 @@ class SubscriberApp(MDApp):
         
         # Builder.load_file(login_kv_path)
         pass
+    
+    def on_window_resize(self, *args):
+        for event in self.on_size_events_of_all_widgets:
+            event()
 
 if __name__ == '__main__':
     LabelBase.register(name="p_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraBold.ttf'))

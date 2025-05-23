@@ -1,6 +1,7 @@
 
 
 <LoginScreen>:
+    container_box : container_box
     BoxLayout:
         orientation: 'vertical'
 
@@ -72,6 +73,7 @@
             text: 'Login Account'
             font_name: 'p_bold'
             font_size: root.login_button_font_size
+            on_press: root.login_account()
             canvas.before:
                 Color:
                     rgba: chex("#352F44")

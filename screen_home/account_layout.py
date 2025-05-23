@@ -10,6 +10,7 @@ from kivymd.uix.widget import MDWidget
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
+from kivymd.app import MDApp 
 
 from kivy.clock import Clock
 import os
@@ -23,6 +24,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
 
 from kivy.uix.image import Image
+
 
 
 class AccountInfoWidget(
@@ -54,10 +56,20 @@ class AccountLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
         Clock.schedule_once(self.setup_image, 1)
+    
+    
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
 
     def setup_image(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))

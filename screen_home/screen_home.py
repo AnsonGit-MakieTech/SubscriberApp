@@ -33,8 +33,19 @@ class AccountHeader(FloatLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(size=self.update_sizing)
+        # self.bind(size=self.update_sizing)
+        Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
+
     
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+
     def on_kv_post(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.edit_icon.source = os.path.join(parent_dir, 'assets', 'edit_icon.png')
@@ -43,6 +54,7 @@ class AccountHeader(FloatLayout):
         
     
     def update_sizing(self, *args):
+        print("Updating sizing from AccountHeader")
         width , height = self.size
         multiplier = 0.1
         self.edit_icon.size = (width * multiplier, height * multiplier)
@@ -53,16 +65,15 @@ class HomeScreen(Screen):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(size=self.update_sizing)
-    
-    def update_sizing(self, *args):
-        width , height = self.size
+        self.opacity = 0
 
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
+        # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
-        
+        anim = Animation(opacity=1, duration=1)
+        anim.bind( on_complete= main_app.on_window_resize)
+        anim.start(self)
         # print("entering logoin")
         return super().on_enter(*args)

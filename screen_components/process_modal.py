@@ -160,11 +160,11 @@ kv_process_modal = '''
 
     BoxLayout:
         id: main_layout
-        orientation:'vertical'
+        orientation:"vertical"
         padding: 20
         spacing: 10
         size_hint: 0.85 , 0.3
-        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+        pos_hint: { "center_x": 0.5 , "center_y": 0.5 }  
 
 
         canvas.before:
@@ -187,7 +187,7 @@ kv_process_modal = '''
             CustomSpinner:
                 id: spinner
                 size_hint: 0.5, 0.5
-                pos_hint: {'center_x': .5, 'center_y': .5}
+                pos_hint: {"center_x": .5, "center_y": .5}
                 active: True # if check.active else False
 
 
@@ -196,9 +196,9 @@ kv_process_modal = '''
             text: root.proccess_text
             text_size: self.width, None
             height: self.texture_size[1]
-            valign: 'middle'  # Or 'center'
-            halign: 'center'  # 'left', 'right', or 'center' depending on your goal
-            font_name: 'p_regular'
+            valign: "middle"  # Or "center"
+            halign: "center"  # "left", "right", or "center" depending on your goal
+            font_name: "p_regular"
             font_size: root.setup_font_size
             color: chex("#014367")
 

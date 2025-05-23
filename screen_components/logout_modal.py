@@ -90,9 +90,7 @@ kv_logout_modal = '''
     BoxLayout:
         id: main_layout
         orientation:"vertical"
-        padding: 20
-        spacing: 10
-        size_hint: 0.85 , 0.3
+        size_hint: 0.75 , 0.25
         pos_hint: { "center_x": 0.5 , "center_y": 0.5 }  
 
 
@@ -105,7 +103,7 @@ kv_logout_modal = '''
                 radius: [10]
 
         Widget:
-            size_hint: 1, 0.05
+            size_hint: 1, 0.025
         Label:
             size_hint: 1, 0.2
             text: "Logout Confirmation"
@@ -127,7 +125,7 @@ kv_logout_modal = '''
             size_hint: 1, 0.2
 
         BoxLayout:
-            size_hint: 1, 0.2
+            size_hint: 1, 0.25
             orientation: "horizontal"
 
             Widget:
@@ -163,7 +161,7 @@ kv_logout_modal = '''
                 size_hint: 0.13, 1
             
         Widget:
-            size_hint: 1, 0.05
+            size_hint: 1, 0.025
 
 <CustomButton>:
     theme_elevation_level: "Custom"

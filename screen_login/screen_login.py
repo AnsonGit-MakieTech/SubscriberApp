@@ -15,6 +15,7 @@ from kivymd.app import MDApp
 import os
 
 from screen_components import text_input
+from variables import *
 
 
 
@@ -28,13 +29,25 @@ class FormLayout(BoxLayout):
     login_button_radius = ListProperty([8, 8, 8, 8])
     info_title_font_size = NumericProperty(14)
     info_content_font_size = NumericProperty(10)
+
+    login_event = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
         Clock.schedule_once(self.update_sizing, 0)
-        self.bind(size=self.update_sizing)
+        # self.bind(size=self.update_sizing)
+
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
 
     
     def update_sizing(self, *args):
@@ -54,6 +67,9 @@ class FormLayout(BoxLayout):
         self.info_title_font_size = int(min( width, height) * 0.03)
         self.info_content_font_size = int(min( width, height) * 0.02)
 
+    def login_account(self):
+        print("Login button pressed!")
+        self.login_event()
 
 
 class LogoLocation(BoxLayout):
@@ -87,23 +103,57 @@ class LogoLocation(BoxLayout):
 
 class LoginScreen(Screen):
     adaptive_radius = ListProperty([24, 24, 0, 0])
+    container_box : FormLayout = ObjectProperty(None)
 
-    def on_kv_post(self, base_widget):
-        container = self.ids.container_box
-        container.bind(size=self.update_radius)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.opacity = 0
 
-    def update_radius(self, instance, value):
-        width, height = value
-        r = min(width, height) * 0.05  # You can change 0.05 to any fraction
-        self.adaptive_radius = [r, r, 0, 0]
+    # def on_kv_post(self, base_widget):
+        
+    #     container = self.ids.container_box
+    #     container.bind(size=self.update_radius)
+
+
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_radius in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_radius)
+        else:
+            if self.update_radius not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_radius)
+            self.update_radius()
+        if parent:
+            self.container_box.login_event = self.login_event
+
+
+    # def on_parent(self, instance, parent):
+    #     if parent:
+    #         self.container_box.login_event = self.login_event
+
+    def update_radius(self, *args):
+        if self.container_box:
+            width, height = self.container_box.size
+            r = min(width, height) * 0.05  # You can change 0.05 to any fraction
+            self.adaptive_radius = [r, r, 0, 0]
 
     def on_enter(self, *args):
-        # main_app  = MDApp.get_running_app()
-        # Clock.schedule_once( lambda *args : main_app.process_modal.open() , 2)
+        main_app  = MDApp.get_running_app()
+        # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
+        # main_app.on_window_resize()
+        anim = Animation(opacity=1, duration=1)
+        anim.bind(on_complete= main_app.on_window_resize)
+        anim.start(self)
         
         # print("entering logoin")
         return super().on_enter(*args)
 
+    def login_event(self):
+        print("login event")
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        self.manager.current = HOME_SCREEN
 
 

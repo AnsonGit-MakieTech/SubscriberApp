@@ -12,6 +12,7 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivymd.app import MDApp 
 import os
 
 
@@ -41,11 +42,21 @@ class TicketWidget(
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
         
-        self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)
         self.opacity = 0
         self.elevation = 0
-        
+    
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
+
+
     def update_sizing(self, *args):
         width, height = self.size
         r = min(width, height) * 0.2  # You can change 0.05 to any fraction
@@ -85,10 +96,20 @@ class TicketsLayout(MDBoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.bind(size=self.update_sizing)
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
         Clock.schedule_once(self.setup_image, 1)
+
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
+
 
     def setup_image(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
