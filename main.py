@@ -8,7 +8,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal , section_icon
+from screen_components import text_input, process_modal , section_icon, logout_modal
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout
 from screen_components import text_input 
@@ -157,13 +157,15 @@ class SubscriberApp(MDApp):
         self.root_screen_manager = sm
 
 
+        Builder.load_string(logout_modal.kv_logout_modal)
         Builder.load_string(process_modal.kv_process_modal)
         self.process_modal = process_modal.ProcessingLayout()
+        self.logout_modal = logout_modal.LogoutModal()
+        
 
 
         Builder.load_string(section_icon.kv_section_layout)
         Builder.load_string(text_input.text_input_kv)
-        Builder.load_string(process_modal.kv_process_modal)
 
         # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         # Builder.load_file(login_kv_path)

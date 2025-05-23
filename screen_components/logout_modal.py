@@ -1,3 +1,5 @@
+from kivy.uix.accordion import Widget
+from kivy.uix.actionbar import Label
 
 
 from kivy.uix.accordion import ObjectProperty, BooleanProperty
@@ -9,27 +11,64 @@ from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 
 import os
+ 
+from kivy.uix.behaviors import ButtonBehavior
 
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
 
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
+from kivymd.uix.boxlayout import MDBoxLayout 
+from kivy.utils import get_color_from_hex
+
+
+class CustomButton(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    ButtonBehavior,
+    MDBoxLayout
+):
+    content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#FAF0E6")
+        
+        self.bind(size=self.update_sizing)
+        Clock.schedule_once(self.update_sizing, 0.1)
+        self.opacity = 0
+        self.elevation = 0
+        
+    def update_sizing(self, *args):
+        width, height = self.size
+        r = min(width, height) * 0.2 # You can change 0.05 to any fraction
+        self.content_background_radius = [r, r, r, r]
+
+    def on_parent(self, instance, value):
+        # Widget is now attached to the tree
+        if value:
+            # Animate appearance
+            Animation(opacity=1, elevation=4, d=0.3).start(self)
 
 
 class LogoutModal(ModalView):
     
-    setup_font_size = NumericProperty(14)
+    title_font_size = NumericProperty(14)
+    content_font_size = NumericProperty(14)
     main_layout : BoxLayout = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.setup_font_size = 14
         
-        Clock.schedule_once(self.update_sizing, 0.1)
         self.bind(size=self.update_sizing)
-        
+    
+    def on_kv_post(self, base_widget):
+        Clock.schedule_once(self.update_sizing, 0.1)
+        return super().on_kv_post(base_widget)
     
     def update_sizing(self, *args):
         width, height = self.size
-        self.setup_font_size = min(width, height) * 0.035
+        self.title_font_size = min(width, height) * 0.045
+        self.content_font_size = min(width, height) * 0.03
         
         padding_x = int(width * 0.08)
         padding_y = int(height * 0.05)
@@ -50,22 +89,91 @@ kv_logout_modal = '''
     
     BoxLayout:
         id: main_layout
-        orientation:'vertical'
+        orientation:"vertical"
         padding: 20
         spacing: 10
         size_hint: 0.85 , 0.3
-        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+        pos_hint: { "center_x": 0.5 , "center_y": 0.5 }  
 
 
         canvas.before:
             Color:
-                rgba: chex("#F7EEDD")
+                rgba: chex("#FAF0E6")
             RoundedRectangle:
                 pos: self.pos
                 size: self.size
                 radius: [10]
 
+        Widget:
+            size_hint: 1, 0.05
+        Label:
+            size_hint: 1, 0.2
+            text: "Logout Confirmation"
+            font_size: root.title_font_size
+            color: chex("#352F44")
+            font_name: "p_bold"
+        Widget:
+            size_hint: 1, 0.1
+        Label: 
+            size_hint: 1, 0.2
+            valign: "middle"  # Or "center"
+            halign: "center"
+            font_name: "p_light"
+            font_size: root.content_font_size
+            color: chex("#014367")
+            text: "Are you sure you want to logout?"
         
+        Widget:
+            size_hint: 1, 0.2
+
+        BoxLayout:
+            size_hint: 1, 0.2
+            orientation: "horizontal"
+
+            Widget:
+                size_hint: 0.13, 1
+            
+            CustomButton:
+                size_hint: 0.4, 1
+                md_bg_color: chex("#5C5470")
+                on_release: root.dismiss()
+                
+                Label: 
+                    size_hint: 1, 1
+                    font_name: "p_bold"
+                    font_size: root.content_font_size
+                    color: chex("#FFFFFF")
+                    text: "Cancel"
+                    
+            Widget:
+                size_hint: 0.1, 1
+
+            CustomButton:
+                size_hint: 0.4, 1
+                md_bg_color: chex("#A30000")
+                
+                Label: 
+                    size_hint: 1, 1
+                    font_name: "p_bold"
+                    font_size: root.content_font_size
+                    color: chex("#FFFFFF")
+                    text: "Logout"
+                
+            Widget:
+                size_hint: 0.13, 1
+            
+        Widget:
+            size_hint: 1, 0.05
+
+<CustomButton>:
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
     
 '''
 

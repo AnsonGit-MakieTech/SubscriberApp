@@ -60,8 +60,8 @@ class HomeScreen(Screen):
 
 
     def on_enter(self, *args):
-        # main_app  = MDApp.get_running_app()
-        # Clock.schedule_once( lambda *args : main_app.process_modal.open() , 2)
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         
         # print("entering logoin")
