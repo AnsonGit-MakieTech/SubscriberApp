@@ -5,7 +5,7 @@ from kivy.uix.image import Image
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
-
+from kivymd.app import MDApp
 import os
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
@@ -105,8 +105,18 @@ class ProcessingLayout(ModalView):
         self.setup_font_size = 14
         
         Clock.schedule_once(self.update_sizing, 0.1)
-        self.bind(size=self.update_sizing)
+        # self.bind(size=self.update_sizing)
+    
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
         
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
     
     def update_sizing(self, *args):
         width, height = self.size

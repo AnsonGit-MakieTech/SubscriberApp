@@ -113,6 +113,10 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
     def change_screen(self, screen_name):
         self.handler.current = screen_name
 
+    def remove_screen(self, screen_name):
+        if screen_name in self.handler.screen_names:
+            self.handler.remove_widget(self.handler.get_screen(screen_name))
+            print("Login screen removed.")
 
 class SubscriberApp(MDApp):
  
@@ -122,7 +126,7 @@ class SubscriberApp(MDApp):
     process_modal = ObjectProperty(None)
 
     on_size_events_of_all_widgets = ListProperty([])
-
+    _resize_scheduled = False
 
     def on_start(self):
         """ Check and request storage permission on Android """ 
@@ -206,9 +210,24 @@ class SubscriberApp(MDApp):
         # Builder.load_file(login_kv_path)
         pass
     
+
     def on_window_resize(self, *args):
+        if not self._resize_scheduled:
+            self._resize_scheduled = True
+            Clock.schedule_once(self._run_resize_events, 0.1)  # debounce: 100ms
+
+    def _run_resize_events(self, *args):
         for event in self.on_size_events_of_all_widgets:
-            event()
+            try:
+                event()
+            except Exception as e:
+                print(f"Resize event error: {e}")
+        print("Window resized to: ", Window.size)
+        self._resize_scheduled = False
+
+
+
+
 
 if __name__ == '__main__':
     LabelBase.register(name="p_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraBold.ttf'))

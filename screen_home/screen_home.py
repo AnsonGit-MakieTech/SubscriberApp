@@ -16,6 +16,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 
+from variables import *
 import os
 
 
@@ -53,8 +54,7 @@ class AccountHeader(FloatLayout):
         self.refresh_icon.source = os.path.join(parent_dir, 'assets', 'refresh_icon.png')
         
     
-    def update_sizing(self, *args):
-        print("Updating sizing from AccountHeader")
+    def update_sizing(self, *args): 
         width , height = self.size
         multiplier = 0.1
         self.edit_icon.size = (width * multiplier, height * multiplier)
@@ -72,8 +72,12 @@ class HomeScreen(Screen):
         main_app  = MDApp.get_running_app()
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
-        anim = Animation(opacity=1, duration=1)
-        anim.bind( on_complete= main_app.on_window_resize)
+        anim = Animation(opacity=1, duration=0.5)
+        anim.bind( on_progress= main_app.on_window_resize, on_complete=self.remove_login_screen)
         anim.start(self)
         # print("entering logoin")
         return super().on_enter(*args)
+
+    def remove_login_screen(self, *args):
+        main_app = MDApp.get_running_app()
+        main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)

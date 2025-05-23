@@ -143,7 +143,7 @@ class LoginScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         # main_app.on_window_resize()
-        anim = Animation(opacity=1, duration=1)
+        anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_complete= main_app.on_window_resize)
         anim.start(self)
         

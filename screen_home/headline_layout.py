@@ -64,8 +64,7 @@ class HeadlineLayout(MDBoxLayout):
             has_comming_soon=False
         )
 
-    def update_sizing(self, *args):
-        print("Updating sizing from HeadlineLayout")
+    def update_sizing(self, *args): 
         width, height = self.size
         self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
         r = min(width, height) * 0.045  # You can change 0.05 to any fraction
