@@ -9,7 +9,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal , section_icon, logout_modal
+from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout
 from screen_components import text_input 
@@ -124,6 +124,8 @@ class SubscriberApp(MDApp):
     done_load_modal : ImageModal = ObjectProperty(None)
     root_screen_manager : ScreenHandler = ObjectProperty(None)
     process_modal = ObjectProperty(None)
+    logout_modal = ObjectProperty(None)
+    add_ticket_modal = ObjectProperty(None)
 
     on_size_events_of_all_widgets = ListProperty([])
     _resize_scheduled = False
@@ -167,8 +169,11 @@ class SubscriberApp(MDApp):
 
         Builder.load_string(logout_modal.kv_logout_modal)
         Builder.load_string(process_modal.kv_process_modal)
+        Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
         self.process_modal = process_modal.ProcessingLayout()
         self.logout_modal = logout_modal.LogoutModal()
+        self.add_ticket_modal = add_ticket_modal.AddTicketModal()
+
         
 
 

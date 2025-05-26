@@ -142,6 +142,7 @@ class LoginScreen(Screen):
         main_app  = MDApp.get_running_app()
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
+        Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
         # main_app.on_window_resize()
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_complete= main_app.on_window_resize)
