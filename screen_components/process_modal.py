@@ -103,6 +103,7 @@ class ProcessingLayout(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.setup_font_size = 14
+        self.opacity = 0
         
         Clock.schedule_once(self.update_sizing, 0.1)
         # self.bind(size=self.update_sizing)
@@ -136,6 +137,10 @@ class ProcessingLayout(ModalView):
         self.spinner.source = os.path.join(parent_dir, 'assets', 'loading_icon.png')
         return super().on_pre_open()
     def on_open(self):
+        anim = Animation(opacity=1, d=0.3)
+        anim.bind(on_start=self.update_sizing)
+        anim.start(self)
+
         self.auto_dismiss = False
         self.spinner.start_spinner()
         self.proccess_text = "Please wait while we complete the process. Do not close the application until it is finished."
@@ -156,8 +161,10 @@ class ProcessingLayout(ModalView):
         self.proccess_text = "An error occurred while processing the data." if not message else message
         self.auto_dismiss = True
         self.is_open = False
-    
 
+    def on_pre_dismiss(self):
+        self.opacity = 0
+        return super().on_pre_dismiss()
         
 kv_process_modal = '''
 <ProcessingLayout>: 

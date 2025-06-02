@@ -53,6 +53,7 @@ class CustomButton(
         width, height = self.size
         r = min(width, height) * 0.2 # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+    
 
     def on_parent(self, instance, value):
         # Widget is now attached to the tree
@@ -69,20 +70,21 @@ class LogoutModal(ModalView):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.opacity = 0
         
         # self.bind(size=self.update_sizing)
     
 
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
+    # def on_parent(self, instance, parent):
+    #     main_app = MDApp.get_running_app()
         
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
+    #     if parent is None:
+    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+    #     else:
+    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+    #         self.update_sizing()
     
     def on_kv_post(self, base_widget):
         Clock.schedule_once(self.update_sizing, 0.1)
@@ -99,7 +101,16 @@ class LogoutModal(ModalView):
         # Set padding as (left, top, right, bottom)
         self.main_layout.padding = [padding_x, padding_y, padding_x, padding_y]
         self.main_layout.spacing = int(height * 0.005)
+ 
+    def on_open(self):
+        anim = Animation(opacity=1, d=0.3)
+        anim.bind(on_start=self.update_sizing)
+        anim.start(self)
+        return super().on_open()
 
+    def on_pre_dismiss(self):
+        self.opacity = 0
+        return super().on_pre_dismiss()
 
 kv_logout_modal = '''
 <LogoutModal>:

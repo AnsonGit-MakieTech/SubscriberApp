@@ -28,17 +28,6 @@ class AddTicketModalDetailsTextInput(
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#5C5470")
 
-
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
     
     def update_sizing(self, *args):
         width, height = self.size
@@ -79,7 +68,7 @@ class AddTicketModal(ModalView):
     h1_font_size = NumericProperty(20)
     main_layout = ObjectProperty()
 
-    details_input = ObjectProperty(None)
+    details_input : AddTicketModalDetailsTextInput = ObjectProperty(None)
     dropdown_btn : app_button.AppButton = ObjectProperty(None)
     canncel_btn : app_button.AppButton = ObjectProperty(None)
     submit_btn : app_button.AppButton = ObjectProperty(None)
@@ -88,6 +77,7 @@ class AddTicketModal(ModalView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.opacity = 0
         self.dropdown = DropDown(max_height=150)
 
         # Create dropdown options
@@ -114,21 +104,36 @@ class AddTicketModal(ModalView):
         print(value)
         pass
     
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
+    # def on_parent(self, instance, parent):
+    #     main_app = MDApp.get_running_app()
         
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
+    #     if parent is None:
+    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+    #     else:
+    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+    #         self.update_sizing()
     
     def update_sizing(self, *args):
         width, height = self.size
         self.h1_font_size = int(min(width, height) * 0.05)
         self.h2_font_size = int(min(width, height) * 0.04)
+        self.details_input.update_sizing()
+ 
+    
+    def on_open(self):
+        anim = Animation(opacity=1, d=0.3)
+        anim.bind(on_start=self.update_sizing)
+        anim.start(self)
+        return super().on_open()
+
+    def on_pre_dismiss(self):
+        self.opacity = 0
+        return super().on_pre_dismiss()
+    
+
+
 
 
 kv_add_ticket_modal = '''

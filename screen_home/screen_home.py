@@ -21,11 +21,15 @@ import os
 
 
 class TappableImage(ButtonBehavior, Image):
+    button_event = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
     
     def on_press(self):
-        print("Image tapped!")  
+        print("Image tapped!") 
+        if self.button_event:
+            self.button_event()
 
 class AccountHeader(FloatLayout):
     edit_icon : TappableImage = ObjectProperty(None)
@@ -46,6 +50,8 @@ class AccountHeader(FloatLayout):
         else:
             if self.update_sizing not in main_app.on_size_events_of_all_widgets:
                 main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            
+    
 
     def on_kv_post(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
@@ -63,6 +69,7 @@ class AccountHeader(FloatLayout):
 
 class HomeScreen(Screen):
     
+    account_header : AccountHeader = ObjectProperty(None)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
@@ -73,9 +80,13 @@ class HomeScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind( on_progress= main_app.on_window_resize, on_complete=self.remove_login_screen)
+        anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_login_screen)
         anim.start(self)
         # print("entering logoin")
+        self.account_header.logout_icon.button_event = main_app.logout_modal.open
+        self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
+        self.account_header.refresh_icon.button_event = main_app.process_modal.open
+
         return super().on_enter(*args)
 
     def remove_login_screen(self, *args):
