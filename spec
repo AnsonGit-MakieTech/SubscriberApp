@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = TechApp
+title = Subscriber App
 
 
 # (str) Package name (must remain the same for updates)
@@ -21,18 +21,19 @@ version = 0.1
 #      If your previous APK had version_code = 1, set this to 2 for the next release.
 android.version_code = 1
 
-requirements = hostpython3, \
-    python3, \
+requirements = \
     kivy==2.3.1, \
-    cython==0.29.36, \
-    https://github.com/kivymd/KivyMD/archive/master.zip, \
-    materialyoucolor, \
-    requests, \
-    pillow, \
-    filetype, \
-    openssl, \
+    kivymd@https://github.com/kivymd/KivyMD/archive/master.zip, \
+    asyncgui, \
     asynckivy, \
-    asyncgui
+    filetype, \
+    materialyoucolor, \
+    pillow, \
+    requests, \
+    urllib3, \
+    idna, \
+    certifi, \
+    charset_normalizer
 
 orientation = portrait
 icon.filename = assets/app_logo.png
