@@ -9,7 +9,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 
 from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal
+from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout
 from screen_components import text_input 
@@ -170,6 +170,7 @@ class SubscriberApp(MDApp):
         Builder.load_string(logout_modal.kv_logout_modal)
         Builder.load_string(process_modal.kv_process_modal)
         Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
+        Builder.load_string(app_button.kv_app_button)
         self.process_modal = process_modal.ProcessingLayout()
         self.logout_modal = logout_modal.LogoutModal()
         self.add_ticket_modal = add_ticket_modal.AddTicketModal()
@@ -240,6 +241,7 @@ if __name__ == '__main__':
     LabelBase.register(name="p_extralight", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraLight.ttf'))
     LabelBase.register(name="p_regular", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Regular.ttf'))
     LabelBase.register(name="p_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Light.ttf'))
+    LabelBase.register(name="p_medium", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Medium.ttf'))
     try:
         SubscriberApp().run()
     except KeyboardInterrupt:
