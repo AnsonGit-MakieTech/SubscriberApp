@@ -1,25 +1,50 @@
-from kivy.uix.actionbar import Button
-from kivy.uix.accordion import Widget
-from kivy.uix.actionbar import Label
-from kivymd.uix.behaviors.ripple_behavior import RoundedRectangle
-from kivy.uix.accordion import ObjectProperty, BooleanProperty
+from kivy.uix.textinput import TextInput
+from kivy.uix.widget import Widget
 from kivy.uix.modalview import ModalView
 
-from kivy.uix.image import Image
 from kivy.animation import Animation
-from kivy.clock import Clock
-from kivy.uix.boxlayout import BoxLayout
 from kivymd.app import MDApp
 import os
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty
-
-from kivy.graphics import PushMatrix, PopMatrix, Rotate, Translate
+ 
 from kivy.uix.dropdown import DropDown
 
 from screen_components import app_button
 
 from kivy.utils import get_color_from_hex
+from kivymd.uix.boxlayout import MDBoxLayout 
+from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
+from kivy.properties import ListProperty
+
+
+class AddTicketModalDetailsTextInput(
+    CommonElevationBehavior,
+    RectangularRippleBehavior,
+    MDBoxLayout):
+    content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
+    details_font_size = NumericProperty(15)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.md_bg_color = get_color_from_hex("#5C5470")
+
+
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing()
+    
+    def update_sizing(self, *args):
+        width, height = self.size
+        self.details_font_size = int(min(width, height) * 0.05)
+        print(f"width: {width}, height: {height}, font_size: {self.details_font_size}")
+
 
 class DropdownButton(app_button.AppButton):
     text = StringProperty("Plan 1")
@@ -47,7 +72,6 @@ class DropdownButton(app_button.AppButton):
     def update_sizing(self, *args):
         width, height = self.size
         self.text_font_size = int(min(width, height) * 0.3)
-        print(f"width: {width}, height: {height}, text_font_size: {self.text_font_size}, result : {min(width, height)}")
 
 class AddTicketModal(ModalView):
 
@@ -55,15 +79,19 @@ class AddTicketModal(ModalView):
     h1_font_size = NumericProperty(20)
     main_layout = ObjectProperty()
 
+    details_input = ObjectProperty(None)
     dropdown_btn : app_button.AppButton = ObjectProperty(None)
-    selected_plan = StringProperty("Click Here")
+    canncel_btn : app_button.AppButton = ObjectProperty(None)
+    submit_btn : app_button.AppButton = ObjectProperty(None)
+
+    selected_plan = StringProperty("Click Here To Select")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.dropdown = DropDown(max_height=150)
 
         # Create dropdown options
-        for option in ["Click Here", "Option 1", "Option 2", "Option 3", "Option 4"]:
+        for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
             widget = Widget(size_hint_y=None, height=2)
             self.dropdown.add_widget(widget)
             btn = DropdownButton(size_hint_y=None, height=34)
@@ -76,6 +104,8 @@ class AddTicketModal(ModalView):
         self.dropdown_btn.bind(on_release=self.dropdown.open)
         self.dropdown.bind(on_select=self.on_select)
         self.dropdown_btn.update_color("#5C5470")
+        self.canncel_btn.update_color("#A30000")
+        self.submit_btn.update_color("#5C5470")
         
 
     def on_select(self, instance, value):
@@ -96,7 +126,6 @@ class AddTicketModal(ModalView):
             self.update_sizing()
     
     def update_sizing(self, *args):
-        main_app = MDApp.get_running_app()
         width, height = self.size
         self.h1_font_size = int(min(width, height) * 0.05)
         self.h2_font_size = int(min(width, height) * 0.04)
@@ -110,6 +139,9 @@ kv_add_ticket_modal = '''
     background_color: 0, 0, 0, 0
 
     dropdown_btn : dropdown_btn
+    details_input : details_input
+    canncel_btn : cancel_btn
+    submit_btn : submit_btn
 
     BoxLayout:
         orientation: "vertical"
@@ -136,6 +168,9 @@ kv_add_ticket_modal = '''
             text: "Router Repair Request Form"
             color: chex("#5C5470")
             font_name: "p_bold"
+            text_size: self.width, None 
+            valign: "middle"
+            halign: "center"
 
         Label:
             size_hint: 1, 0.077
@@ -152,25 +187,107 @@ kv_add_ticket_modal = '''
             Widget:
                 size_hint: 0.1, 1
             AppButton:
+                size_hint: 0.8, 1
                 id: dropdown_btn
                 Label:
-                    size_hint: 0.8, 1
+                    size_hint: 1, 1
                     text: root.selected_plan
                     font_name: "p_bold"
                     font_size: root.h2_font_size
                     color: chex("#FFFFFF")
             Widget:
                 size_hint: 0.1, 1
-        Button:
+        Label:
             size_hint: 1, 0.075
-        Button:
+            font_size: root.h2_font_size
+            text: "    Repair Details *"
+            color: chex("#FFFFFF")
+            font_name: "p_medium"
+            text_size: self.width, None 
+            valign: "middle"  # Or "center"
+            halign: "left"  # "left", "right", or "center" depending on your goal
+        BoxLayout:
             size_hint: 1, 0.40
-        Button:
-            size_hint: 1, 0.1
-        Widget:
-            size_hint: 1, 0.05
+            orientation: "horizontal"
+            
+            Widget:
+                size_hint: 0.1, 1
 
-    
+            AddTicketModalDetailsTextInput:
+                size_hint: 0.8, 1
+                id : details_input
+
+            Widget:
+                size_hint: 0.1, 1
+
+
+        Widget:
+            size_hint: 1, 0.04
+        BoxLayout:
+            size_hint: 1, 0.07
+            orientation: "horizontal"
+
+            Widget:
+                size_hint: 0.1, 1
+
+            AppButton:
+                size_hint: 0.3, 1
+                id: cancel_btn
+                on_release:
+                    root.dismiss()
+
+                Label:
+                    size_hint: 1, 1
+                    text: "Cancel"
+                    font_name: "p_bold"
+                    font_size: root.h2_font_size
+                    color: chex("#FFFFFF")
+
+            Widget:
+                size_hint: 0.2, 1
+
+            AppButton:
+                size_hint: 0.3, 1
+                id: submit_btn
+                
+                Label:
+                    size_hint: 1, 1
+                    text: "Submit"
+                    font_name: "p_bold"
+                    font_size: root.h2_font_size
+                    color: chex("#FFFFFF")
+            
+            Widget:
+                size_hint: 0.1, 1
+
+        Widget:
+            size_hint: 1, 0.04
+
+            
+
+
+<AddTicketModalDetailsTextInput>:
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+
+    TextInput:
+        size_hint: 1, 1
+        hint_text: "Provide additional information about the problem . . ." 
+        multiline: True 
+        background_color: 0, 0, 0, 0  # Transparent
+        foreground_color: chex("#FFFFFF")  # This is the actual text color
+        cursor_color: chex("#26231F")  # Optional, to see the cursor better
+        font_name: 'p_regular'
+        font_size: root.details_font_size
+        padding: [15]  # Add padding for readability 
+
+
 
 <DropdownButton>:
     size_hint_y: None

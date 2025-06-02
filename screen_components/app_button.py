@@ -1,6 +1,5 @@
 
 from kivy.properties import  StringProperty , ListProperty
-from kivymd.uix.behaviors import CommonElevationBehavior 
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivy.animation import Animation 
 
@@ -10,8 +9,7 @@ from kivy.utils import get_color_from_hex
 from kivy.uix.behaviors import ButtonBehavior
 
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
- 
-from kivy.uix.behaviors import ButtonBehavior 
+
 
 class AppButton(
     CommonElevationBehavior,
@@ -20,7 +18,6 @@ class AppButton(
     MDBoxLayout
 ):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
-    widget_type = StringProperty("addons") 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -1,13 +1,16 @@
-from kivy.uix.accordion import ListProperty
 __version__ = "1.0.0"
+from kivy.core.window import Window
 
-from kivy.uix.accordion import ObjectProperty
+Window.keyboard_anim_args = {"d": 0.2, "t": "in_out_expo"}
+Window.softinput_mode = "below_target"
+
+
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivy.lang.builder import Builder
 from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
-
+from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty
 from screen_login.screen_login import LoginScreen 
 from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button
 from screen_home.screen_home import HomeScreen
@@ -33,7 +36,6 @@ if platform == "android":
 if platform == "ios":
     pass
 
-from kivy.core.window import Window
 Window.show_cursor = True
 
 
