@@ -24,6 +24,51 @@
                     
                     HeaderButtons:
                         id: header_buttons
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+        
+
+                    BoxLayout:
+                        size_hint: 1, None
+                        orientation: 'horizontal'
+                        height: 300
+
+
+                        Image:
+                            allow_stretch: True
+                            keep_ratio: True
+                            source: root.forgot_account_logo
+                            size_hint: (0.5, 1)
+
+                        BoxLayout:
+                            size_hint: (0.5, 1)
+                            orientation: 'vertical'
+                            spacing: 0
+                            padding: [0 , 0 , 20 , 0]
+                            
+                            Widget:
+                                size_hint: (1, 0.2)
+                            Label:
+                                size_hint: (1 , 0.25)
+                                font_size: root.forgot_account_title_font_size
+                                halign: 'left'
+                                valign: 'middle'  # optional, keeps vertical centering
+                                text_size: self.size
+                                font_name: 'p_extrabold'
+                                text: 'Reset Your Password'
+                                color: chex("#352F44")
+                            Widget:
+                                size_hint: (1, 0.05)
+                            Label:
+                                size_hint: (1, 0.50)
+                                font_size: root.forgot_account_content_font_size
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.size
+                                font_name: 'p_light'
+                                color: chex("#352F44")
+                                text: "Enter your username and a new password below. We'll send a verification link to your email—click that link to confirm and complete the change."
 
 
 

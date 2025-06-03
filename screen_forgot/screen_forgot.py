@@ -26,14 +26,14 @@ from screen_components import app_button, top_form_buttons
 class ForgotAccountScreen(Screen):
     adaptive_radius = ListProperty([ 0, 0, 24, 24])
     login_logo = StringProperty("")
-    create_account_logo = StringProperty("")
+    forgot_account_logo = StringProperty("")
     
     info_title_font_size = NumericProperty(14)
     info_content_font_size = NumericProperty(10)
     adaptive_radius = ListProperty([24, 24, 0, 0])
     
-    create_account_title_font_size = NumericProperty(14)
-    create_account_content_font_size = NumericProperty(10)
+    forgot_account_title_font_size = NumericProperty(14)
+    forgot_account_content_font_size = NumericProperty(10)
     
     header_buttons : top_form_buttons.HeaderButtons = ObjectProperty(None)
     find_my_location_button : app_button.AppButton = ObjectProperty(None)
@@ -48,7 +48,7 @@ class ForgotAccountScreen(Screen):
         self.opacity = 0
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
-        self.create_account_logo = os.path.join(parent_dir, 'assets', 'create_account_logo.png')
+        self.forgot_account_logo = os.path.join(parent_dir, 'assets', 'forgot_account_logo.png')
         
     def on_parent(self, instance, parent):
         main_app = MDApp.get_running_app()
@@ -67,6 +67,13 @@ class ForgotAccountScreen(Screen):
         self.info_content_font_size = int(min( width, height) * 0.02)
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
         self.adaptive_radius = [0, 0, r, r]
+        
+        self.forgot_account_title_font_size = int(width* 0.07)
+        self.forgot_account_content_font_size = int(width  * 0.03)
+        if self.forgot_account_title_font_size > 29:
+            self.forgot_account_title_font_size = 29
+        if self.forgot_account_content_font_size > 25:
+            self.forgot_account_content_font_size = 25
     
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
