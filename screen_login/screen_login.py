@@ -30,6 +30,8 @@ class FormLayout(BoxLayout):
     info_title_font_size = NumericProperty(14)
     info_content_font_size = NumericProperty(10)
 
+    link_font_size = NumericProperty(10)
+
     login_event = ObjectProperty(None)
     login_button : app_button.AppButton = ObjectProperty(None)
     username_input : text_input.OneLineInput = ObjectProperty(None)
@@ -78,11 +80,14 @@ class FormLayout(BoxLayout):
 
         self.info_title_font_size = int(min( width, height) * 0.03)
         self.info_content_font_size = int(min( width, height) * 0.02)
+        self.link_font_size = int(min( width, height) * 0.025)
 
     def login_account(self):
         print("Login button pressed!")
         self.login_event()
 
+    def register_account(self):
+        print("Register button pressed!")
 
 class LogoLocation(BoxLayout):
 

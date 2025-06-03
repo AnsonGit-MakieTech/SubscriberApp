@@ -68,8 +68,16 @@
         size_hint: (1, 0.1)
         orientation: 'horizontal'
         
-        Widget:
+        LabelClickable:
             size_hint: (0.5, 1)
+            text: '[u]Create or Forgot account?[/u]'
+            font_name: 'p_italic'
+            font_size: root.link_font_size
+            markup: True
+            color: chex('#5C5470')
+            
+            on_release: root.register_account()
+
         AppButton:
             id: login_button
             size_hint: (0.5, 1)
