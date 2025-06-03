@@ -25,6 +25,9 @@
 
 
 <FormLayout>:
+    login_button : login_button
+    username_input : username_input
+    password_input : password_input
     orientation: 'vertical'
     
     Widget:
@@ -40,8 +43,8 @@
         text_size: self.size
     
     OneLineInput:
-        size_hint: (1, 0.1)
-        hint_text: "Please provide your username here . . ."
+        id: username_input
+        size_hint: (1, 0.1) 
     
     
     Label:
@@ -55,9 +58,8 @@
     
     
     OneLineInput:
+        id: password_input
         size_hint: (1, 0.1)
-        hint_text: "Please provide your password here . . ."
-        password: True
 
     Widget:
         size_hint: (1, 0.02)
@@ -68,21 +70,17 @@
         
         Widget:
             size_hint: (0.5, 1)
-        Button:
+        AppButton:
+            id: login_button
             size_hint: (0.5, 1)
-            background_down: ''
-            background_color: (0 , 0 , 0 , 0)
-            text: 'Login Account'
-            font_name: 'p_bold'
-            font_size: root.login_button_font_size
-            on_press: root.login_account()
-            canvas.before:
-                Color:
-                    rgba: chex("#352F44")
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: root.login_button_radius  # Dynamically bind to a property
+            # background_down: ''
+            # background_color: (0 , 0 , 0 , 0)
+            on_release: root.login_account()
+            Label:
+                size_hint: (1, 1)
+                text: 'Login Account'
+                font_name: 'p_bold'
+                font_size: root.login_button_font_size
                 
     BoxLayout:
         size_hint: (1, 0.4)

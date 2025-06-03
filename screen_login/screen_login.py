@@ -16,7 +16,7 @@ import os
 
 from screen_components import text_input
 from variables import *
-
+from screen_components import app_button
 
 
 
@@ -31,12 +31,15 @@ class FormLayout(BoxLayout):
     info_content_font_size = NumericProperty(10)
 
     login_event = ObjectProperty(None)
+    login_button : app_button.AppButton = ObjectProperty(None)
+    username_input : text_input.OneLineInput = ObjectProperty(None)
+    password_input : text_input.OneLineInput = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
-        Clock.schedule_once(self.update_sizing, 0)
+        Clock.schedule_once(self.update_sizing, 0) 
         # self.bind(size=self.update_sizing)
 
     def on_parent(self, instance, parent):
@@ -48,6 +51,15 @@ class FormLayout(BoxLayout):
             if self.update_sizing not in main_app.on_size_events_of_all_widgets:
                 main_app.on_size_events_of_all_widgets.append(self.update_sizing)
             self.update_sizing()
+            self.update_ui()
+    
+    def update_ui(self, *args):
+        if self.login_button is None or self.username_input is None or self.password_input is None:
+            Clock.schedule_once(self.update_ui, 0.1)
+            return
+        self.login_button.update_color("#352F44")
+        self.username_input.costumized_input(bgcolor = "#5C5470", hint_text = "Please provide your username here . . .", is_password = False)
+        self.password_input.costumized_input(bgcolor = "#5C5470", hint_text = "Please provide your password here . . .", is_password = True)
 
     
     def update_sizing(self, *args):
