@@ -88,6 +88,10 @@ class FormLayout(BoxLayout):
 
     def register_account(self):
         print("Register button pressed!")
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
+
 
 class LogoLocation(BoxLayout):
 
