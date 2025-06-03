@@ -16,7 +16,7 @@ import os
 
 from screen_components import text_input
 from variables import *
-from screen_components import app_button
+from screen_components import app_button, top_form_buttons
 
 
 
@@ -29,6 +29,8 @@ class CreateAccountScreen(Screen):
     info_title_font_size = NumericProperty(14)
     info_content_font_size = NumericProperty(10)
     adaptive_radius = ListProperty([24, 24, 0, 0])
+    
+    header_buttons : top_form_buttons.HeaderButtons = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -53,6 +55,7 @@ class CreateAccountScreen(Screen):
         self.info_content_font_size = int(min( width, height) * 0.02) 
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
         self.adaptive_radius = [0, 0, r, r]
+        self.header_buttons.update_sizing()
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()

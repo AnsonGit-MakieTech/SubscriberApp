@@ -2,7 +2,7 @@
 
 
 <CreateAccountScreen>:
-    
+    header_buttons : header_buttons
     BoxLayout:
         orientation: 'vertical' 
 
@@ -11,7 +11,21 @@
             size_hint: 1 , 0.8
             md_bg_color: chex("#B9B4C7")
             radius: root.adaptive_radius
-            
+
+            ScrollView:
+                size_hint: 1 , 1
+
+                MDGridLayout:
+                    size_hint: 1, None
+                    adaptive_height: True
+                    cols: 1
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+                    
+                    HeaderButtons:
+                        id: header_buttons
 
         
 
