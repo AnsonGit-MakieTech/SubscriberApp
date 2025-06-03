@@ -3,6 +3,7 @@
 
 <CreateAccountScreen>:
     header_buttons : header_buttons
+    find_my_location_button : find_my_location_button
     BoxLayout:
         orientation: 'vertical' 
 
@@ -19,15 +20,120 @@
                     size_hint: 1, None
                     adaptive_height: True
                     cols: 1
+                    padding: [20, 0 , 20 , 0]
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 25
+                    
+                    HeaderButtons:
+                        id: header_buttons
+                    
 
                     Widget:
                         size_hint: 1, None
                         height: 15
-                    
-                    HeaderButtons:
-                        id: header_buttons
-
         
+
+                    BoxLayout:
+                        size_hint: 1, None
+                        orientation: 'horizontal'
+                        height: 300
+
+
+                        Image:
+                            allow_stretch: True
+                            keep_ratio: True
+                            source: root.create_account_logo
+                            size_hint: (0.5, 1)
+
+                        BoxLayout:
+                            size_hint: (0.5, 1)
+                            orientation: 'vertical'
+                            spacing: 0
+                            padding: [0 , 0 , 20 , 0]
+                            
+                            Widget:
+                                size_hint: (1, 0.2)
+                            Label:
+                                size_hint: (1 , 0.25)
+                                font_size: root.create_account_title_font_size
+                                halign: 'left'
+                                valign: 'middle'  # optional, keeps vertical centering
+                                text_size: self.size
+                                font_name: 'p_extrabold'
+                                text: 'Create Your Account'
+                                color: chex("#352F44")
+                            Widget:
+                                size_hint: (1, 0.05)
+                            Label:
+                                size_hint: (1, 0.50)
+                                font_size: root.create_account_content_font_size
+                                halign: 'left'
+                                valign: 'top'
+                                text_size: self.size
+                                font_name: 'p_light'
+                                color: chex("#352F44")
+                                text: 'Get started with "Your Connection, Your Control"—track router issues, monitor tickets, and manage your account seamlessly.'
+
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+ 
+                    Label:
+                        size_hint: (1 , 0.25)
+                        font_size: root.h1_font_size
+                        halign: 'left'
+                        valign: 'middle'  # optional, keeps vertical centering
+                        text_size: self.size
+                        font_name: 'p_bold'
+                        text: 'Verify Service Availability'
+                        color: chex("#FFFFFF")
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+
+                    Label:
+                        size_hint: 1 , None
+                        text_size: self.width, None 
+                        height: self.texture_size[1]  # Auto height based on wrapped content
+                        font_size: root.h2_font_size
+                        halign: 'left'
+                        valign: 'top'
+                        font_name: 'p_light'
+                        color: chex("#352F44")
+                        text: "We need your location first to confirm that your home or office falls within our coverage area. This ensures you get the speeds and packages we can actually deliver, helps us show you the right pricing, and lets us schedule installation quickly if you're in range."
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+
+                    BoxLayout:
+                        size_hint: 1, None
+                        height: 35
+
+                        AppButton:
+                            id: find_my_location_button
+                            size_hint: 0.4 , 1
+
+                            Label:
+                                size_hint: 1, 1
+                                text: "Find My Location"
+                                font_size: root.find_my_location_button_font_size
+                                font_name: 'p_bold'
+
+                        Label:
+                            size_hint: 0.6, 1
+                            text: "123.1023 , 13.0123"
+                            font_size: root.find_my_location_button_font_size
+                            font_name: 'p_mediumitalic'
+                            color: chex("#5C5470")
+
+
+
+
 
         BoxLayout:
             size_hint: (1, 0.2)

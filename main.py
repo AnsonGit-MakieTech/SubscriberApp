@@ -251,6 +251,9 @@ if __name__ == '__main__':
     LabelBase.register(name="p_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Light.ttf'))
     LabelBase.register(name="p_medium", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Medium.ttf'))
     LabelBase.register(name="p_italic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Italic.ttf'))
+    LabelBase.register(name="p_mediumitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-MediumItalic.ttf'))
+    
+    
     try:
         SubscriberApp().run()
     except KeyboardInterrupt:
