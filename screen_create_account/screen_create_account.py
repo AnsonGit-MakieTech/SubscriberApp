@@ -25,29 +25,34 @@ from screen_components import app_button
 
 class CreateAccountScreen(Screen):
     adaptive_radius = ListProperty([24, 24, 0, 0]) 
+    login_logo = StringProperty("")
+    info_title_font_size = NumericProperty(14)
+    info_content_font_size = NumericProperty(10)
+    adaptive_radius = ListProperty([24, 24, 0, 0])
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
+        Clock.schedule_once(self.update_sizing, 0) 
 
-    # def on_parent(self, instance, parent):
-    #     main_app = MDApp.get_running_app()
-    #     if parent is None:
-    #         if self.update_radius in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.remove(self.update_radius)
-    #     else:
-    #         if self.update_radius not in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.append(self.update_radius)
-    #         self.update_radius()
-    #     if parent:
-    #         self.container_box.login_event = self.login_event
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing() 
 
-
-    # def update_radius(self, *args):
-    #     if self.container_box:
-    #         width, height = self.container_box.size
-    #         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
-    #         self.adaptive_radius = [r, r, 0, 0]
+    def update_sizing(self, *args):
+        width , height = self.size 
+        self.info_title_font_size = int(min( width, height) * 0.03)
+        self.info_content_font_size = int(min( width, height) * 0.02) 
+        r = min(width, height) * 0.05  # You can change 0.05 to any fraction
+        self.adaptive_radius = [0, 0, r, r]
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
