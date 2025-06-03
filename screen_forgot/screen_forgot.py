@@ -16,7 +16,7 @@ import os
 
 from screen_components import text_input
 from variables import *
-from screen_components import app_button, top_form_buttons
+from screen_components import app_button, top_form_buttons, text_input
 
 
 
@@ -29,19 +29,20 @@ class ForgotAccountScreen(Screen):
     forgot_account_logo = StringProperty("")
     
     info_title_font_size = NumericProperty(14)
-    info_content_font_size = NumericProperty(10)
-    adaptive_radius = ListProperty([24, 24, 0, 0])
+    info_content_font_size = NumericProperty(10) 
     
     forgot_account_title_font_size = NumericProperty(14)
     forgot_account_content_font_size = NumericProperty(10)
     
     header_buttons : top_form_buttons.HeaderButtons = ObjectProperty(None)
-    find_my_location_button : app_button.AppButton = ObjectProperty(None)
+    username_text_input : text_input.OneLineInput = ObjectProperty(None)
+    new_password_text_input : text_input.OneLineInput = ObjectProperty(None)
+    retype_new_password_text_input : text_input.OneLineInput = ObjectProperty(None)
     
-    find_my_location_button_font_size = NumericProperty(14)
+    submit_button : app_button.AppButton = ObjectProperty(None)
+    submit_button_font_size = NumericProperty(14)
     
     h1_font_size = NumericProperty(14)
-    h2_font_size = NumericProperty(14)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -74,6 +75,12 @@ class ForgotAccountScreen(Screen):
             self.forgot_account_title_font_size = 29
         if self.forgot_account_content_font_size > 25:
             self.forgot_account_content_font_size = 25
+        self.h1_font_size = int(width * 0.04)
+        if self.h1_font_size > 17:
+            self.h1_font_size = 17
+        self.submit_button_font_size = int(width * 0.03)
+        if self.submit_button_font_size > 19:
+            self.submit_button_font_size = 19
     
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
@@ -81,7 +88,11 @@ class ForgotAccountScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
         # main_app.on_window_resize()
-         
+        
+        self.submit_button.update_color("#352F44")
+        self.username_text_input.costumized_input(hint_text="Type your username here . . .")
+        self.new_password_text_input.costumized_input(hint_text="Type your new password here . . .")
+        self.retype_new_password_text_input.costumized_input(hint_text="Retype your new password here . . .")
         self.header_buttons.customized_ui(button_text_1 = "Login Account" , button_text_2 = "Create Account")
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_complete= main_app.on_window_resize)

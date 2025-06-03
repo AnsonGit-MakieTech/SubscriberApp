@@ -104,22 +104,23 @@ text_input_kv = '''
 <OneLineInput>:
     # This line “hooks” the id into the ObjectProperty
     text_input: text_input
-
     radius: root.background_radius
+    orientation: "vertical"
 
     TextInput:
         id: text_input
         size_hint: 1, 1
+        pos_hint: {"center_x": .5, "center_y": .5}
         multiline: False
-        background_normal: ''
-        background_active: ''
+        background_normal: ""
+        background_active: ""
         background_color: 0, 0, 0, 0
         foreground_color: 1, 1, 1, 1
         cursor_color: 1, 1, 1, 1
         hint_text_color: 1, 1, 1, 0.6
         font_size: root.setup_font_size
         # valign does nothing here—remove it
-        # valign: 'middle'
+        # valign: "middle"
         text_size: self.size  # this can stay if you want horizontal alignment
         hint_text: root.hint_text
         password: root.is_password
