@@ -1,0 +1,67 @@
+<ForgotAccountScreen>:
+    header_buttons : header_buttons
+    BoxLayout:
+        orientation: 'vertical' 
+
+        
+        MDBoxLayout:
+            size_hint: 1 , 0.8
+            md_bg_color: chex("#B9B4C7")
+            radius: root.adaptive_radius
+
+            ScrollView:
+                size_hint: 1 , 1
+
+                MDGridLayout:
+                    size_hint: 1, None
+                    adaptive_height: True
+                    cols: 1
+                    padding: [20, 0 , 20 , 0]
+
+                    Widget:
+                        size_hint: 1, None
+                        height: 25
+                    
+                    HeaderButtons:
+                        id: header_buttons
+
+
+
+        BoxLayout:
+            size_hint: (1, 0.2)
+            orientation: 'horizontal'
+            padding: 10
+
+            Image:
+                allow_stretch: True
+                keep_ratio: True
+                source: root.login_logo
+                size_hint: (0.5, 1)
+            
+            BoxLayout:
+                size_hint: (0.5, 1)
+                orientation: 'vertical'
+                spacing: 0
+                
+                Widget:
+                    size_hint: (1, 0.2)
+                Label:
+                    size_hint: (1 , 0.2)
+                    font_size: root.info_title_font_size
+                    halign: 'left'
+                    valign: 'middle'  # optional, keeps vertical centering
+                    text_size: self.size
+                    font_name: 'p_regular'
+                    text: 'Your Connection, Your Control'
+                Widget:
+                    size_hint: (1, 0.05)
+                Label:
+                    size_hint: (1, 0.55)
+                    font_size: root.info_content_font_size
+                    halign: 'left'
+                    valign: 'top'
+                    text_size: self.size
+                    font_name: 'p_extralight'
+                    text: 'Stay in the loop—track your router issues, monitor ticket updates, and manage your account, all in one smart app designed to keep your internet running smoothly.'
+                    
+        

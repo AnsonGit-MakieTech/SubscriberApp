@@ -16,6 +16,7 @@ from screen_components import text_input, process_modal , section_icon, logout_m
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
 from screen_create_account.screen_create_account import CreateAccountScreen
+from screen_forgot.screen_forgot import ForgotAccountScreen
 from variables import *
 import os
 import json
@@ -200,6 +201,10 @@ class SubscriberApp(MDApp):
         create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
         Builder.load_file(create_account_kv_path)
         self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
+        
+        forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
+        Builder.load_file(forgot_account_kv_path)
+        self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
 
         def change_to_login_screen(*args): 
             print("this happen hehehee")

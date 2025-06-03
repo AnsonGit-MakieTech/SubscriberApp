@@ -35,8 +35,13 @@ class HeaderButtons(BoxLayout):
         if self.header_font_size > 23:
             self.header_font_size = 23
         
-
-
+    def customized_ui(self, button_text_1 = None , button_text_2 = None):
+        if button_text_1 is not None:
+            self.button_1_text = button_text_1
+        if button_text_2 is not None:
+            self.button_2_text = button_text_2
+        
+        
 kv_header_buttons = '''
 <HeaderButtons>:
     button_1: button_1
