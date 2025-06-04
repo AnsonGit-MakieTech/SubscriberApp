@@ -140,10 +140,14 @@
                     
                     MDBoxLayout:
                         id: registration_form
+                        orientation: 'vertical'
                         size_hint: 1, None
                         adaptive_height: True 
 
 
+                    Widget:
+                        size_hint: 1, None
+                        height: 30
 
 
         BoxLayout:
@@ -187,17 +191,233 @@
 
 
 <AccountRegistrationFormLayout>:
+    
+    first_name_input: first_name_input
+    last_name_input: last_name_input
+    middle_name_input: middle_name_input
+    email_input: email_input
+    street_input : street_input
+    barangay_input: barangay_input
+    city_input: city_input
+    phone1_input: phone1_input
+    phone2_input: phone2_input
+    phone3_input: phone3_input
+
     opacity: 0
     size_hint: (1 , None)
     adaptive_height: True
     orientation: 'vertical'
 
 
-    MDBoxLayout:
+    AppButton:
         size_hint: (1 , None)
-        height: 50
-        radius: [10]
-        md_bg_color: chex("#35C5470")
+        height: 8
+        radius: [3]
+        md_bg_color: chex("5C5470") 
+    
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        text_size: self.width, None 
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_size: root.h1_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering 
+        font_name: 'p_bold'
+        text: 'Enter your account details below to complete registration.'
+        color: chex("#352F44") 
+        halign: 'left'
+        valign: 'top'
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Personal Information'
+        color: chex("#FFFFFF")
+ 
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput:
+        id: first_name_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: middle_name_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: last_name_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: email_input
+        size_hint: 1, None
+        height: 35
+
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Address Information'
+        color: chex("#FFFFFF")
+ 
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: street_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: barangay_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    AppButton: 
+        id: city_input
+        size_hint: 1, None
+        height: 35
+
+        Label:
+            size_hint: 1, 1
+            text: root.selected_city
+            font_size: root.h2_font_size
+            font_name: 'p_bold'
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Contact Information'
+        color: chex("#FFFFFF")
+ 
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: phone1_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: phone2_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: phone3_input
+        size_hint: 1, None
+        height: 35
 
 
 
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Valid I.D. Information Upload'
+        color: chex("#FFFFFF")
+    
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 125
+        orientation: 'horizontal'
+
+        Widget:
+            size_hint: 1, 1
+        
+        MDFloatLayout:
+            size_hint: (None , 1)
+            width: root.valid_id_image_width
+
+
+        Widget:
+            size_hint: 1, 1
+
+
+<CityDropdownButton>: 
+
+    Label:
+        size_hint: 1, 1
+        text: root.text
+        font_name: "p_regular"
+        font_size: root.text_font_size
+        color: chex("#FFFFFF")
