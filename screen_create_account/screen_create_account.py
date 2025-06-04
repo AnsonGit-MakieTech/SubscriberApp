@@ -215,4 +215,9 @@ class CreateAccountScreen(Screen):
             anim.start(registration)
             self.registration_form.add_widget(registration) 
             registration.customized_ui()
-            
+
+
+    def find_my_location(self, *args):
+        main_app = MDApp.get_running_app()
+        main_app.user_map_verification_modal.open() 
+    

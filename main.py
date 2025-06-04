@@ -12,7 +12,7 @@ from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty
 from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons
+from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons, verify_user_location_modal
 from screen_home.screen_home import HomeScreen
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
 from screen_create_account.screen_create_account import CreateAccountScreen
@@ -176,9 +176,12 @@ class SubscriberApp(MDApp):
         Builder.load_string(app_button.kv_app_button)
         Builder.load_string(label_clickable.kv_label_clickable)
         Builder.load_string(top_form_buttons.kv_header_buttons)
+        Builder.load_string(verify_user_location_modal.kv_verify_user_location_modal)
+
         self.process_modal = process_modal.ProcessingLayout()
         self.logout_modal = logout_modal.LogoutModal()
         self.add_ticket_modal = add_ticket_modal.AddTicketModal()
+        self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
 
         
 

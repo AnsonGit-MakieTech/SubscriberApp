@@ -61,13 +61,15 @@ class OneLineInput(MDBoxLayout):
     def get_text(self):
         return self.text_input.text
 
-    def costumized_input(self, bgcolor = None, hint_text = None, is_password = None):
+    def costumized_input(self, bgcolor = None, hint_text = None, is_password = None, halign = None):
         if bgcolor:
             self.md_bg_color = get_color_from_hex(bgcolor)
         if hint_text:
             self.hint_text = hint_text
         if is_password is not None:
             self.is_password = is_password
+        if halign:
+                self.text_input.halign = halign
 
     def setup_layout(self, *args):
         # Make sure our child TextInput actually exists
