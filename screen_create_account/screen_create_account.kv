@@ -4,6 +4,8 @@
 <CreateAccountScreen>:
     header_buttons : header_buttons
     find_my_location_button : find_my_location_button
+    registration_form : registration_form
+
     BoxLayout:
         orientation: 'vertical' 
 
@@ -132,6 +134,14 @@
                             font_name: 'p_mediumitalic'
                             color: chex("#5C5470")
 
+                    Widget:
+                        size_hint: 1, None
+                        height: 15
+                    
+                    MDBoxLayout:
+                        id: registration_form
+                        size_hint: 1, None
+                        adaptive_height: True 
 
 
 
@@ -173,4 +183,21 @@
                     font_name: 'p_extralight'
                     text: 'Stay in the loop—track your router issues, monitor ticket updates, and manage your account, all in one smart app designed to keep your internet running smoothly.'
                     
-        
+
+
+
+<AccountRegistrationFormLayout>:
+    opacity: 0
+    size_hint: (1 , None)
+    adaptive_height: True
+    orientation: 'vertical'
+
+
+    MDBoxLayout:
+        size_hint: (1 , None)
+        height: 50
+        radius: [10]
+        md_bg_color: chex("#35C5470")
+
+
+

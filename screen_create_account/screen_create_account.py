@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.animation import Animation
 from kivy.uix.button import Button
 from kivy.uix.image import Image
@@ -19,6 +20,14 @@ from variables import *
 from screen_components import app_button, top_form_buttons
 
 
+
+class AccountRegistrationFormLayout(
+    MDBoxLayout
+):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.opacity = 0
 
 
 
@@ -41,6 +50,9 @@ class CreateAccountScreen(Screen):
     
     h1_font_size = NumericProperty(14)
     h2_font_size = NumericProperty(14)
+
+    
+    registration_form : BoxLayout = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -67,10 +79,10 @@ class CreateAccountScreen(Screen):
         self.adaptive_radius = [0, 0, r, r]
         self.header_buttons.update_sizing()
         
-        self.create_account_title_font_size = int(width* 0.07)
+        self.create_account_title_font_size = int(width* 0.06)
         self.create_account_content_font_size = int(width  * 0.03)
-        if self.create_account_title_font_size > 29:
-            self.create_account_title_font_size = 29
+        if self.create_account_title_font_size > 27:
+            self.create_account_title_font_size = 27
         if self.create_account_content_font_size > 25:
             self.create_account_content_font_size = 25
         self.h1_font_size = int(width * 0.04)
@@ -82,6 +94,7 @@ class CreateAccountScreen(Screen):
         self.find_my_location_button_font_size = int(width * 0.03)
         if self.find_my_location_button_font_size > 19:
             self.find_my_location_button_font_size = 19
+            
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
@@ -95,5 +108,20 @@ class CreateAccountScreen(Screen):
         anim.bind(on_complete= main_app.on_window_resize)
         anim.start(self)
         
+        Clock.schedule_once(self.display_registration_form, 0.1)
+        
         # print("entering logoin")
         return super().on_enter(*args)
+    
+
+    def display_registration_form(self, *args):
+        if not self.registration_form:
+            Clock.schedule_once(self.display_registration_form, 0.1)
+            return
+
+        if len(self.registration_form.children) < 1:
+            registration = AccountRegistrationFormLayout()
+            anim = Animation(opacity=1, duration=0.5)
+            anim.start(registration)
+            self.registration_form.add_widget(registration)
+            
