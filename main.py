@@ -170,6 +170,10 @@ class SubscriberApp(MDApp):
         self.root_screen_manager = sm
 
 
+
+        Builder.load_string(section_icon.kv_section_layout)
+        Builder.load_string(text_input.text_input_kv)
+        
         Builder.load_string(logout_modal.kv_logout_modal)
         Builder.load_string(process_modal.kv_process_modal)
         Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
@@ -185,9 +189,6 @@ class SubscriberApp(MDApp):
 
         
 
-
-        Builder.load_string(section_icon.kv_section_layout)
-        Builder.load_string(text_input.text_input_kv)
 
         login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         Builder.load_file(login_kv_path)

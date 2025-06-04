@@ -1,8 +1,8 @@
-from kivy.uix.accordion import Animation
-from kivy.uix.actionbar import Button
+
+
  
 from kivymd.uix.label import MDIcon   
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , BooleanProperty 
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , BooleanProperty , ListProperty
 from kivy.metrics import  sp  
 from kivy.uix.textinput import TextInput
 from kivy.uix.modalview import ModalView 
@@ -17,11 +17,14 @@ from kivy.utils import get_color_from_hex as chex
 from kivy.utils import platform
 # from utils.app_utils import is_valid_latlon 
 from kivymd.app  import MDApp
+from kivy.animation import Animation
 
 if platform == "android":
     from plyer import gps 
+
 from kivy import platform
 import os
+from screen_components import text_input 
 
 if platform == "win":
     from plyer import filechooser
@@ -60,13 +63,18 @@ class UserVerificationMapModal(ModalView):
     lon : str = StringProperty('[font=p_bold]Longitude :[/font] [font=p_light]0[/font]')
     lon_data : float = NumericProperty(0)
     lat_data : float = NumericProperty(0)
-    location_input : TextInput = ObjectProperty(None)
+    location_input : text_input.OneLineInput  = ObjectProperty(None)
     is_valid_location : bool = BooleanProperty(False)
 
     parent_event : object = ObjectProperty(None)
 
     layout_spacing = NumericProperty(10)
+    layout_padding = ListProperty([10, 10, 10, 10])
     map_input_height = NumericProperty(100)
+    layout_radius = ListProperty([10, 10, 10, 10])
+
+    h4_font_size = NumericProperty(18)
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -89,6 +97,15 @@ class UserVerificationMapModal(ModalView):
         self.map_input_height = width * 0.4
         if self.map_input_height > 100:
             self.map_input_height = 100
+        
+        r = int(min(width, height) * 0.03)  # You can change 0.05 to any fraction
+        self.layout_radius = [r, r, r, r]
+        cpad = int(min(width, height) * 0.03)
+        self.layout_padding = [cpad, cpad, cpad, cpad]
+
+        self.h4_font_size = int(min(width, height) * 0.03)
+        if self.h4_font_size > 12:
+            self.h4_font_size = 12
 
     def on_kv_post(self, base_widget):
         # Ensure location_input is set and bind an event
@@ -108,11 +125,15 @@ class UserVerificationMapModal(ModalView):
         else:
             self.is_valid_location = False
 
-    def on_open(self, *args):
-        anim = Animation(opacity=1, duration=0.3)
-        anim.bind(on_start=self.update_sizing)
-        anim.start(self)
+    def on_dismiss(self):
+        self.opacity = 0
+        return super().on_dismiss()
 
+    def on_open(self, *args):
+        self.location_input.costumized_input(hint_text="Enter Your Copied Location", halign="center")
+        anim = Animation(opacity=1, duration=0.3)
+        anim.bind(on_start=self.update_sizing, on_progress=self.location_input.setup_layout)
+        anim.start(self)
 
         # if platform == "android":
         #     try:
@@ -209,16 +230,17 @@ kv_verify_user_location_modal = '''
 <UserVerificationMapModal>:
 
     # map_obj : map_obj
-    # location_input : location_input
+    location_input : location_input
 
     size_hint: 1, 1
     auto_dismiss: True
     background: ""
     background_color: 0, 0, 0, 0
+    overlay_color : 0, 0, 0, 0
 
     canvas.before:
         Color:
-            rgb: chex("#5C5470")
+            rgb: chex("#B9B4C7")
             a: 0.5
         Rectangle:
             pos: self.pos
@@ -226,17 +248,145 @@ kv_verify_user_location_modal = '''
 
     
     BoxLayout:
-        orientation:'vertical' 
+        orientation:"vertical" 
         spacing: root.layout_spacing
         size_hint: 0.85 , 0.9
-        pos_hint: { 'center_x': 0.5 , 'center_y': 0.5 }  
+        pos_hint: { "center_x": 0.5 , "center_y": 0.5 }  
         
-        Button:
+        MDBoxLayout:
             size_hint: 1, None
             height: root.map_input_height
+            md_bg_color: chex("#352F44")
+            radius: root.layout_radius
+            orientation: 'vertical'
+            padding : root.layout_padding
 
-        Button:
+            Label:
+                size_hint: 1, 0.6 
+                font_size: root.h4_font_size
+                halign: "center"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_light"
+                text: "If the map below is not loading, paste the location you copied from Google Maps instead."
+                color: chex("#FFFFFF")
+    
+            OneLineInput:
+                id: location_input
+                size_hint: 1, 0.4
+
+        
+        MDBoxLayout:
             size_hint: 1, 1
+            md_bg_color: chex("#352F44")
+            radius: root.layout_radius
+            padding : root.layout_padding
+            orientation: 'vertical'
+
+            Label:
+                size_hint: 1, 0.1
+                font_size: root.h4_font_size
+                halign: "center"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_bold"
+                text: "Drag the map to position the marker over your current location."
+                color: chex("#FFFFFF")
+
+                            
+                        
+            Widget:
+                size_hint: 1, 0.05
+
+            BoxLayout:
+                size_hint: 1, 0.5
+            
+                
+                canvas.before:
+                    Color:
+                        rgb: chex("#A30000")
+                        a: 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Label:
+                size_hint: 1, 0.1
+                font_size: root.h4_font_size
+                halign: "center"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_regular"
+                text: "These are the latitude and longitude of your selected location."
+                color: chex("#FFFFFF")
+
+
+                
+                canvas.before:
+                    Color:
+                        rgb: chex("#05B51A")
+                        a: 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+            Label:
+                size_hint: 1, 0.05
+                font_size: root.h4_font_size
+                halign: "left"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_light"
+                text: "Latitude : 13.00"
+                color: chex("#FFFFFF")
+
+
+                canvas.before:
+                    Color:
+                        rgb: chex("#05B51A")
+                        a: 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+            Label:
+                size_hint: 1, 0.05
+                font_size: root.h4_font_size
+                halign: "left"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_light"
+                text: "Latitude : 13.00"
+                color: chex("#FFFFFF")
+
+
+                canvas.before:
+                    Color:
+                        rgb: chex("#05B51A")
+                        a: 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+
+            Widget:
+                size_hint: 1, 0.02
+
+            BoxLayout:
+                size_hint: 1, 0.06
+
+                canvas.before:
+                    Color:
+                        rgb: chex("#05B51A")
+                        a: 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Widget:
+                size_hint: 1, 0.02
+            
+            
             
         
 
