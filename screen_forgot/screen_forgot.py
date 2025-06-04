@@ -68,8 +68,9 @@ class ForgotAccountScreen(Screen):
         self.info_content_font_size = int(min( width, height) * 0.02)
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
         self.adaptive_radius = [0, 0, r, r]
+        self.header_buttons.update_sizing()
         
-        self.forgot_account_title_font_size = int(width* 0.07)
+        self.forgot_account_title_font_size = int(width* 0.065)
         self.forgot_account_content_font_size = int(width  * 0.03)
         if self.forgot_account_title_font_size > 29:
             self.forgot_account_title_font_size = 29
