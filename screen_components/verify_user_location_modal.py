@@ -77,6 +77,7 @@ class UserVerificationMapModal(ModalView):
     layout_radius = ListProperty([10, 10, 10, 10])
 
     h4_font_size = NumericProperty(18)
+    h2_font_size = NumericProperty(18)
 
 
 
@@ -111,6 +112,10 @@ class UserVerificationMapModal(ModalView):
         self.h4_font_size = int(min(width, height) * 0.03)
         if self.h4_font_size > 12:
             self.h4_font_size = 12
+        self.h2_font_size = int(min(width, height) * 0.04)
+        if self.h2_font_size > 17:
+            self.h2_font_size = 17
+        print(f"📍 h2_font_size: {self.h2_font_size}")
 
     def on_kv_post(self, base_widget):
         # Ensure location_input is set and bind an event
@@ -186,7 +191,7 @@ class UserVerificationMapModal(ModalView):
                 marker_icon = MDIcon(icon="home-map-marker",
                                     font_size=sp(58), 
                                     theme_text_color="Custom",
-                                    text_color=chex("#352F44"),
+                                    text_color=chex("#EF5555"),
                                     pos_hint={"center_x": 0.5, "center_y": 0.5}
                                     )
                 self.map_obj.add_widget(marker_icon)
@@ -202,8 +207,8 @@ class UserVerificationMapModal(ModalView):
             # print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
             if self.parent_event is not None:
                 self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
-            lat = f"{round(self.lat_data, 10)}.." if len(str(self.lat_data)) > 10 else self.lat_data
-            lon = f"{round(self.lon_data, 10)}.." if len(str(self.lon_data)) > 10 else self.lon_data
+            lat = f"{round(self.lat_data, 25)}.." if len(str(self.lat_data)) > 25 else self.lat_data
+            lon = f"{round(self.lon_data, 25)}.." if len(str(self.lon_data)) > 25 else self.lon_data
             self.lat = f"[font=p_bold]Latitude :[/font] [font=p_light]{lat}[/font]"
             self.lon = f"[font=p_bold]Longitude :[/font] [font=p_light]{lon}[/font]"
             
@@ -327,14 +332,18 @@ kv_verify_user_location_modal = '''
                 color: chex("#FFFFFF")
 
 
-                
-                canvas.before:
-                    Color:
-                        rgb: chex("#05B51A")
-                        a: 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+            Label:
+                size_hint: 1, 0.05
+                font_size: root.h4_font_size
+                halign: "left"
+                valign: "middle" 
+                text_size: self.size
+                font_name: "p_light"
+                # text: "Latitude : 13.00"
+                text: root.lat
+                color: chex("#FFFFFF")
+                markup: True
+
 
             Label:
                 size_hint: 1, 0.05
@@ -343,36 +352,12 @@ kv_verify_user_location_modal = '''
                 valign: "middle" 
                 text_size: self.size
                 font_name: "p_light"
-                text: "Latitude : 13.00"
+                # text: "Latitude : 13.00"
+                text: root.lon
                 color: chex("#FFFFFF")
+                markup: True
 
 
-                canvas.before:
-                    Color:
-                        rgb: chex("#05B51A")
-                        a: 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-
-            Label:
-                size_hint: 1, 0.05
-                font_size: root.h4_font_size
-                halign: "left"
-                valign: "middle" 
-                text_size: self.size
-                font_name: "p_light"
-                text: "Latitude : 13.00"
-                color: chex("#FFFFFF")
-
-
-                canvas.before:
-                    Color:
-                        rgb: chex("#05B51A")
-                        a: 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
 
 
             Widget:
@@ -380,15 +365,28 @@ kv_verify_user_location_modal = '''
 
             BoxLayout:
                 size_hint: 1, 0.06
-
-                canvas.before:
-                    Color:
-                        rgb: chex("#05B51A")
-                        a: 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                
+                AppButton: 
+                    size_hint: 0.4, 1 
+                    md_bg_color: chex("#A30000")
+                    Label:
+                        text: "Cancel"
+                        font_size: root.h2_font_size
+                        font_name: "p_bold"
+                        color: chex("#FFFFFF")
+                
+                Widget:
+                    size_hint: 0.2, 1
             
+                AppButton: 
+                    size_hint: 0.4, 1 
+                    md_bg_color: chex("#05B51A")
+                    Label:
+                        text: "Submit"
+                        font_size: root.h2_font_size
+                        font_name: "p_bold"
+                        color: chex("#FFFFFF")
+
             Widget:
                 size_hint: 1, 0.02
             
