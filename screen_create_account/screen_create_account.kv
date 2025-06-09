@@ -489,7 +489,7 @@
             size_hint: None, None
             size: root.checkbox_size
             
-        Label:
+        LabelClickable:
             size_hint: 1, 1
             font_size: root.h4_font_size
             halign: 'left'
@@ -514,7 +514,7 @@
             size_hint: None, None
             size: root.checkbox_size
             
-        Label:
+        LabelClickable:
             size_hint: 1, 1
             font_size: root.h4_font_size
             halign: 'left'
@@ -524,6 +524,41 @@
             text: '[u]I have read and agree to the [Privacy Policy].'
             color: chex("#352F44")
             markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+
+
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 30
+        orientation: 'horizontal'
+
+        Widget:
+            size_hint: 0.45, 1
+        
+        AppButton:
+            size_hint: 0.55, 1
+            md_bg_color: chex("352F44")
+
+            Label:
+                size_hint: 1, 1
+                text: 'Register Account'
+                font_size: root.h3_font_size
+                font_name: 'p_bold'
+                color: chex("#FAF0E6")
+
+
+
+
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
 
 
 <CustomCheckbox@MDCheckbox>:
