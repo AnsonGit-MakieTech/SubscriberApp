@@ -21,4 +21,4 @@ venv/
 .vscode/
 .idea/
 
- 
+cache/

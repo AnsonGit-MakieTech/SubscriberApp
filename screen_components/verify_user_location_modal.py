@@ -44,7 +44,9 @@ map_source = MapSource(
     cache_key="satellite",
     tile_size=256,
     image_ext="jpg",  # Esri tiles are usually JPG
-    attribution="Tiles © Esri — Source: Esri, Earthstar Geographics"
+    attribution="Tiles © Esri — Source: Esri, Earthstar Geographics",
+    max_zoom = 17, 
+    min_zoom = 5
 )
 
 
@@ -65,6 +67,7 @@ class UserVerificationMapModal(ModalView):
     lat_data : float = NumericProperty(0)
     location_input : text_input.OneLineInput  = ObjectProperty(None)
     is_valid_location : bool = BooleanProperty(False)
+    mapview : MapView = ObjectProperty(None)
 
     parent_event : object = ObjectProperty(None)
 
@@ -74,6 +77,8 @@ class UserVerificationMapModal(ModalView):
     layout_radius = ListProperty([10, 10, 10, 10])
 
     h4_font_size = NumericProperty(18)
+
+
 
 
     def __init__(self, **kwargs):
@@ -164,14 +169,13 @@ class UserVerificationMapModal(ModalView):
         if self.map_obj is None:
             print("Map object is None, scheduling load_map again...")
             Clock.schedule_once(self.load_map, 0.3)
-            return
-
-        if not self.ids.map.children:
+            return 
+        if len(self.map_obj.children) == 0:
             try:
                 # if not has_internet():
                 #     return
                 
-                self.mapview = MapView(lat=12.367796960, lon=123.62151820, zoom=25,
+                self.mapview = MapView(lat=12.36779, lon=123.62151, zoom=25,
                                 map_source=map_source,
                                 size_hint=(1, 1),
                                 pos_hint={"center_x": 0.5, "center_y": 0.5})
@@ -182,7 +186,7 @@ class UserVerificationMapModal(ModalView):
                 marker_icon = MDIcon(icon="home-map-marker",
                                     font_size=sp(58), 
                                     theme_text_color="Custom",
-                                    text_color=chex("#B71E1E"),
+                                    text_color=chex("#352F44"),
                                     pos_hint={"center_x": 0.5, "center_y": 0.5}
                                     )
                 self.map_obj.add_widget(marker_icon)
@@ -196,7 +200,8 @@ class UserVerificationMapModal(ModalView):
             self.lat_data = self.mapview.lat
             self.lon_data = self.mapview.lon 
             # print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
-            self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
+            if self.parent_event is not None:
+                self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
             lat = f"{round(self.lat_data, 10)}.." if len(str(self.lat_data)) > 10 else self.lat_data
             lon = f"{round(self.lon_data, 10)}.." if len(str(self.lon_data)) > 10 else self.lon_data
             self.lat = f"[font=p_bold]Latitude :[/font] [font=p_light]{lat}[/font]"
@@ -229,7 +234,7 @@ kv_verify_user_location_modal = '''
 
 <UserVerificationMapModal>:
 
-    # map_obj : map_obj
+    map_obj : map_obj
     location_input : location_input
 
     size_hint: 1, 1
@@ -298,17 +303,18 @@ kv_verify_user_location_modal = '''
             Widget:
                 size_hint: 1, 0.05
 
-            BoxLayout:
+            FloatLayout:
+                id: map_obj
                 size_hint: 1, 0.5
             
                 
-                canvas.before:
-                    Color:
-                        rgb: chex("#A30000")
-                        a: 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                # canvas.before:
+                #     Color:
+                #         rgb: chex("#A30000")
+                #         a: 0.5
+                #     Rectangle:
+                #         pos: self.pos
+                #         size: self.size
             
             Label:
                 size_hint: 1, 0.1

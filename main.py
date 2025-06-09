@@ -129,6 +129,7 @@ class SubscriberApp(MDApp):
     process_modal = ObjectProperty(None)
     logout_modal = ObjectProperty(None)
     add_ticket_modal = ObjectProperty(None)
+    user_map_verification_modal = ObjectProperty(None)
 
     on_size_events_of_all_widgets = ListProperty([])
     _resize_scheduled = False

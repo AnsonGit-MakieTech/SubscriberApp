@@ -198,7 +198,8 @@ class CreateAccountScreen(Screen):
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_complete= main_app.on_window_resize)
         anim.start(self)
-        
+        print("user map verification modal" , main_app.user_map_verification_modal.load_map)
+        main_app.user_map_verification_modal.load_map()
         
         # print("entering logoin")
         return super().on_enter(*args)
