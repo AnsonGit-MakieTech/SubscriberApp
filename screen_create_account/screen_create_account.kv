@@ -1,6 +1,8 @@
 
 
 
+
+
 <CreateAccountScreen>:
     header_buttons : header_buttons
     find_my_location_button : find_my_location_button
@@ -203,6 +205,9 @@
     phone1_input: phone1_input
     phone2_input: phone2_input
     phone3_input: phone3_input
+    username_input: username_input
+    password_input: password_input
+    confirm_password_input: confirm_password_input
 
     opacity: 0
     size_hint: (1 , None)
@@ -414,11 +419,129 @@
             size_hint: 1, 1
 
 
-<CityDropdownButton>: 
+    Widget:
+        size_hint: 1, None
+        height: 15
 
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Account Security Information'
+        color: chex("#FFFFFF")
+
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: username_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: password_input
+        size_hint: 1, None
+        height: 35
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    OneLineInput: 
+        id: confirm_password_input
+        size_hint: 1, None
+        height: 35
+
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    Label:
+        size_hint: 1, None
+        height: 35
+        font_size: root.h2_font_size
+        halign: 'left'
+        valign: 'middle'  # optional, keeps vertical centering
+        text_size: self.size
+        font_name: 'p_bold'
+        text: 'Terms & Privacy'
+        color: chex("#352F44")
+
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 33
+        orientation: 'horizontal'
+        spacing: 5
+        
+        CustomCheckbox:
+            size_hint: None, None
+            size: root.checkbox_size
+            
+        Label:
+            size_hint: 1, 1
+            font_size: root.h4_font_size
+            halign: 'left'
+            valign: 'middle'  # optional, keeps vertical centering
+            text_size: self.size
+            font_name: 'p_italic'
+            text: '[u]I have read and agree to the [Terms of Service].'
+            color: chex("#352F44")
+            markup: True
+    
+    Widget:
+        size_hint: 1, None
+        height: 5
+    
+    BoxLayout:
+        size_hint: 1, None
+        height: 33
+        orientation: 'horizontal'
+        spacing: 5
+        
+        CustomCheckbox:
+            size_hint: None, None
+            size: root.checkbox_size
+            
+        Label:
+            size_hint: 1, 1
+            font_size: root.h4_font_size
+            halign: 'left'
+            valign: 'middle'  # optional, keeps vertical centering
+            text_size: self.size
+            font_name: 'p_italic'
+            text: '[u]I have read and agree to the [Privacy Policy].'
+            color: chex("#352F44")
+            markup: True
+
+
+<CustomCheckbox@MDCheckbox>:
+    theme_text_color: "Custom"    
+    selected_color:   chex("#352F44")
+
+    # Control the actual icon glyphs for each state
+    checkbox_icon_normal: 'checkbox-blank-outline'
+    checkbox_icon_down:   'checkbox-marked-outline'
+    color_inactive : chex("#B9B4C7")
+
+
+
+<CityDropdownButton>: 
     Label:
         size_hint: 1, 1
         text: root.text
         font_name: "p_regular"
         font_size: root.text_font_size
         color: chex("#FFFFFF")
+ 

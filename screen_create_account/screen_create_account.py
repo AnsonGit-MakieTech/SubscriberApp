@@ -46,7 +46,10 @@ class AccountRegistrationFormLayout(
     
     h1_font_size = NumericProperty(14)
     h2_font_size = NumericProperty(14)
+    h3_font_size = NumericProperty(13)
+    h4_font_size = NumericProperty(10)
     valid_id_image_width = NumericProperty(250)
+    checkbox_size = ListProperty([35, 35])
     
     first_name_input: text_input.OneLineInput = ObjectProperty(None)
     last_name_input: text_input.OneLineInput = ObjectProperty(None)
@@ -58,6 +61,9 @@ class AccountRegistrationFormLayout(
     phone1_input: text_input.OneLineInput = ObjectProperty(None)
     phone2_input: text_input.OneLineInput = ObjectProperty(None)
     phone3_input: text_input.OneLineInput = ObjectProperty(None)
+    username_input: text_input.OneLineInput = ObjectProperty(None)
+    password_input: text_input.OneLineInput = ObjectProperty(None)
+    confirm_password_input: text_input.OneLineInput = ObjectProperty(None)
     
     
     selected_city = StringProperty("Select City")
@@ -100,6 +106,9 @@ class AccountRegistrationFormLayout(
         self.phone1_input.costumized_input( hint_text = "Primary Phone Number (required)" )
         self.phone2_input.costumized_input( hint_text = "Additional Phone Number (optional)" )
         self.phone3_input.costumized_input( hint_text = "Additional Phone Number (optional)" )
+        self.username_input.costumized_input( hint_text = "Username . . .", is_password = False )
+        self.password_input.costumized_input( hint_text = "Password . . .", is_password = True )
+        self.confirm_password_input.costumized_input( hint_text = "Confirm Password . . .", is_password = True )
 
 
     def update_sizing(self, *args):
@@ -114,8 +123,22 @@ class AccountRegistrationFormLayout(
         self.valid_id_image_width = int(width * 0.9)
         if self.valid_id_image_width > 250:
             self.valid_id_image_width = 250
-        print(f"width: {width}, height: {height} , valid_id_image_width: {self.valid_id_image_width}")
-
+        
+        self.h3_font_size = int(width * 0.035)
+        if self.h3_font_size > 14:
+            self.h3_font_size = 14
+        
+        self.h4_font_size = int(width * 0.032)
+        if self.h4_font_size > 12:
+            self.h4_font_size = 12
+        print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
+        
+        # cwidth = width * 0.03
+        # cheight = width * 0.03
+        # self.checkbox_size = [cwidth, cheight]
+        # if cwidth > 35 or cheight > 35:
+        #     self.checkbox_size = [35, 35]
+        # print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
 
 class CreateAccountScreen(Screen): 
     login_logo = StringProperty("")
