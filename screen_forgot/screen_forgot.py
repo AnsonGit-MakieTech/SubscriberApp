@@ -98,6 +98,25 @@ class ForgotAccountScreen(Screen):
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_complete= main_app.on_window_resize)
         anim.start(self)
+
+        self.header_buttons.button_1_event = self.go_back_to_login
+        self.header_buttons.button_2_event = self.go_to_create_account
         
         # print("entering logoin")
         return super().on_enter(*args)
+
+
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
+
+
+    def go_back_to_login(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        self.manager.current = LOGIN_SCREEN
+        
+    def go_to_create_account(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        self.manager.current = CREATE_ACCOUNT_SCREEN

@@ -306,10 +306,16 @@ class CreateAccountScreen(Screen):
         anim.start(self)
         print("user map verification modal" , main_app.user_map_verification_modal.load_map)
         main_app.user_map_verification_modal.load_map()
+
+        self.header_buttons.button_1_event = self.go_back_to_login
+        self.header_buttons.button_2_event = self.go_to_forgot_account
         
         # print("entering logoin")
         return super().on_enter(*args)
-    
+
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
 
     def display_registration_form(self, *args):
         if not self.registration_form:
@@ -328,3 +334,17 @@ class CreateAccountScreen(Screen):
         main_app = MDApp.get_running_app()
         main_app.user_map_verification_modal.open() 
     
+    def go_back_to_login(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        self.manager.current = LOGIN_SCREEN
+        
+    def go_to_forgot_account(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        self.manager.current = FORGOT_ACCOUNT_SCREEN
+    
+
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
