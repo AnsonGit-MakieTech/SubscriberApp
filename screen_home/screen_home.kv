@@ -67,21 +67,26 @@
     edit_icon : edit_icon
     refresh_icon : refresh_icon
     
-    Label:
+    AppButton:
+        md_bg_color: chex("#5C5470")
+        radius: [16]
         size_hint: None, None
-        font_size: '34px'
-        font_name: 'p_extrabold'
-        text: "N"
         size: 120, 120
         pos_hint: {'center_x': 0.5,'center_y': 0.4}
 
-        canvas.before:
-            Color:
-                rgba: chex("#5C5470")
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: [16]
+        Label:
+            size_hint: 1, 1
+            font_size: '34px'
+            font_name: 'p_extrabold'
+            text: "N"
+
+            # canvas.before:
+            #     Color:
+            #         rgba: chex("#5C5470")
+            #     RoundedRectangle:
+            #         pos: self.pos
+            #         size: self.size
+            #         radius: [16]
 
     MDBoxLayout:
         orientation: 'vertical'

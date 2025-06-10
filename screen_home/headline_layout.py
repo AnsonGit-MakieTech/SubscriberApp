@@ -83,17 +83,19 @@ kv_headline_layout = '''
     wallet_icon : wallet_icon
     ticket_icon : ticket_icon
     
-    MDBoxLayout:
+    AppButton:
         orientation: 'vertical'
         size_hint: 0.5, None
         adaptive_height: True
-        canvas.before:
-            Color:
-                rgba: chex("#5C5470")
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: root.content_background_radius
+        radius: root.content_background_radius
+        md_bg_color: chex("#5C5470")
+        # canvas.before:
+        #     Color:
+        #         rgba: 
+        #     RoundedRectangle:
+        #         pos: self.pos
+        #         size: self.size
+                
         
         Widget:
             size_hint: 1, None
@@ -175,17 +177,19 @@ kv_headline_layout = '''
 
 
     
-    MDBoxLayout:
+    AppButton:
         orientation: 'vertical'
         size_hint: 0.5, 1
         adaptive_height: True
-        canvas.before:
-            Color:
-                rgba: chex("#5C5470")
-            RoundedRectangle:
-                pos: self.pos
-                size: self.size
-                radius: root.content_background_radius
+        radius: root.content_background_radius
+        md_bg_color: chex("#5C5470")
+        # canvas.before:
+        #     Color:
+        #         rgba: chex("#5C5470")
+        #     RoundedRectangle:
+        #         pos: self.pos
+        #         size: self.size
+        #         radius: root.content_background_radius
         
         Widget:
             size_hint: 1, None
