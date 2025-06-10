@@ -1,7 +1,7 @@
-from kivy.uix.accordion import DictProperty
+
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, DictProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, DictProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -22,8 +22,16 @@ import os
 from screen_components import text_input
 from variables import *
 from screen_components import app_button, top_form_buttons, text_input
+from utils.app_utils import *
 
-
+from kivy import platform
+import os
+import shutil
+if platform == "win":
+    from plyer import filechooser
+if platform == "android":
+    from android.storage import app_storage_path
+    from androidstorage4kivy import SharedStorage, Chooser
 
 
 
@@ -71,6 +79,8 @@ class AccountRegistrationFormLayout(
     
     selected_city = StringProperty("Select City")
     valid_id_image_source = StringProperty("")
+
+    is_selecting_file = BooleanProperty(False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -145,6 +155,73 @@ class AccountRegistrationFormLayout(
         # if cwidth > 35 or cheight > 35:
         #     self.checkbox_size = [35, 35]
         # print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
+
+
+
+    def upload_image(self):
+        if self.is_selecting_file:
+            return
+        self.is_selecting_file = True
+        
+        def reset_selecting(*args):
+            self.is_selecting_file = False
+
+        Clock.schedule_once( reset_selecting  , 1)
+
+        if platform == "win":
+            filechooser.open_file(on_selection=self.handle_selection)
+        elif platform == "android":
+            # SharedStorage().choose_file(mime_type="image/*", callback=self.on_image_selected)
+            self.chooser = Chooser(self.on_image_selected)
+            self.chooser.choose_content('image/*', multiple=False)
+
+    def handle_selection(self, selection):
+        if selection:
+            image_path = selection[0]  
+            if not is_image(image_path): 
+                return
+            self.valid_id_image_source = image_path
+            self.is_selecting_file = False
+        else:
+            self.is_selecting_file = False
+
+    def on_image_selected(self, uri_list):
+        
+        if uri_list:
+            uri = uri_list[0]
+            ss = SharedStorage()
+
+            # ✅ Copy file from shared storage to app cache
+            private_file_path = ss.copy_from_shared(uri)
+            if private_file_path: 
+                Clock.schedule_once(lambda dt: self.on_image_loaded_path(private_file_path))
+            else: 
+                self.is_selecting_file = False
+        else:
+            self.is_selecting_file = False
+
+    def on_image_loaded_path(self, private_file_path):
+        filename = os.path.basename(private_file_path)
+
+        # ✅ Check if it's an image
+        if not is_image_ext(filename): 
+            self.is_selecting_file = False
+            return
+        save_dir = os.path.join(self.get_save_path(), "selected_images")
+        os.makedirs(save_dir, exist_ok=True) 
+        image_path = os.path.join(save_dir, filename) 
+        shutil.copy(private_file_path, image_path) 
+        self.valid_id_image_source = image_path
+        self.is_selecting_file = False 
+
+    def get_save_path(self):
+        # Return a writable path depending on the platform
+        if platform == "android": 
+            return app_storage_path()
+        else:
+            return os.path.expanduser("~")
+
+
 
 class CreateAccountScreen(Screen): 
     login_logo = StringProperty("")
