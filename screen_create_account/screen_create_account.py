@@ -24,6 +24,9 @@ from variables import *
 from screen_components import app_button, top_form_buttons, text_input
 
 
+
+
+
 class CityDropdownButton(app_button.AppButton):
     text = StringProperty("Select City")
     text_font_size = NumericProperty(16)
@@ -67,10 +70,13 @@ class AccountRegistrationFormLayout(
     
     
     selected_city = StringProperty("Select City")
+    valid_id_image_source = StringProperty("")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.opacity = 0
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.valid_id_image_source = os.path.join(parent_dir, 'assets', 'add_id_image.png')
 
         self.dropdown = DropDown(max_height=150)
 

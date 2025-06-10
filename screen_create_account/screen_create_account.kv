@@ -410,9 +410,19 @@
         Widget:
             size_hint: 1, 1
         
-        MDFloatLayout:
+        AppButton:
             size_hint: (None , 1)
             width: root.valid_id_image_width
+            md_bg_color: chex('#352F44')
+ 
+            Image:
+                size_hint: 0.9, 0.9
+                source: root.valid_id_image_source
+                allow_stretch: False
+                keep_ratio: False
+                pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+
+
 
 
         Widget:
