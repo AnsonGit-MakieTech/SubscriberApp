@@ -35,19 +35,19 @@ if platform == "android":
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
 
 # Optional: Custom tile server or use default
-# map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-#                        cache_key="osm",
-#                        tile_size=256,
-#                        image_ext="png")
-map_source = MapSource(
-    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    cache_key="satellite",
-    tile_size=256,
-    image_ext="jpg",  # Esri tiles are usually JPG
-    attribution="Tiles © Esri — Source: Esri, Earthstar Geographics",
-    max_zoom = 17, 
-    min_zoom = 5
-)
+map_source = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                       cache_key="osm",
+                       tile_size=256,
+                       image_ext="png")
+# map_source = MapSource(
+#     url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+#     cache_key="satellite",
+#     tile_size=256,
+#     image_ext="jpg",  # Esri tiles are usually JPG
+#     attribution="Tiles © Esri — Source: Esri, Earthstar Geographics",
+#     max_zoom = 17, 
+#     min_zoom = 5
+# )
 
 
 
