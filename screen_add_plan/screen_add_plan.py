@@ -18,6 +18,8 @@ from kivy.uix.behaviors import ButtonBehavior
 
 from variables import *
 import os
+if platform == "android":
+    from plyer import gps 
 
 from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
 
@@ -39,4 +41,103 @@ map_source_satlite = MapSource(
 
 
 class ScreenAddPlan(Screen):
-    pass
+    
+    holder = ObjectProperty(None)
+    map_view = ObjectProperty(None)
+    
+
+    def __init__(self, **kwargs):
+        super(ScreenAddPlan, self).__init__(**kwargs)
+        self.opacity = 0
+
+
+    def on_enter(self, *args):
+        main_app  = MDApp.get_running_app() 
+        anim = Animation(opacity=1, duration=0.5)
+        anim.bind( on_start= main_app.on_window_resize)
+        anim.start(self)
+        Clock.schedule_once(self.load_map_view, 0.1)
+
+        return super().on_enter(*args)
+
+
+    def load_map_view(self, *args):
+        if self.holder is None:
+            Clock.schedule_once(self.load_map_view, 0.2)
+            return
+        
+        if self.map_view is None:
+            self.mapview = MapView(
+                lat=DEFAULT_LAT, 
+                lon=DEFAULT_LON, 
+                zoom=25,
+                map_source=map_source_labeled,
+                size_hint=(1, 1),
+                pos_hint={"center_x": 0.5, "center_y": 0.5}
+            )
+            self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
+
+            if platform == "android":
+                try:
+                    gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
+                    gps.start(minTime=1000, minDistance=1)
+                except NotImplementedError:
+                    print("GPS not implemented on this platform")
+                    self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+                except Exception as e:
+                    print(f"Error starting GPS: {e}")
+                    self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+            else:
+                self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+
+
+    def on_map_move(self, *args):
+        """ Called when user pans the map. """
+        if self.mapview:
+            self.lat_data = self.mapview.lat
+            self.lon_data = self.mapview.lon  
+            lat = f"{round(self.lat_data, 25)}.." if len(str(self.lat_data)) > 25 else self.lat_data
+            lon = f"{round(self.lon_data, 25)}.." if len(str(self.lon_data)) > 25 else self.lon_data 
+            print(f"📍 Map center updated → Lat: {lat}, Lon: {lon}")
+
+
+    def get_center_coords(self):
+        """ Call this when you want to access the map center directly. """
+        if self.mapview:
+            return self.mapview.lat, self.mapview.lon
+        return None, None
+
+    def go_to_location(self , new_lat , new_lon): 
+        self.lat_data = new_lat
+        self.lon_data = new_lon
+        try:
+            if self.mapview:
+                self.mapview.center_on(new_lat, new_lon)
+                self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
+                self.mapview.min_zoom = 1
+                self.mapview.max_zoom = 17
+            else:
+                Clock.schedule_once(self.load_map, 0.3)
+                Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
+        except Exception as e:
+            # print(f"Error: {e}")
+            pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

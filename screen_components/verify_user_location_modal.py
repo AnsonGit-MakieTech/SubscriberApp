@@ -25,6 +25,7 @@ if platform == "android":
 from kivy import platform
 import os
 from screen_components import text_input 
+from variables import *
 
 if platform == "win":
     from plyer import filechooser
@@ -151,12 +152,12 @@ class UserVerificationMapModal(ModalView):
         #         gps.start(minTime=1000, minDistance=1)
         #     except NotImplementedError:
         #         print("GPS not implemented on this platform")
-        #         self.go_to_location(12.367796960, 123.62151820)
+        #         self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
         #     except Exception as e:
         #         print(f"Error starting GPS: {e}")
-        #         self.go_to_location(12.367796960, 123.62151820)
+        #         self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
         # else:
-        #     self.go_to_location(12.367796960, 123.62151820)  # fallback
+        #     self.go_to_location(DEFAULT_LAT, DEFAULT_LON)  # fallback
 
     def gps_status(self, status_type, status):
         # print(f"GPS Status → {status_type}: {status}")
@@ -180,7 +181,7 @@ class UserVerificationMapModal(ModalView):
                 # if not has_internet():
                 #     return
                 
-                self.mapview = MapView(lat=12.36779, lon=123.62151, zoom=25,
+                self.mapview = MapView(lat=DEFAULT_LAT, lon=DEFAULT_LON, zoom=25,
                                 map_source=map_source,
                                 size_hint=(1, 1),
                                 pos_hint={"center_x": 0.5, "center_y": 0.5})
