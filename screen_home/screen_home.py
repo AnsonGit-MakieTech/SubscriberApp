@@ -80,15 +80,19 @@ class HomeScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_login_screen)
+        anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_outside_screens)
         anim.start(self)
         # print("entering logoin")
         self.account_header.logout_icon.button_event = main_app.logout_modal.open
         self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
         self.account_header.refresh_icon.button_event = main_app.process_modal.open
-
+ 
         return super().on_enter(*args)
-
-    def remove_login_screen(self, *args):
-        main_app = MDApp.get_running_app()
+ 
+    
+    def remove_outside_screens(self, *args):
+        # This function used to removed the outside screens ( login, register and forgot password)
+        main_app  = MDApp.get_running_app()
         main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)
+        main_app.root_screen_manager.remove_screen(CREATE_ACCOUNT_SCREEN)
+        main_app.root_screen_manager.remove_screen(FORGOT_ACCOUNT_SCREEN)

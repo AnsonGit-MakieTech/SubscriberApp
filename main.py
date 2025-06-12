@@ -13,22 +13,21 @@ from kivy.utils import platform, get_color_from_hex
 from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty
 from screen_login.screen_login import LoginScreen 
 from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons, verify_user_location_modal
-from screen_home.screen_home import HomeScreen
+
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
 from screen_create_account.screen_create_account import CreateAccountScreen
 from screen_forgot.screen_forgot import ForgotAccountScreen
 from variables import *
 import os
 import json
-
-from kivy.config import Config
+import shutil
+ 
 from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
-from communications  import Communications
-from kivy.logger import Logger
+from communications  import Communications 
 from kivy.animation import Animation
 
 if platform == "android": 
@@ -111,7 +110,9 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
     handler : MDScreenManager = ObjectProperty(None)
 
     def add_handler_screen(self, screen_name, screen_class):
+        print(f"Adding screen: {screen_name}")
         self.handler.add_widget(screen_class(name=screen_name))
+        print(f"Screen added: {screen_name}")
     
     def change_screen(self, screen_name):
         self.handler.current = screen_name
@@ -119,7 +120,7 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
     def remove_screen(self, screen_name):
         if screen_name in self.handler.screen_names:
             self.handler.remove_widget(self.handler.get_screen(screen_name))
-            print("Login screen removed.")
+            print(f"{screen_name} screen removed.")
 
 class SubscriberApp(MDApp):
  
@@ -137,20 +138,21 @@ class SubscriberApp(MDApp):
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
-        Clock.schedule_once(self.load_screens, 0.1)
-        Clock.schedule_once(self.on_window_resize, 1)
+        Clock.schedule_once(self.load_screens)
+        Clock.schedule_once(self.on_window_resize, 1) 
         # self.process_modal.open()
 
     def on_stop(self):
         try:
             # Close communications
+            self._clear_cache_folder()
             self.communications.kill_all_threads()
         except Exception as e:
             # print(f"Error saving user data: {e}")
             pass
 
     def on_pause(self):
-        Clock.schedule_once(self.show_welcome_popup, 0.1) 
+        Clock.schedule_once(self.show_welcome_popup, 0.1)
         return super().on_pause()
 
     def build(self):
@@ -188,34 +190,15 @@ class SubscriberApp(MDApp):
         self.add_ticket_modal = add_ticket_modal.AddTicketModal()
         self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
 
-        
-
 
         login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         Builder.load_file(login_kv_path)
-        self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+         
+        def change_to_login_screen(*args):   
+            self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+            self.root_screen_manager.change_screen(LOGIN_SCREEN) 
 
-        Builder.load_string(headline_layout.kv_headline_layout)
-        Builder.load_string(router_layout.kv_router_layout)
-        Builder.load_string(tickets_layout.kv_tickets_layout)
-        Builder.load_string(account_layout.kv_account_layout)
-        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
-        Builder.load_file(login_kv_path)
-        self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
-
-        create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
-        Builder.load_file(create_account_kv_path)
-        self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
-        
-        forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
-        Builder.load_file(forgot_account_kv_path)
-        self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
-
-        def change_to_login_screen(*args): 
-            print("this happen hehehee")
-            self.root_screen_manager.change_screen(LOGIN_SCREEN)
-            # self.root_screen_manager.change_screen(HOME_SCREEN)
-        Clock.schedule_once(self.show_welcome_popup, 0.5)
+        Clock.schedule_once(self.show_welcome_popup)
         Clock.schedule_once(change_to_login_screen, 1)
 
         Window.bind(size=self.on_window_resize) # bind the on_window_resize method to the window size event
@@ -227,12 +210,21 @@ class SubscriberApp(MDApp):
             self.done_load_modal.animate_closing()
         Clock.schedule_once(close_popup, 1)
 
-    def load_screens(self, *args):
-        # Load home screen
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+    def load_screens(self, *args): 
+        Builder.load_string(headline_layout.kv_headline_layout)
+        Builder.load_string(router_layout.kv_router_layout)
+        Builder.load_string(tickets_layout.kv_tickets_layout)
+        Builder.load_string(account_layout.kv_account_layout)
+        home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        Builder.load_file(home_kv_path) 
+
+        create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
+        Builder.load_file(create_account_kv_path)
+        self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
         
-        # Builder.load_file(login_kv_path)
-        pass
+        forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
+        Builder.load_file(forgot_account_kv_path)
+        self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
     
 
     def on_window_resize(self, *args):
@@ -249,7 +241,20 @@ class SubscriberApp(MDApp):
         print("Window resized to: ", Window.size)
         self._resize_scheduled = False
 
-
+    def _clear_cache_folder(self):
+        cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+        if os.path.isdir(cache_dir):
+            try:
+                # delete everything inside “cached”
+                shutil.rmtree(cache_dir)
+                # recreate empty folder so your code never breaks on next run
+                os.makedirs(cache_dir, exist_ok=True)
+                print("Cache cleared.")
+            except Exception as e:
+                # silently ignore or log
+                print("Failed to clear cache:", e)
+        else:
+            print("Cache directory does not exist.")
 
 
 
