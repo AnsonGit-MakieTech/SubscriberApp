@@ -19,8 +19,8 @@ from kivy.properties import ListProperty
 
 
 class AddTicketModalDetailsTextInput(
-    CommonElevationBehavior,
-    RectangularRippleBehavior,
+    # CommonElevationBehavior,
+    # RectangularRippleBehavior,
     MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     details_font_size = NumericProperty(15)
@@ -165,13 +165,13 @@ kv_add_ticket_modal = '''
                 # radius: [0]
 
         Widget:
-            size_hint: 1, 0.05
+            size_hint: 1, 0.02
 
         Label:
             size_hint: 1, 0.15
             font_size: root.h1_font_size
             text: "Router Repair Request Form"
-            color: chex("#5C5470")
+            color: chex("#26231F")
             font_name: "p_bold"
             text_size: self.width, None 
             valign: "middle"
@@ -181,7 +181,7 @@ kv_add_ticket_modal = '''
             size_hint: 1, 0.077
             font_size: root.h2_font_size
             text: "    Select Plan *"
-            color: chex("#FFFFFF")
+            color: chex("#5C5470")
             font_name: "p_medium"
             text_size: self.width, None 
             valign: "middle"  # Or "center"
@@ -206,7 +206,7 @@ kv_add_ticket_modal = '''
             size_hint: 1, 0.075
             font_size: root.h2_font_size
             text: "    Repair Details *"
-            color: chex("#FFFFFF")
+            color: chex("#5C5470")
             font_name: "p_medium"
             text_size: self.width, None 
             valign: "middle"  # Or "center"
@@ -227,7 +227,9 @@ kv_add_ticket_modal = '''
 
 
         Widget:
-            size_hint: 1, 0.04
+            size_hint: 1, 0.07
+
+
         BoxLayout:
             size_hint: 1, 0.07
             orientation: "horizontal"
@@ -272,13 +274,13 @@ kv_add_ticket_modal = '''
 
 
 <AddTicketModalDetailsTextInput>:
-    theme_elevation_level: "Custom"
-    elevation_level: 2
-    theme_shadow_offset: "Custom"
-    shadow_offset: 0, -3
-    theme_shadow_softness: "Custom"
-    shadow_softness: 12
-    shadow_radius: root.content_background_radius
+    # theme_elevation_level: "Custom"
+    # elevation_level: 2
+    # theme_shadow_offset: "Custom"
+    # shadow_offset: 0, -3
+    # theme_shadow_softness: "Custom"
+    # shadow_softness: 12
+    # shadow_radius: root.content_background_radius
     radius: root.content_background_radius
 
     TextInput:
