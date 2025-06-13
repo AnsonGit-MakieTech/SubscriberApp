@@ -171,7 +171,7 @@ kv_tickets_layout = '''
         Widget:
             size_hint: 0.2, None
         
-        ClickableLabel:
+        CustomClickableLabel:
             size_hint: 0.3, 1
             font_size: 10
             color: chex("#FFFFFF")

@@ -1,17 +1,15 @@
-from kivy.uix.accordion import BooleanProperty
-from kivy.uix.actionbar import Label
-from kivy.uix.accordion import Widget
+ 
 
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
-
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 
 
-class ClickableLabel(ButtonBehavior, Label):
+class CustomClickableLabel(ButtonBehavior, Label):
     pass
 
 class ClickableImage(FloatLayout):
@@ -20,10 +18,13 @@ class ClickableImage(FloatLayout):
     has_comming_soon = BooleanProperty(True)
     additional_event = ObjectProperty(None)
     set_angle = NumericProperty(0)
+    clickable_label :  CustomClickableLabel = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.adaptable_font_size = 5
+     
+
     
 
 class SectionIconLayout(BoxLayout):
@@ -36,7 +37,7 @@ class SectionIconLayout(BoxLayout):
         if main_text:
             self.clickable_image.main_text = f"[u]{main_text}[/u]"
         if additional_event:
-            self.clickable_image.additional_event = additional_event
+            self.clickable_image.additional_event = additional_event  
         self.clickable_image.has_comming_soon = has_comming_soon
         self.clickable_image.set_angle = -45 if has_comming_soon else 0
 
@@ -71,7 +72,7 @@ kv_section_layout = '''
 
 
 <ClickableImage>:
-    clickable_image : clickable_image
+    clickable_label : clickable_label
 
     Label:
         pos_hint: {'center_x': 0.5,'center_y': 0.5}
@@ -82,8 +83,8 @@ kv_section_layout = '''
         markup: True
         opacity: 0.7 if root.has_comming_soon else 1
     
-    ClickableLabel:
-        id : clickable_image
+    CustomClickableLabel:
+        id : clickable_label
         pos_hint: {'center_x': 0.5,'center_y': 0.5}
         size_hint: 1, 1
         font_size: root.adaptable_font_size
@@ -91,8 +92,7 @@ kv_section_layout = '''
         text: "comming soon"
         opacity: 1 if root.has_comming_soon else 0
 
-        on_release:
-            root.additional_event() if root.additional_event else None
+        on_release: root.additional_event() if root.additional_event else None
 
 
         canvas.before:

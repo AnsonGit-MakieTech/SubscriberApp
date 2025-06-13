@@ -1,7 +1,7 @@
 
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -40,14 +40,17 @@ map_source_satlite = MapSource(
 
 
 
-class ScreenAddPlan(Screen):
+class AddPlanScreen(Screen):
     
     holder = ObjectProperty(None)
     map_view = ObjectProperty(None)
-    
+    is_map_labeled = BooleanProperty(True)
+
+    button_timeout = NumericProperty(5)
+    is_okey_to_click = BooleanProperty(True)
 
     def __init__(self, **kwargs):
-        super(ScreenAddPlan, self).__init__(**kwargs)
+        super(AddPlanScreen, self).__init__(**kwargs)
         self.opacity = 0
 
 
@@ -90,6 +93,27 @@ class ScreenAddPlan(Screen):
             else:
                 self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
 
+            Clock.schedule_interval(self.change_map_source, 1)
+
+    def update_is_okey_to_click(self, *args):
+        self.is_okey_to_click = True
+        
+    def change_map_source(self, *args):
+        if self.mapview is None:
+            return
+        
+        if self.is_okey_to_click == False:
+            return 
+        
+        self.is_okey_to_click = False
+        Clock.schedule_once( self.update_is_okey_to_click , self.button_timeout)
+    
+        if self.is_map_labeled:
+            self.mapview.map_source = map_source_satlite
+            self.is_map_labeled = False
+        else:
+            self.mapview.map_source = map_source_labeled
+            self.is_map_labeled = True
 
     def on_map_move(self, *args):
         """ Called when user pans the map. """

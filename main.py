@@ -210,13 +210,16 @@ class SubscriberApp(MDApp):
             self.done_load_modal.animate_closing()
         Clock.schedule_once(close_popup, 1)
 
-    def load_screens(self, *args): 
+    def load_screens(self, *args):  
         Builder.load_string(headline_layout.kv_headline_layout)
         Builder.load_string(router_layout.kv_router_layout)
         Builder.load_string(tickets_layout.kv_tickets_layout)
         Builder.load_string(account_layout.kv_account_layout)
         home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
         Builder.load_file(home_kv_path) 
+
+        screen_add_plan_kv_path = os.path.join(os.path.dirname(__file__), 'screen_add_plan', 'screen_add_plan.kv')
+        Builder.load_file(screen_add_plan_kv_path)
 
         create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
         Builder.load_file(create_account_kv_path)
@@ -225,6 +228,7 @@ class SubscriberApp(MDApp):
         forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
         Builder.load_file(forgot_account_kv_path)
         self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
+
     
 
     def on_window_resize(self, *args):

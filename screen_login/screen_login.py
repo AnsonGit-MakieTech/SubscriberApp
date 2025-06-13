@@ -19,6 +19,7 @@ from variables import *
 from screen_components import app_button
 
 from screen_home.screen_home import HomeScreen
+from screen_add_plan.screen_add_plan import AddPlanScreen
 
 
 
@@ -178,6 +179,10 @@ class LoginScreen(Screen):
         main_app  = MDApp.get_running_app()
         main_app.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
         main_app.root_screen_manager.change_screen(HOME_SCREEN)
+        # Clock.schedule_once(main_app.show_welcome_popup)
+
+        # main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN, AddPlanScreen)
+        # main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
         Clock.schedule_once(main_app.show_welcome_popup)
 
 
