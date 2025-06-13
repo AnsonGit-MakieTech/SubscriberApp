@@ -21,7 +21,7 @@ import os
 if platform == "android":
     from plyer import gps 
 
-from kivy_garden.mapview import MapView, MapSource  # Make sure mapview is installed
+from kivy_garden.mapview import MapView, MapSource , MapMarker # Make sure mapview is installed
 
 # Optional: Custom tile server or use default
 map_source_labeled = MapSource(url="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -38,6 +38,41 @@ map_source_satlite = MapSource(
     min_zoom = 5
 )
 
+class SingleMarkerMapView(MapView):
+    current_marker : MapMarker = ObjectProperty(None)
+    current_marker_size : int = NumericProperty(20)
+
+    is_map_clicked_not_colliding = ObjectProperty(None)
+    
+
+    def on_touch_up(self, touch):
+        
+        if self.collide_point(*touch.pos) and not self.is_map_clicked_not_colliding(True):
+            # convert screen xy → lat, lon
+            lat, lon = self.get_latlon_at(*touch.pos)
+
+            # remove existing marker
+            if self.current_marker:
+                self.remove_widget(self.current_marker)
+            
+            parent_dir = os.path.dirname(os.path.dirname(__file__))
+
+            # add a new one
+            self.current_marker = MapMarker(
+                lat=lat,
+                lon=lon,
+                source=os.path.join(parent_dir, 'assets', 'map_marker.png'),
+                size_hint=(None, None),
+            )
+            self.current_marker.height = self.current_marker_size
+            self.current_marker.width = self.current_marker_size
+            self.add_widget(self.current_marker)
+
+            # print out the chosen coords
+            print(f"Selected location → lat: {lat:.6f}, lon: {lon:.6f}")
+            return True
+
+        return super().on_touch_up(touch)
 
 
 class AddPlanScreen(Screen):
@@ -46,13 +81,86 @@ class AddPlanScreen(Screen):
     map_view = ObjectProperty(None)
     is_map_labeled = BooleanProperty(True)
 
-    button_timeout = NumericProperty(5)
+    button_timeout = NumericProperty(2)
     is_okey_to_click = BooleanProperty(True)
+
+    header_button_padding = NumericProperty(5)
+    header_button_spacing = NumericProperty(5)
+    header_height = NumericProperty(30)
+
+    home_icon = StringProperty('')
+    city_icon = StringProperty('')
+    question_icon = StringProperty('')
+    bag_icon = StringProperty('')
+    change_map_icon = StringProperty('')
+
+    selected_city = StringProperty('Click here to select available city')
+    header_font_size = NumericProperty(12)
+    selected_plan = StringProperty('Find the best plan for you')
+    
+    is_map_clicked_not_colliding = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super(AddPlanScreen, self).__init__(**kwargs)
         self.opacity = 0
 
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.home_icon = os.path.join(parent_dir, 'assets', 'house_icon.png')
+        self.city_icon = os.path.join(parent_dir, 'assets', 'city_icon.png')
+        self.question_icon = os.path.join(parent_dir, 'assets', 'q_a_icon.png')
+        self.bag_icon = os.path.join(parent_dir, 'assets', 'bag_icon.png')
+        self.change_map_icon = os.path.join(parent_dir, 'assets', 'change_map_icon.png')
+
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing() 
+
+    def update_sizing(self, *args):
+        width , height = self.size 
+
+        self.header_font_size = int(min( width, height) * 0.03)
+        if self.header_font_size > 15:
+            self.header_font_size = 15
+
+        self.header_height = int(min( width, height) * 0.08)
+        if self.header_height > 30:
+            self.header_height = 30
+        
+
+        print(f"width: {width}, height: {height}, header_height: {self.header_height}")
+
+
+
+    def on_touch_down(self, touch):
+        # 1) If the touch is inside the map area…
+        if self.mapview and self.mapview.collide_point(*touch.pos):
+            # 2) …give each overlaid widget a shot at it
+            for child in self.holder.children:
+                if child is not self.mapview and child.collide_point(*touch.pos):
+                    self.is_map_clicked_not_colliding = True 
+                    
+        return super().on_touch_down(touch)
+
+
+    def on_touch_up(self, touch):
+        # 1) If the touch is inside the map area…
+        
+        if self.mapview and self.mapview.collide_point(*touch.pos):
+            # 2) …give each overlaid widget a shot at it
+            for child in self.holder.children:
+                if child is not self.mapview and child.collide_point(*touch.pos):
+                    # dispatch the event to just that child 
+                    self.is_map_clicked_not_colliding = False 
+        return super().on_touch_up(touch)
+
+
+    
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app() 
@@ -70,7 +178,7 @@ class AddPlanScreen(Screen):
             return
         
         if self.map_view is None:
-            self.mapview = MapView(
+            self.mapview = SingleMarkerMapView(
                 lat=DEFAULT_LAT, 
                 lon=DEFAULT_LON, 
                 zoom=25,
@@ -78,7 +186,14 @@ class AddPlanScreen(Screen):
                 size_hint=(1, 1),
                 pos_hint={"center_x": 0.5, "center_y": 0.5}
             )
+            def is_colliding(new_value):
+                old_value = self.is_map_clicked_not_colliding
+                if old_value != new_value:
+                    self.is_map_clicked_not_colliding = new_value
+                return old_value
+            self.mapview.is_map_clicked_not_colliding = is_colliding
             self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
+            self.holder.add_widget(self.mapview, index=len(self.holder.children))
 
             if platform == "android":
                 try:
@@ -93,7 +208,7 @@ class AddPlanScreen(Screen):
             else:
                 self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
 
-            Clock.schedule_interval(self.change_map_source, 1)
+            # Clock.schedule_interval(self.change_map_source, 1)
 
     def update_is_okey_to_click(self, *args):
         self.is_okey_to_click = True

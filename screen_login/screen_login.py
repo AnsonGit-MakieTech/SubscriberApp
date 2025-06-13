@@ -178,11 +178,11 @@ class LoginScreen(Screen):
         print("login event")
         main_app  = MDApp.get_running_app()
         main_app.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
-        main_app.root_screen_manager.change_screen(HOME_SCREEN)
+        # main_app.root_screen_manager.change_screen(HOME_SCREEN)
         # Clock.schedule_once(main_app.show_welcome_popup)
 
-        # main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN, AddPlanScreen)
-        # main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+        main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN, AddPlanScreen)
+        main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
         Clock.schedule_once(main_app.show_welcome_popup)
 
 

@@ -9,8 +9,121 @@
         size_hint: (1 , 1)
         pos_hint: {"center_x": 0.5, "center_y": 0.5}
         md_bg_color: chex('FAF0E6')
+        
+
+        MDBoxLayout:
+            # Header Buttons for selecting city and going home
+            orientation: 'vertical'
+            size_hint: (1 , None) 
+            pos_hint: {'center_x' : 0.5, 'top' : 0.99 }
+            adaptive_height: True
+            padding: [ root.header_button_padding , 0 , root.header_button_padding , 0]
+            spacing: root.header_button_spacing
+
+            MDBoxLayout:
+                size_hint: (1, None)
+                orientation: 'horizontal'
+                height: root.header_height
+                spacing: root.header_button_spacing
+                
+                AppButton:
+                    size_hint: (None , 1)
+                    width: root.header_height
+                    md_bg_color: chex("#352F44")
+                    padding: root.header_button_padding
+
+                    Image:
+                        source: root.home_icon
+                        allow_stretch: False
+                        keep_ratio: True
+                        size_hint: 1, 1
+                
+                AppButton:
+                    size_hint: (1, 1)
+                    md_bg_color: chex("#FFFFFF")
+                    padding: root.header_button_padding
+
+                    Label:
+                        size_hint: 1, 1
+                        text: root.selected_city
+                        font_size: root.header_font_size
+                        color: chex("#26221F")
+                        font_name: 'p_light'
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                    Image:
+                        source: root.city_icon
+                        size_hint: (None , 1)
+                        width: root.header_height
+                        allow_stretch: False
+                        keep_ratio: True
+                        
+
+            MDBoxLayout:
+                # Header Buttons for selecting plan and how to use
+                size_hint: (1, None)
+                orientation: 'horizontal'
+                height: root.header_height
+                spacing: root.header_button_spacing
+                
+                AppButton:
+                    size_hint: (None , 1)
+                    width: root.header_height
+                    md_bg_color: chex("#352F44")
+                    padding: root.header_button_padding
+
+                    Image:
+                        source: root.question_icon
+                        allow_stretch: False
+                        keep_ratio: True
+                        size_hint: 1, 1
+                
+                AppButton:
+                    size_hint: (1, 1)
+                    md_bg_color: chex("#5C5470")
+                    padding: root.header_button_padding
+
+                    Label:
+                        size_hint: 1, 1
+                        text: root.selected_plan
+                        font_size: root.header_font_size
+                        color: chex("#FAF0E6")
+                        font_name: 'p_bold'
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                    Image:
+                        source: root.bag_icon
+                        size_hint: (None , 1)
+                        width: root.header_height
+                        allow_stretch: False
+                        keep_ratio: True
 
 
+            MDBoxLayout:
+                    # Header Buttons for selecting plan and how to use
+                size_hint: (1, None)
+                orientation: 'horizontal'
+                height: root.header_height
+                spacing: root.header_button_spacing
+                
+                AppButton:
+                    size_hint: (None , 1)
+                    width: root.header_height
+                    md_bg_color: chex("#352F44")
+                    padding: root.header_button_padding
+                    on_release: root.change_map_source()
 
+                    Image:
+                        source: root.change_map_icon
+                        allow_stretch: False
+                        keep_ratio: True
+                        size_hint: 1, 1
+
+                Widget:
+                    size_hint: (1, 1)
 
         
