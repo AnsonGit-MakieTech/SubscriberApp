@@ -45,9 +45,8 @@ class SingleMarkerMapView(MapView):
     is_map_clicked_not_colliding = ObjectProperty(None)
     
 
-    def on_touch_up(self, touch):
-        
-        if self.collide_point(*touch.pos) and not self.is_map_clicked_not_colliding(True):
+    def on_touch_up(self, touch): 
+        if self.collide_point(*touch.pos) and self.is_map_clicked_not_colliding():
             # convert screen xy → lat, lon
             lat, lon = self.get_latlon_at(*touch.pos)
 
@@ -138,27 +137,14 @@ class AddPlanScreen(Screen):
 
 
     def on_touch_down(self, touch):
-        # 1) If the touch is inside the map area…
+        self.is_map_clicked_not_colliding = True
         if self.mapview and self.mapview.collide_point(*touch.pos):
-            # 2) …give each overlaid widget a shot at it
+            # 2) …give each overlaid widget a shot at it 
             for child in self.holder.children:
                 if child is not self.mapview and child.collide_point(*touch.pos):
-                    self.is_map_clicked_not_colliding = True 
+                    self.is_map_clicked_not_colliding = False
                     
         return super().on_touch_down(touch)
-
-
-    def on_touch_up(self, touch):
-        # 1) If the touch is inside the map area…
-        
-        if self.mapview and self.mapview.collide_point(*touch.pos):
-            # 2) …give each overlaid widget a shot at it
-            for child in self.holder.children:
-                if child is not self.mapview and child.collide_point(*touch.pos):
-                    # dispatch the event to just that child 
-                    self.is_map_clicked_not_colliding = False 
-        return super().on_touch_up(touch)
-
 
     
 
@@ -171,6 +157,9 @@ class AddPlanScreen(Screen):
 
         return super().on_enter(*args)
 
+
+    def check_is_map_clicked_not_colliding(self, *args):
+        return self.is_map_clicked_not_colliding
 
     def load_map_view(self, *args):
         if self.holder is None:
@@ -185,13 +174,8 @@ class AddPlanScreen(Screen):
                 map_source=map_source_labeled,
                 size_hint=(1, 1),
                 pos_hint={"center_x": 0.5, "center_y": 0.5}
-            )
-            def is_colliding(new_value):
-                old_value = self.is_map_clicked_not_colliding
-                if old_value != new_value:
-                    self.is_map_clicked_not_colliding = new_value
-                return old_value
-            self.mapview.is_map_clicked_not_colliding = is_colliding
+            ) 
+            self.mapview.is_map_clicked_not_colliding = self.check_is_map_clicked_not_colliding
             self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
             self.holder.add_widget(self.mapview, index=len(self.holder.children))
 
@@ -222,13 +206,18 @@ class AddPlanScreen(Screen):
         
         self.is_okey_to_click = False
         Clock.schedule_once( self.update_is_okey_to_click , self.button_timeout)
-    
+        self.mapview.pause_on_action = False
         if self.is_map_labeled:
             self.mapview.map_source = map_source_satlite
             self.is_map_labeled = False
+            
         else:
             self.mapview.map_source = map_source_labeled
             self.is_map_labeled = True
+        self.mapview.remove_all_tiles() 
+        self.mapview.pause_on_action = True  # (optionally) restore original behavior
+        # new_zoom = max(self.mapview.min_zoom, self.mapview.zoom - 1)
+        # self.mapview.zoom = new_zoom
 
     def on_map_move(self, *args):
         """ Called when user pans the map. """
