@@ -32,7 +32,7 @@ class AddTicketModalDetailsTextInput(
     def update_sizing(self, *args):
         width, height = self.size
         self.details_font_size = int(min(width, height) * 0.05)
-        print(f"width: {width}, height: {height}, font_size: {self.details_font_size}")
+        # print(f"width: {width}, height: {height}, font_size: {self.details_font_size}")
 
 
 class DropdownButton(app_button.AppButton):

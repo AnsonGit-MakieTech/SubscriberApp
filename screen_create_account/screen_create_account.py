@@ -147,7 +147,7 @@ class AccountRegistrationFormLayout(
         self.h4_font_size = int(width * 0.032)
         if self.h4_font_size > 12:
             self.h4_font_size = 12
-        print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
+        # print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
         
         # cwidth = width * 0.03
         # cheight = width * 0.03

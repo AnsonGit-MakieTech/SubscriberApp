@@ -132,7 +132,7 @@ class AddPlanScreen(Screen):
             self.header_height = 30
         
 
-        print(f"width: {width}, height: {height}, header_height: {self.header_height}")
+        # print(f"width: {width}, height: {height}, header_height: {self.header_height}")
 
 
 

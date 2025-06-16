@@ -7,6 +7,7 @@ from kivy.metrics import  sp
 from kivy.uix.textinput import TextInput
 from kivy.uix.modalview import ModalView 
 from kivy_garden.mapview import MapView
+from kivy.uix.image import Image
 import os
 from kivy.clock import Clock
 from kivy.uix.modalview import ModalView
@@ -78,8 +79,9 @@ class UserVerificationMapModal(ModalView):
     layout_radius = ListProperty([10, 10, 10, 10])
 
     h4_font_size = NumericProperty(18)
-    h2_font_size = NumericProperty(18)
+    h2_font_size = NumericProperty(18) 
 
+    map_marker = ObjectProperty(None)
 
 
 
@@ -116,7 +118,12 @@ class UserVerificationMapModal(ModalView):
         self.h2_font_size = int(min(width, height) * 0.04)
         if self.h2_font_size > 17:
             self.h2_font_size = 17
-        print(f"📍 h2_font_size: {self.h2_font_size}")
+        
+        map_icon_size = int(min(width, height) * 0.06)
+        if map_icon_size > 30:
+            map_icon_size = 30
+        self.map_marker.size = (map_icon_size, map_icon_size)
+        print(f"📍 map_icon_size: {self.map_marker.size}")
 
     def on_kv_post(self, base_widget):
         # Ensure location_input is set and bind an event
@@ -189,13 +196,17 @@ class UserVerificationMapModal(ModalView):
                 self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
 
                 self.map_obj.add_widget(self.mapview)
-                marker_icon = MDIcon(icon="home-map-marker",
-                                    font_size=sp(58), 
-                                    theme_text_color="Custom",
-                                    text_color=chex("#EF5555"),
-                                    pos_hint={"center_x": 0.5, "center_y": 0.5}
-                                    )
-                self.map_obj.add_widget(marker_icon)
+                
+                parent_dir = os.path.dirname(os.path.dirname(__file__))  
+                self.map_marker = marker_icon = Image(
+                    source=os.path.join(parent_dir, 'assets', 'map_house.png'),
+                    keep_ratio=True,
+                    allow_stretch=True,
+                    size_hint = (None, None),
+                    size=(20 , 20), 
+                    pos_hint={"center_x": 0.5, "center_y": 0.5}
+                    )
+                self.map_obj.add_widget(self.map_marker)
             except Exception as e:
                 print(f"Error loading map: {e}")
                 pass
