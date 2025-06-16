@@ -194,9 +194,6 @@ class AddPlanScreen(Screen):
 
             # Clock.schedule_interval(self.change_map_source, 1)
 
-    def update_is_okey_to_click(self, *args):
-        self.is_okey_to_click = True
-        
     def change_map_source(self, *args):
         if self.mapview is None:
             return
@@ -206,7 +203,7 @@ class AddPlanScreen(Screen):
         
         self.is_okey_to_click = False
         Clock.schedule_once( self.update_is_okey_to_click , self.button_timeout)
-        self.mapview.pause_on_action = False
+        # self.mapview.pause_on_action = False
         if self.is_map_labeled:
             self.mapview.map_source = map_source_satlite
             self.is_map_labeled = False
@@ -214,10 +211,17 @@ class AddPlanScreen(Screen):
         else:
             self.mapview.map_source = map_source_labeled
             self.is_map_labeled = True
-        self.mapview.remove_all_tiles() 
-        self.mapview.pause_on_action = True  # (optionally) restore original behavior
+        self.mapview.remove_all_tiles()
+        self.mapview.trigger_update(full=True)  #– this tells MapView “please re‐build everything” :contentReference[oaicite:1]{index=1}
+        print("change_map_source")
+        # self.mapview.pause_on_action = True  # (optionally) restore original behavior
         # new_zoom = max(self.mapview.min_zoom, self.mapview.zoom - 1)
         # self.mapview.zoom = new_zoom
+
+
+    def update_is_okey_to_click(self, *args):
+        self.is_okey_to_click = True
+        
 
     def on_map_move(self, *args):
         """ Called when user pans the map. """
