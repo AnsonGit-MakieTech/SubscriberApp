@@ -24,31 +24,147 @@
 
         FloatLayout:
             size_hint: (1, 0.05)
-            
 
+            Label: 
+                size_hint: None , 1 
+                text: "Let's Get You Set Up"
+                font_size: root.h1_font_size
+                color: chex("#FFFFFF")
+                font_name: 'p_extrabold'
+                text_size: None, self.height
+                halign: 'left'
+                valign: 'middle' 
+                width: self.texture_size[0]
+                pos_hint: {'x': 0.15 , 'center_y' : 0.5}
 
-        Button:
+        FloatLayout:
             size_hint: (1, 0.15)
 
+            Label: 
+                size_hint: 0.55 , 1 
+                text: "Choose one of the options below to either apply for a brand-new Charles TV plan or, if you're already a subscriber, just create your app account."
+                font_size: root.h2_font_size
+                color: chex("#FFFFFF")
+                font_name: 'p_extralight'
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'  
+                pos_hint: {'x': 0.15 , 'center_y' : 0.5}
 
-        Button:
+
+        FloatLayout:
             size_hint: (1, 0.2)
 
+            BoxLayout:
+                size_hint: (1, None)
+                height: root.button_size
+                orientation: 'horizontal'
+                pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                spacing: root.button_spacing
 
-        Button:
+                Widget:
+                    
+                AppButton:
+                    size_hint: (None , None)
+                    size: (root.button_size , root.button_size)
+                    md_bg_color: chex("#B9B4C7")
+
+                    FloatLayout:
+                        
+                        Image:
+                            source: root.has_wifi_icon
+                            allow_stretch: True
+                            keep_ratio: True
+                            pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                            size_hint: (None , None)
+                            size: root.button_icon_size, root.button_icon_size
+
+                        Label: 
+                            size_hint: 1 , 0.1 
+                            text: "Apply for a New Plan"
+                            font_size: root.h4_font_size
+                            color: chex("#352F44")
+                            font_name: 'p_medium' 
+                            pos_hint: {'center_x': 0.5 , 'y' : 0.1}
+                
+                AppButton:
+                    size_hint: (None , None)
+                    size: (root.button_size , root.button_size)
+                    md_bg_color: chex("#B9B4C7")
+
+
+                    FloatLayout:
+                        
+                        Image:
+                            source: root.register_icon
+                            allow_stretch: True
+                            keep_ratio: True
+                            pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                            size_hint: (None , None)
+                            size: root.button_icon_size, root.button_icon_size
+
+                        Label: 
+                            size_hint: 1 , 0.1 
+                            text: "I Already Have a Plan"
+                            font_size: root.h4_font_size
+                            color: chex("#352F44")
+                            font_name: 'p_medium' 
+                            pos_hint: {'center_x': 0.5 , 'y' : 0.1}
+
+                    
+                
+                Widget:
+
+
+        FloatLayout:
             size_hint: (1, 0.03)
 
-
-        Button:
-            size_hint: (1, 0.02)
-
+            Label: 
+                size_hint: None , 1
+                text: "[u]Have an account? Tap here."
+                font_size: root.h2_font_size
+                color: chex("#FFFFFF")
+                font_name: 'p_regular'
+                text_size: None, self.height
+                halign: 'right'
+                valign: 'middle' 
+                width: self.texture_size[0] 
+                pos_hint: {'right': 0.85 , 'center_y' : 0.5}
+                markup: True
             
-        Button:
-            size_hint: (1, 0.2)
+        Widget:
+            size_hint: (1, 0.22)
 
 
-        Button:
+        FloatLayout:
             size_hint: (1, 0.05)
+
+            BoxLayout:
+                size_hint: (1, 1)
+                orientation: 'horizontal'
+                pos_hint: {'x' : 0.05, 'center_y' : 0.5}
+                spacing: root.charles_tv_icon_spacing
+                
+
+                Image:
+                    source: root.visit_icon
+                    size_hint: None, None
+                    size: (root.visit_icon_size , root.visit_icon_size)
+                    pos_hint: {'center_y' : 0.5}
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "[u]Chat with Charles TV"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_regular'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0] 
+                    markup: True
+
+                Widget:
 
 
 
