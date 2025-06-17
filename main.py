@@ -50,6 +50,7 @@ from screen_create_account.screen_create_account import CreateAccountScreen
 from screen_forgot.screen_forgot import ForgotAccountScreen
 from screen_login.screen_login import LoginScreen 
 from screen_first_time.screen_first_time import FirstTimeScreen
+from screen_product_showcase.screen_product_showcase import ProductShowcaseScreen
 
 class TappableImage(Image):
     def __init__(self, modal_ref, **kwargs):
@@ -199,10 +200,10 @@ class SubscriberApp(MDApp):
             # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
             # self.root_screen_manager.change_screen(LOGIN_SCREEN) 
             print("Changing to login screen")
-            self.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN, FirstTimeScreen)
-            self.root_screen_manager.change_screen(FIRST_TIME_SCREEN)
+            self.root_screen_manager.add_handler_screen(PRODUCT_SHOWCASE_SCREEN, ProductShowcaseScreen)
+            self.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
 
-        test_kv_path = os.path.join(os.path.dirname(__file__), 'screen_first_time', 'screen_first_time.kv')
+        test_kv_path = os.path.join(os.path.dirname(__file__), 'screen_product_showcase', 'screen_product_showcase.kv')
         Builder.load_file(test_kv_path)
 
         Clock.schedule_once(self.show_welcome_popup)

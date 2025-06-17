@@ -1,0 +1,193 @@
+
+<ProductShowcaseScreen>:
+    circle_widget : circle_widget
+    
+    FloatLayout:
+        size_hint: 1, 1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5 }
+
+        AdaptiveCircle:
+            id: circle_widget
+            size_hint: None, None 
+            pos_hint: {"center_x": 0.072, "center_y": 0.73}
+            color: chex('#5C5470')
+     
+        MDBoxLayout: 
+            size_hint: 1, 1
+            orientation: "vertical"
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            Widget:
+                size_hint: 1, 0.05
+
+            FloatLayout:
+                size_hint: 1, 0.03
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "Recommended for you"
+                    font_size: root.h2_font_size
+                    color: chex("#B9B4C7")
+                    font_name: 'p_regular'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}
+
+
+            FloatLayout:
+                size_hint: 1, 0.04
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "Home Plan 50150"
+                    font_size: root.h1_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5} 
+
+            FloatLayout:
+                size_hint: 1, .11
+
+                Label: 
+                    size_hint: 0.55 , 1 
+                    text: "With Home Plan 50150, everyone at home can stream, work, and game at the same time—zero slow-downs. Perfect for families who demand reliable Wi-Fi on every device. Get connected today!"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extralight'
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'top'  
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}
+
+
+            FloatLayout:
+                size_hint: 1, 0.05
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "Rate:  [font=p_extralight]P 1,499 /mo (all-in, no hidden fees)"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
+
+            FloatLayout:
+                size_hint: 1, 0.05
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "Speed:  [font=p_extralight]Up to 150 Mbps download / 50 Mbps"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
+
+            FloatLayout:
+                size_hint: 1, 0.05
+ 
+                Label: 
+                    size_hint: None , 1 
+                    text: "Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
+
+            FloatLayout:
+                size_hint: 1, 0.05
+ 
+                Label: 
+                    size_hint: None , 1 
+                    text: "Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
+
+            FloatLayout:
+                size_hint: 1, 0.07
+            
+                AppButton:
+                    size_hint: None, 1
+                    adaptive_width: True
+                    md_bg_color: chex("#FF9393")
+
+                    # Image:
+                    #     source: root.cart_subscribe_icon
+                    #     size_hint: (None, 1)
+                    #     width: self.height
+                    #     keep_ratio: False
+                    #     allow_stretch: True
+                    
+                    Label: 
+                        size_hint: None , 1 
+                        text: "Subscribe Now"
+                        font_size: root.h1_font_size
+                        color: chex("#FFFFFF")
+                        font_name: 'p_extrabold'
+                        text_size: None, self.height
+                        halign: 'left'
+                        valign: 'middle' 
+                        width: self.texture_size[0]
+
+
+            Widget:
+                size_hint: 1, 0.03
+
+
+            Widget:
+                size_hint: 1, 0.03
+
+
+            Widget:
+                size_hint: 1, .12
+
+
+            Button:
+                size_hint: 1, 0.07
+
+
+            Button:
+                size_hint: 1, .25
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

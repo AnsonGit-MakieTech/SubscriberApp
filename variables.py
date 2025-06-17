@@ -3,6 +3,7 @@
 
 
 FIRST_TIME_SCREEN = 'first_time_screen'
+PRODUCT_SHOWCASE_SCREEN = 'product_showcase_screen'
 
 LOGIN_SCREEN = 'login_screen'
 CREATE_ACCOUNT_SCREEN = 'create_account_screen'
