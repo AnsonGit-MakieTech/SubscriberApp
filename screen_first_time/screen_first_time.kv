@@ -1,0 +1,55 @@
+
+
+<FirstTimeScreen>:
+    
+    MDBoxLayout:
+        orientation: "vertical"
+
+
+        Widget:
+            size_hint: (1, 0.1)
+
+            
+        FloatLayout:
+            size_hint: (1, 0.2)
+
+            Image:
+                source: root.logo
+                size_hint: None, None
+                size: (root.image_size , root.image_size)
+                pos_hint: {'x': 0.15 , 'center_y' : 0.5}
+                keep_ratio: False
+                allow_stretch: True
+
+
+        FloatLayout:
+            size_hint: (1, 0.05)
+            
+
+
+        Button:
+            size_hint: (1, 0.15)
+
+
+        Button:
+            size_hint: (1, 0.2)
+
+
+        Button:
+            size_hint: (1, 0.03)
+
+
+        Button:
+            size_hint: (1, 0.02)
+
+            
+        Button:
+            size_hint: (1, 0.2)
+
+
+        Button:
+            size_hint: (1, 0.05)
+
+
+
+

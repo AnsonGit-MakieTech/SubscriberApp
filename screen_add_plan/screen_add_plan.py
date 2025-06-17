@@ -15,7 +15,11 @@ from kivymd.app import MDApp
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
-
+from kivymd.uix.boxlayout import MDBoxLayout  
+from kivy.utils import get_color_from_hex
+from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
+from kivy.core.text import Label as CoreLabel
+from kivy.uix.label import Label
 from variables import *
 import os
 if platform == "android":
@@ -37,6 +41,86 @@ map_source_satlite = MapSource(
     max_zoom = 17, 
     min_zoom = 5
 )
+
+
+class AddPlanInformation(
+    CommonElevationBehavior,
+    RectangularRippleBehavior, 
+    MDBoxLayout
+):
+    content_background_radius = ListProperty([ 8 , 8, 0 , 0 ])
+
+    header_font_size = NumericProperty(20)
+    content_font_size = NumericProperty(15)
+
+    bag_icon = StringProperty("")
+
+    plan_name_label : Label = ObjectProperty(None)
+    plan_name_text = StringProperty("Home Plan")
+
+    max_content_font_size = NumericProperty(11)
+    min_content_font_size = NumericProperty(1)
+    padding_x = NumericProperty(5)
+    
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs) 
+        self.md_bg_color = get_color_from_hex('#FFFFFF')
+        
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.bag_icon = os.path.join(parent_dir, 'assets', 'bag_black_icon.png')
+
+        Clock.schedule_interval(self.test_add_name, 0.5)
+    
+    def test_add_name(self, *args):
+        self.plan_name_label.text += "1"
+        self.update_content_font_size()
+        
+ 
+
+    def update_sizing(self, *args):
+        width , height = self.size 
+        rad = int(min(width, height) * 0.10)
+        self.content_background_radius = [rad, rad, 0, 0]
+
+        self.header_font_size = int( width  * 0.04)
+        if self.header_font_size > 13:
+            self.header_font_size = 13
+
+        self.update_content_font_size()
+
+
+    def update_content_font_size(self, *args):
+        width , height = self.size 
+        if self.plan_name_label is not None:
+            # 1) start with your old “responsive” guess
+            fs = int(width * 0.03)
+            fs = min(fs, self.max_content_font_size)
+            fs = max(fs, self.min_content_font_size)
+
+            # 2) now shrink until the text actually fits
+            text = self.plan_name_label.text or ""
+            avail = max(width - 2 * self.padding_x, 0)
+
+            while fs > self.min_content_font_size:
+                # measure via CoreLabel
+                probe = CoreLabel(
+                    text=text,
+                    font_name=self.plan_name_label.font_name,
+                    font_size=fs,
+                )
+                probe.refresh()
+                text_w, _ = probe.texture.size
+                if text_w <= avail:
+                    break
+                fs -= 1
+
+            # 3) apply your finally chosen size
+            self.content_font_size = fs
+
+            # (optional) force the label to reflow
+            self.plan_name_label.texture_update()
+
 
 class SingleMarkerMapView(MapView):
     current_marker : MapMarker = ObjectProperty(None)
@@ -99,6 +183,10 @@ class AddPlanScreen(Screen):
     
     is_map_clicked_not_colliding = BooleanProperty(False)
 
+
+    add_plan_information : AddPlanInformation = ObjectProperty(None)
+    footer_height  = NumericProperty(200)
+
     def __init__(self, **kwargs):
         super(AddPlanScreen, self).__init__(**kwargs)
         self.opacity = 0
@@ -130,11 +218,11 @@ class AddPlanScreen(Screen):
         self.header_height = int(min( width, height) * 0.08)
         if self.header_height > 30:
             self.header_height = 30
-        
+         
+        if self.add_plan_information is not None:
+            self.add_plan_information.update_sizing()
 
         # print(f"width: {width}, height: {height}, header_height: {self.header_height}")
-
-
 
     def on_touch_down(self, touch):
         self.is_map_clicked_not_colliding = True

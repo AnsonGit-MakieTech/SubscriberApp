@@ -2,7 +2,7 @@
 
 
 
-
+FIRST_TIME_SCREEN = 'first_time_screen'
 
 LOGIN_SCREEN = 'login_screen'
 CREATE_ACCOUNT_SCREEN = 'create_account_screen'

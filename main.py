@@ -11,12 +11,7 @@ from kivy.lang.builder import Builder
 from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
 from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty
-from screen_login.screen_login import LoginScreen 
-from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons, verify_user_location_modal
 
-from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
-from screen_create_account.screen_create_account import CreateAccountScreen
-from screen_forgot.screen_forgot import ForgotAccountScreen
 from variables import *
 import os
 import json
@@ -29,6 +24,11 @@ from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from communications  import Communications 
 from kivy.animation import Animation
+
+from kivy.uix.image import Image
+from kivy.uix.modalview import ModalView
+from kivy.graphics import Color, Rectangle 
+
 
 if platform == "android": 
     from android.permissions import request_permissions, Permission, check_permission  # pylint: disable=import-error
@@ -44,11 +44,12 @@ if platform == "win":
     Window.size = (360, 780)
 
 
-
-
-from kivy.uix.image import Image
-from kivy.uix.modalview import ModalView
-from kivy.graphics import Color, Rectangle 
+from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons, verify_user_location_modal
+from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
+from screen_create_account.screen_create_account import CreateAccountScreen
+from screen_forgot.screen_forgot import ForgotAccountScreen
+from screen_login.screen_login import LoginScreen 
+from screen_first_time.screen_first_time import FirstTimeScreen
 
 class TappableImage(Image):
     def __init__(self, modal_ref, **kwargs):
@@ -191,12 +192,18 @@ class SubscriberApp(MDApp):
         self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
 
 
-        login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
-        Builder.load_file(login_kv_path)
+        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        # Builder.load_file(login_kv_path)
          
         def change_to_login_screen(*args):   
-            self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
-            self.root_screen_manager.change_screen(LOGIN_SCREEN) 
+            # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
+            # self.root_screen_manager.change_screen(LOGIN_SCREEN) 
+            print("Changing to login screen")
+            self.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN, FirstTimeScreen)
+            self.root_screen_manager.change_screen(FIRST_TIME_SCREEN)
+
+        test_kv_path = os.path.join(os.path.dirname(__file__), 'screen_first_time', 'screen_first_time.kv')
+        Builder.load_file(test_kv_path)
 
         Clock.schedule_once(self.show_welcome_popup)
         Clock.schedule_once(change_to_login_screen, 1)
@@ -211,23 +218,24 @@ class SubscriberApp(MDApp):
         Clock.schedule_once(close_popup, 1)
 
     def load_screens(self, *args):  
-        Builder.load_string(headline_layout.kv_headline_layout)
-        Builder.load_string(router_layout.kv_router_layout)
-        Builder.load_string(tickets_layout.kv_tickets_layout)
-        Builder.load_string(account_layout.kv_account_layout)
-        home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
-        Builder.load_file(home_kv_path) 
+        # Builder.load_string(headline_layout.kv_headline_layout)
+        # Builder.load_string(router_layout.kv_router_layout)
+        # Builder.load_string(tickets_layout.kv_tickets_layout)
+        # Builder.load_string(account_layout.kv_account_layout)
+        # home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        # Builder.load_file(home_kv_path) 
 
-        screen_add_plan_kv_path = os.path.join(os.path.dirname(__file__), 'screen_add_plan', 'screen_add_plan.kv')
-        Builder.load_file(screen_add_plan_kv_path)
+        # screen_add_plan_kv_path = os.path.join(os.path.dirname(__file__), 'screen_add_plan', 'screen_add_plan.kv')
+        # Builder.load_file(screen_add_plan_kv_path)
 
-        create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
-        Builder.load_file(create_account_kv_path)
-        self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
+        # create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
+        # Builder.load_file(create_account_kv_path)
+        # self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
         
-        forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
-        Builder.load_file(forgot_account_kv_path)
-        self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
+        # forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
+        # Builder.load_file(forgot_account_kv_path)
+        # self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
+        pass
 
     
 

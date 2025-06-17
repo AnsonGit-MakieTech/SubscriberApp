@@ -3,6 +3,7 @@
 <AddPlanScreen>:
 
     holder : holder
+    add_plan_information : add_plan_information
     
     MDFloatLayout:
         id: holder  
@@ -126,4 +127,94 @@
                 Widget:
                     size_hint: (1, 1)
 
+        
+
+
+        AddPlanInformation:
+            # Header Buttons for selecting city and going home
+            id: add_plan_information
+            size_hint: (1 , None)
+            pos_hint: {'center_x' : 0.5, 'y': 0 }
+            height: root.footer_height
+
+
+
+<AddPlanInformation>:
+    
+    plan_name_label : plan_name_label
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, 3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    orientation: 'vertical'
+
+    Widget:
+        size_hint: (1 , 0.05)
+    Label:
+        size_hint: 1, 0.2
+        text: "        Plan Selected Information"
+        font_size: root.header_font_size
+        color: chex("#352F44")
+        font_name: 'p_bold'
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+        # canvas.before:
+        #     Color:
+        #         rgba: chex("#EF5555")
+        #     Rectangle:
+        #         pos: self.pos
+        #         size: self.size
+    
+
+    BoxLayout:
+        size_hint: (1 , 0.2)
+        orientation: 'horizontal'
+
+        Widget:
+            size_hint: 0.1 , 1
+        Image:
+            size_hint: None , 1
+            width: self.parent.height
+            allow_stretch: False
+            keep_ratio: True
+            source: root.bag_icon
+        
+        Widget:
+            size_hint: 0.05 , 1
+        
+        Label:
+            id: plan_name_label
+            size_hint: None , 1 
+            text: "Name :"
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_bold'
+            text_size: None, self.height
+            halign: 'left'
+            valign: 'middle' 
+            width: self.texture_size[0]
+
+        Widget:
+            size_hint: 0.02 , 1
+            
+        Label:
+            id: plan_name_label
+            size_hint: 0.83, 1
+            text: root.plan_name_text 
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_light'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            markup: True
+
+    Widget:
         
