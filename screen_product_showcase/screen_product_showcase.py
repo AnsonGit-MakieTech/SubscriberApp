@@ -1,10 +1,11 @@
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
 from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.uix.image import Image
 from types import MethodType  # ✅ Import MethodType
 from kivy.clock import Clock
@@ -12,6 +13,7 @@ from kivy.utils import platform
 from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransition, ScreenManager
 from kivymd.app import MDApp 
 from kivy.utils import get_color_from_hex
+from kivymd.uix.boxlayout import MDBoxLayout
 
 import os
 
@@ -21,7 +23,8 @@ from screen_components import app_button, top_form_buttons, text_input
  
 from kivy.uix.widget import Widget
 from kivy.properties import ListProperty
-from kivy.graphics import Color, Ellipse
+from kivy.graphics import Color, Ellipse 
+from kivy.uix.behaviors import ButtonBehavior
 
 class AdaptiveCircle(Widget):
     color = ListProperty(get_color_from_hex("#5C5470"))  # default: opaque red
@@ -51,10 +54,81 @@ class AdaptiveCircle(Widget):
             Color(rgba=value)
         # note: if you want the circle to be behind other canvas ops,
         # you could put this in canvas.before instead of canvas.
- 
+
+
+
+class ProductShowcaseCategory(Label):
+    widget_type = StringProperty('category')
+
+
+    def update_sizing(self, width, height):
+        self.height = min( width, height) * 0.08
+        self.font_size = int( min( width, height) * 0.03) 
+        
+
+
+
+class ProductShowcaseProduct( 
+    ButtonBehavior,
+    MDBoxLayout):
+    widget_type = StringProperty('product')
+    is_selected = BooleanProperty(False)
+    category = StringProperty('Recommended for you')
+    border_width = NumericProperty(1)
+    border_radius = NumericProperty(1)
+    
+    additional_height = NumericProperty(0.20)
+    original_height = NumericProperty(0)
+
+    product_name = ObjectProperty(None)
+    plan_font_size = NumericProperty(0)
+    additional_plan_font_size = NumericProperty(0.10)
+    original_plan_font_size = NumericProperty(0)
+
+    def update_sizing(self, width, height):
+        self.height = min( width, height) * 0.13
+        self.original_height = min( width, height) * 0.13
+        # 2% of the smaller edge for border thickness
+        bw = min(self.width, self.height) * 0.2
+        self.border_width = max(bw, 1)
+        # 10% of the smaller edge for corner radius
+        br = min(self.width, self.height) * 0.10
+        self.border_radius = max(br, 1)
+        print("border_width:", self.border_width)
+        self.canvas.ask_update()
+
+
+        self.plan_font_size = int(min(width, height) * 0.03)
+        self.original_plan_font_size = int(min(width, height) * 0.03)
+
+
+
+    
+    def click_event(self, *args):
+        print("clicked")
+        self.is_selected = not self.is_selected
+        if self.is_selected:
+            anim = Animation(
+                height=(self.height + (self.height * self.additional_height)), duration=0.2)
+            anim.start(self)
+
+            if self.product_name:
+                anim = Animation(font_size=self.plan_font_size + (self.plan_font_size * self.additional_plan_font_size), duration=0.2)
+                anim.start(self.product_name)
+
+        else:
+            anim = Animation(height=self.original_height, duration=0.2)
+            anim.start(self)
+
+            if self.product_name:
+                anim = Animation(font_size=self.original_plan_font_size, duration=0.2)
+                anim.start(self.product_name)
+
+
 
 class ProductShowcaseScreen(Screen): 
     circle_widget = ObjectProperty(None)
+    subscribe_button : app_button.AppButton = ObjectProperty(None)
 
     h1_font_size = NumericProperty(30)
     h2_font_size = NumericProperty(20)
@@ -62,14 +136,19 @@ class ProductShowcaseScreen(Screen):
     h4_font_size = NumericProperty(14)
     h5_font_size = NumericProperty(12)
 
+    subscribe_spacing  = NumericProperty(10) 
+    subscribe_icon_size = NumericProperty(20)
     cart_subscribe_icon = StringProperty('')
+    product_subscribe_icon = StringProperty('')
+
+    product_list : MDBoxLayout = ObjectProperty(None)
 
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.opacity = 0
+        super().__init__(**kwargs) 
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.cart_subscribe_icon = os.path.join(parent_dir, 'assets', 'cart_subscribe_icon.png') 
+        self.product_subscribe_icon = os.path.join(parent_dir, 'assets', 'product_icon.png')
         
 
         
@@ -97,6 +176,18 @@ class ProductShowcaseScreen(Screen):
         self.h4_font_size = min(width, height) * 0.02
         self.h5_font_size = min(width, height) * 0.015
 
+        rad = min(width, height) * 0.01
+        if rad > 10:
+            rad = 10
+        self.subscribe_spacing = rad * 2 
+        self.subscribe_icon_size = min(width, height) * 0.05
+
+        if self.subscribe_button is not None:
+            self.subscribe_button.content_background_radius = [rad , rad, rad, rad]
+
+        if self.product_list is not None:
+            for child in self.product_list.children:
+                child.update_sizing(width, height)
 
 
 

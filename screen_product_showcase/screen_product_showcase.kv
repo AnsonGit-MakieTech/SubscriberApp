@@ -1,6 +1,8 @@
 
 <ProductShowcaseScreen>:
     circle_widget : circle_widget
+    subscribe_button : subscribe_button
+    product_list : product_list
     
     FloatLayout:
         size_hint: 1, 1
@@ -131,56 +133,203 @@
                     markup: True
 
             FloatLayout:
-                size_hint: 1, 0.07
+                size_hint: 1, 0.04
             
                 AppButton:
+                    id: subscribe_button
                     size_hint: None, 1
                     adaptive_width: True
                     md_bg_color: chex("#FF9393")
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}
+                    spacing: root.subscribe_spacing 
+                    
+                    
+                    Label: 
+                        size_hint: None , 1 
+                        text: " "   
+                        font_size: root.h2_font_size
+                        text_size: None, self.height 
+                        width: self.texture_size[0]
 
-                    # Image:
-                    #     source: root.cart_subscribe_icon
-                    #     size_hint: (None, 1)
-                    #     width: self.height
-                    #     keep_ratio: False
-                    #     allow_stretch: True
+                    Image:
+                        source: root.cart_subscribe_icon
+                        size_hint: (None, None)
+                        size: ( root.subscribe_icon_size, root.subscribe_icon_size)
+                        keep_ratio: False
+                        allow_stretch: True
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     
                     Label: 
                         size_hint: None , 1 
                         text: "Subscribe Now"
-                        font_size: root.h1_font_size
+                        font_size: root.h2_font_size
                         color: chex("#FFFFFF")
-                        font_name: 'p_extrabold'
+                        font_name: 'p_regular'
                         text_size: None, self.height
                         halign: 'left'
                         valign: 'middle' 
                         width: self.texture_size[0]
+                    
+                    
+                    Label: 
+                        size_hint: None , 1 
+                        text: " "   
+                        font_size: root.h2_font_size
+                        text_size: None, self.height 
+                        width: self.texture_size[0]
 
 
             Widget:
+                size_hint: 1, 0.02
+ 
+
+            FloatLayout:
                 size_hint: 1, 0.03
 
-
-            Widget:
-                size_hint: 1, 0.03
+                Label: 
+                    size_hint: None , 1 
+                    text: "[u]Have an account? Tap here."
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_regular'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
 
 
             Widget:
                 size_hint: 1, .12
 
 
-            Button:
+            BoxLayout:
                 size_hint: 1, 0.07
+                spacing: root.subscribe_spacing 
+
+                Widget:
+                    size_hint: 0.9, 1
+
+                Label: 
+                    size_hint: None , 1 
+                    text: "List of available plans for you"
+                    font_size: root.h2_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_bold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+
+                Image:
+                    source: root.product_subscribe_icon
+                    size_hint: (None, None)
+                    size: ( root.subscribe_icon_size, root.subscribe_icon_size)
+                    keep_ratio: False
+                    allow_stretch: True
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                Widget:
+                    size_hint: 0.1, 1
+                    
 
 
-            Button:
-                size_hint: 1, .25
+            FloatLayout:
+                size_hint: 1, .29
+
+                ScrollView:
+                    size_hint: 0.9, 1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                
+                    MDBoxLayout:
+                        id: product_list
+                        size_hint: (1, None)
+                        adaptive_height: True
+                        orientation: 'vertical'
+                        spacing: root.subscribe_spacing 
+
+                        ProductShowcaseCategory:
+                            
+                        ProductShowcaseProduct:
+                            
+                        ProductShowcaseProduct:
+                            
+                        ProductShowcaseCategory:
 
 
 
 
 
 
+
+
+
+
+
+
+
+<ProductShowcaseCategory>: 
+    text: "Recommended for you" 
+    color: chex("#B9B4C7")
+    font_name: 'p_regular'
+    size_hint: (1 , None) 
+    text_size: self.size
+    halign: 'left'
+    valign: 'middle'
+
+
+
+
+
+
+<ProductShowcaseProduct>:
+    size_hint: 1, None
+    orientation: "horizontal"
+    radius: [root.border_radius]
+    on_release: root.click_event()
+    product_name : product_name
+
+    canvas.before:
+        # background with rounded corners
+        Color:
+            rgba: chex("#FFFFFF") if self.is_selected else chex("#FAF0E6")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            # four identical radii (tl, tr, br, bl)
+            radius: [10, 10, 10, 10]
+
+    canvas.after:
+        # border only when selected
+        Color:
+            rgba: chex("#B9B4C7") if self.is_selected else (0, 0, 0, 0)
+        Line:
+            # x, y, w, h, radius_x, radius_y
+            rounded_rectangle:
+                (self.x, self.y, self.width, self.height, 10, 10)
+            width: 2
+
+
+    
+    Label:
+        size_hint: 0.04, 1
+    
+    Label:
+        id: product_name
+        text: "Recommended for you" 
+        color: chex("#352F44")
+        font_name: 'p_regular' if not root.is_selected else 'p_semibold'
+        size_hint: (0.94 , 1) 
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        font_size: root.plan_font_size
+     
+        
+    
+    Label:
+        size_hint: 0.02, 1
 
 
 
