@@ -241,6 +241,8 @@
                 ScrollView:
                     size_hint: 0.9, 1
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    scroll_type: ['content'] 
+                    bar_width: 0
                 
                     MDBoxLayout:
                         id: product_list
@@ -253,13 +255,30 @@
                             
                         ProductShowcaseProduct:
                             
+                        ProductShowcaseProduct: 
+
+                        ProductShowcaseCategory:
+                            
                         ProductShowcaseProduct:
                             
+                        ProductShowcaseProduct:
+                            
+
+                        
                         ProductShowcaseCategory:
+                            
+                        ProductShowcaseProduct:
+                            
+                        ProductShowcaseProduct:
+                            
 
 
-
-
+                            
+                        ProductShowcaseCategory:
+                            
+                        ProductShowcaseProduct:
+                            
+                        ProductShowcaseProduct:
 
 
 
@@ -320,16 +339,23 @@
         text: "Recommended for you" 
         color: chex("#352F44")
         font_name: 'p_regular' if not root.is_selected else 'p_semibold'
-        size_hint: (0.94 , 1) 
+        size_hint: (0.92 , 1) 
         text_size: self.size
         halign: 'left'
         valign: 'middle'
         font_size: root.plan_font_size
      
         
-    
+    Image:
+        source: root.selected_icon
+        opacity: 0 if not root.is_selected else 1
+        size_hint: (None, None)
+        size: ( root.select_icon_size, root.select_icon_size)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        keep_ratio: False
+        allow_stretch: True
     Label:
-        size_hint: 0.02, 1
+        size_hint: 0.04, 1
 
 
 

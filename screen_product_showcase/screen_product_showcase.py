@@ -85,6 +85,15 @@ class ProductShowcaseProduct(
     additional_plan_font_size = NumericProperty(0.10)
     original_plan_font_size = NumericProperty(0)
 
+    select_icon_size = NumericProperty(0)
+    selected_icon = StringProperty('')
+
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.selected_icon = os.path.join(parent_dir, 'assets', 'selected_icon.png')
+
     def update_sizing(self, width, height):
         self.height = min( width, height) * 0.13
         self.original_height = min( width, height) * 0.13
@@ -93,13 +102,15 @@ class ProductShowcaseProduct(
         self.border_width = max(bw, 1)
         # 10% of the smaller edge for corner radius
         br = min(self.width, self.height) * 0.10
-        self.border_radius = max(br, 1)
-        print("border_width:", self.border_width)
+        self.border_radius = max(br, 1) 
         self.canvas.ask_update()
-
 
         self.plan_font_size = int(min(width, height) * 0.03)
         self.original_plan_font_size = int(min(width, height) * 0.03)
+
+        self.select_icon_size = int(min(width, height) * 0.05)
+        print(f"width: {width}, height: {height}, select_icon_size: {self.select_icon_size}")
+        
 
 
 
