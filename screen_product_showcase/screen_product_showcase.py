@@ -109,7 +109,7 @@ class ProductShowcaseProduct(
         self.original_plan_font_size = int(min(width, height) * 0.03)
 
         self.select_icon_size = int(min(width, height) * 0.05)
-        print(f"width: {width}, height: {height}, select_icon_size: {self.select_icon_size}")
+        # print(f"width: {width}, height: {height}, select_icon_size: {self.select_icon_size}")
         
 
 
