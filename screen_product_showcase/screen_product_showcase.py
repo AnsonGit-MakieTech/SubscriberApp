@@ -204,6 +204,6 @@ class ProductShowcaseScreen(Screen):
 
     def on_enter(self, *args):
         main_app = MDApp.get_running_app()
-        main_app.next_step_modal.open()
+        main_app.application_number_modal.open()
 
 

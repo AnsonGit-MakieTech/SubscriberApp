@@ -36,6 +36,8 @@ class NextStepModal(ModalView):
     visit_text = StringProperty('Generate an application number now and bring it to our office to pay in person.')
     proceed_text = StringProperty('Proceed to Payment')
 
+    content_text = StringProperty("      Decide how you'd like to complete your application" )
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
@@ -109,12 +111,11 @@ kv_next_step_modal = '''
 
             
     MDBoxLayout:
-        orientation: 'vertical'
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        orientation: "vertical"
+        pos_hint: {"center_x": 0.5,"center_y": 0.5}
         size_hint: 0.85, 0.33
-        md_bg_color: chex('#352F44')
-        radius: root.content_background_radius
-        spacing: 2
+        md_bg_color: chex("#352F44")
+        radius: root.content_background_radius 
 
 
         Widget:
@@ -124,20 +125,20 @@ kv_next_step_modal = '''
             size_hint: 1, .1
             text: "         Choose Your Next Step" 
             color: chex("#FFFFFF")
-            font_name: 'p_semibold' 
+            font_name: "p_semibold" 
             text_size: self.size
-            halign: 'left'
-            valign: 'middle'
+            halign: "left"
+            valign: "middle"
             font_size: root.h1_font_size
 
         Label:
             size_hint: 1, .07
-            text: "      Decide how you'd like to complete your application" 
+            text: root.content_text
             color: chex("#FFFFFF")
-            font_name: 'p_extralight' 
+            font_name: "p_extralight" 
             text_size: self.size
-            halign: 'left'
-            valign: 'middle'
+            halign: "left"
+            valign: "middle"
             font_size: root.h2_font_size
  
         FloatLayout:
@@ -146,8 +147,8 @@ kv_next_step_modal = '''
             BoxLayout:
                 size_hint: (1, None)
                 height: root.button_size
-                orientation: 'horizontal'
-                pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                orientation: "horizontal"
+                pos_hint: {"center_x" : 0.5, "center_y" : 0.5}
                 spacing: root.button_spacing
 
                 Widget:
@@ -166,7 +167,7 @@ kv_next_step_modal = '''
                             source: root.online_icon if root.is_pay_online_selected else root.online_unselected_icon
                             allow_stretch: True
                             keep_ratio: True
-                            pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                            pos_hint: {"center_x" : 0.5, "center_y" : 0.5}
                             size_hint: (None , None)
                             size: root.button_icon_size, root.button_icon_size
 
@@ -175,8 +176,8 @@ kv_next_step_modal = '''
                             text: "Pay Online"
                             font_size: root.h2_font_size
                             color: chex("#352F44") if root.is_pay_online_selected else chex("#B9B4C7")
-                            font_name: 'p_medium' 
-                            pos_hint: {'center_x': 0.5 , 'y' : 0.1}
+                            font_name: "p_medium" 
+                            pos_hint: {"center_x": 0.5 , "y" : 0.1}
                 
                 AppButton:
                     size_hint: (None , None)
@@ -191,7 +192,7 @@ kv_next_step_modal = '''
                             source: root.visit_unselected_icon if not root.is_pay_online_selected else root.visit_icon
                             allow_stretch: True
                             keep_ratio: True
-                            pos_hint: {'center_x' : 0.5, 'center_y' : 0.5}
+                            pos_hint: {"center_x" : 0.5, "center_y" : 0.5}
                             size_hint: (None , None)
                             size: root.button_icon_size, root.button_icon_size
 
@@ -200,22 +201,22 @@ kv_next_step_modal = '''
                             text: "Visit Office"
                             font_size: root.h2_font_size
                             color: chex("#352F44") if not root.is_pay_online_selected else chex("#B9B4C7")
-                            font_name: 'p_medium' 
-                            pos_hint: {'center_x': 0.5 , 'y' : 0.1}
+                            font_name: "p_medium" 
+                            pos_hint: {"center_x": 0.5 , "y" : 0.1}
 
                     
                 
                 Widget:
 
         Label:
-            pos_hint: {'center_x': 0.5}
+            pos_hint: {"center_x": 0.5}
             size_hint: 0.9, .15
             text: root.online_text if root.is_pay_online_selected else root.visit_text
             color: chex("#FFFFFF")
-            font_name: 'p_extralight' 
+            font_name: "p_extralight" 
             text_size: self.size
-            halign: 'center'
-            valign: 'middle'
+            halign: "center"
+            valign: "middle"
             font_size: root.h2_font_size
 
         Widget:
@@ -224,19 +225,19 @@ kv_next_step_modal = '''
         AppButton:
             size_hint: None, .1
             adaptive_width: True
-            orientation: 'horizontal'
+            orientation: "horizontal"
             md_bg_color: chex("#F98585")
             radius: root.button_radius
-            pos_hint: {'right': 0.95}
+            pos_hint: {"right": 0.95}
 
             Label: 
                 size_hint: None , 1 
                 text: "    "
                 font_size: root.h1_font_size 
-                font_name: 'p_extrabold'
+                font_name: "p_extrabold"
                 text_size: None, self.height
-                halign: 'left'
-                valign: 'middle' 
+                halign: "left"
+                valign: "middle" 
                 width: self.texture_size[0]
 
             Label: 
@@ -244,20 +245,20 @@ kv_next_step_modal = '''
                 text: root.proceed_text
                 font_size: root.h1_font_size
                 color: chex("#352F44")
-                font_name: 'p_extrabold'
+                font_name: "p_extrabold"
                 text_size: None, self.height
-                halign: 'left'
-                valign: 'middle' 
+                halign: "left"
+                valign: "middle" 
                 width: self.texture_size[0]
 
             Label: 
                 size_hint: None , 1 
                 text: "    "
                 font_size: root.h1_font_size 
-                font_name: 'p_extrabold'
+                font_name: "p_extrabold"
                 text_size: None, self.height
-                halign: 'left'
-                valign: 'middle' 
+                halign: "left"
+                valign: "middle" 
                 width: self.texture_size[0]
 
 
