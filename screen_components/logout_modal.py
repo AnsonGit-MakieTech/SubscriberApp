@@ -1,11 +1,6 @@
-from kivy.uix.accordion import Widget
-from kivy.uix.actionbar import Label
 
-
-from kivy.uix.accordion import ObjectProperty, BooleanProperty
 from kivy.uix.modalview import ModalView
-
-from kivy.uix.image import Image
+ 
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout

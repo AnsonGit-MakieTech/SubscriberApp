@@ -44,7 +44,13 @@ if platform == "win":
     Window.size = (360, 780)
 
 
-from screen_components import text_input, process_modal , section_icon, logout_modal, add_ticket_modal, app_button, label_clickable, top_form_buttons, verify_user_location_modal
+from screen_components import (
+    text_input, process_modal ,
+    section_icon, logout_modal, 
+    add_ticket_modal, app_button, 
+    label_clickable, top_form_buttons, 
+    verify_user_location_modal, next_step_modal
+)
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
 from screen_create_account.screen_create_account import CreateAccountScreen
 from screen_forgot.screen_forgot import ForgotAccountScreen
@@ -133,6 +139,7 @@ class SubscriberApp(MDApp):
     logout_modal = ObjectProperty(None)
     add_ticket_modal = ObjectProperty(None)
     user_map_verification_modal = ObjectProperty(None)
+    next_step_modal = ObjectProperty(None)
 
     on_size_events_of_all_widgets = ListProperty([])
     _resize_scheduled = False
@@ -186,11 +193,13 @@ class SubscriberApp(MDApp):
         Builder.load_string(label_clickable.kv_label_clickable)
         Builder.load_string(top_form_buttons.kv_header_buttons)
         Builder.load_string(verify_user_location_modal.kv_verify_user_location_modal)
+        Builder.load_string(next_step_modal.kv_next_step_modal)
 
         self.process_modal = process_modal.ProcessingLayout()
         self.logout_modal = logout_modal.LogoutModal()
         self.add_ticket_modal = add_ticket_modal.AddTicketModal()
         self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
+        self.next_step_modal = next_step_modal.NextStepModal()
 
 
         # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
