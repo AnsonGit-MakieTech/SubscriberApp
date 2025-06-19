@@ -15,7 +15,7 @@ from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransiti
 from kivymd.app import MDApp 
 from kivy.uix.widget import Widget
 from kivy.uix.dropdown import DropDown
-from kivy.utils import get_color_from_hex
+from kivy.utils import get_color_from_hex 
 
 import os
 
@@ -23,6 +23,7 @@ from screen_components import text_input
 from variables import *
 from screen_components import app_button, top_form_buttons, text_input
 from utils.app_utils import *
+
 
 from kivy import platform
 import os
@@ -75,8 +76,10 @@ class AccountRegistrationFormLayout(
     username_input: text_input.OneLineInput = ObjectProperty(None)
     password_input: text_input.OneLineInput = ObjectProperty(None)
     confirm_password_input: text_input.OneLineInput = ObjectProperty(None)
+    date_of_birth_input: app_button.AppButton = ObjectProperty(None)
     
-    
+    picker = ObjectProperty(None)
+
     selected_city = StringProperty("Select City")
     valid_id_image_source = StringProperty("")
 
@@ -102,6 +105,7 @@ class AccountRegistrationFormLayout(
 
         # Bind button from KV to open dropdown
         self.dropdown.bind(on_select=self.on_select)
+
 
     def on_select(self, instance, value):
         self.selected_city = value.text
@@ -155,10 +159,21 @@ class AccountRegistrationFormLayout(
         # if cwidth > 35 or cheight > 35:
         #     self.checkbox_size = [35, 35]
         # print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
+ 
 
-
+    def select_date(self, *args):
+        
+        from kivymd.uix.pickers import MDDockedDatePicker
+        self.picker  = MDDockedDatePicker()
+        self.picker.pos_hint = {"center_x": .5, "center_y": .5}
+        self.picker.size_hint = [.9, .6]
+        self.picker.open()
+    
+    def on_date_chosen(self, *args):
+        print("Result : ", args)
 
     def upload_image(self):
+        
         if self.is_selecting_file:
             return
         self.is_selecting_file = True
@@ -176,6 +191,7 @@ class AccountRegistrationFormLayout(
             self.chooser.choose_content('image/*', multiple=False)
 
     def handle_selection(self, selection):
+        
         if selection:
             image_path = selection[0]  
             if not is_image(image_path): 

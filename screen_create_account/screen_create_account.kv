@@ -208,6 +208,7 @@
     username_input: username_input
     password_input: password_input
     confirm_password_input: confirm_password_input
+    date_of_birth_input : date_of_birth_input
 
     opacity: 0
     size_hint: (1 , None)
@@ -290,6 +291,27 @@
         size_hint: 1, None
         height: 35
 
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+    AppButton: 
+        id: date_of_birth_input
+        size_hint: 1, None
+        height: 35
+        on_release: root.select_date()
+        md_bg_color: chex('#5C5470')
+
+        Label:
+            size_hint: 1, 1
+            text: "  Select birth date"
+            font_size: root.h3_font_size
+            font_name: 'p_light'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'  # optional, keeps vertical centering
+            color: chex("#FFFFFF")
 
     Widget:
         size_hint: 1, None
