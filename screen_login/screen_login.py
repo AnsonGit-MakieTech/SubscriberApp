@@ -13,6 +13,7 @@ from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransiti
 from kivymd.app import MDApp 
 
 import os
+from kivy.lang.builder import Builder
 
 from screen_components import text_input
 from variables import *
@@ -20,7 +21,7 @@ from screen_components import app_button
 
 from screen_home.screen_home import HomeScreen
 from screen_add_plan.screen_add_plan import AddPlanScreen
-
+ 
 
 
 class FormLayout(BoxLayout):
@@ -90,8 +91,11 @@ class FormLayout(BoxLayout):
     def register_account(self):
         print("Register button pressed!")
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup) 
-        main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
+        Clock.schedule_once(main_app.show_welcome_popup)  
+        if not main_app.root_screen_manager.does_screen_exist(FORGOT_ACCOUNT_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_forgot', 'screen_forgot.kv', FORGOT_ACCOUNT_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN)
+        main_app.root_screen_manager.change_screen(FORGOT_ACCOUNT_SCREEN)
 
 
 class LogoLocation(BoxLayout):
@@ -165,24 +169,34 @@ class LoginScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
         # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
-        # main_app.on_window_resize()
+        # main_app.on_window_resize() 
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind(on_complete= main_app.on_window_resize)
+        anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
         anim.start(self) 
         # print("entering logoin")
+        Clock.schedule_once(self.load_forgot_screen)
         return super().on_enter(*args)
 
 
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
 
     def login_event(self):
         print("login event")
         main_app  = MDApp.get_running_app()
-        main_app.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
+        main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
         # main_app.root_screen_manager.change_screen(HOME_SCREEN)
         # Clock.schedule_once(main_app.show_welcome_popup)
 
-        main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN, AddPlanScreen)
+        main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN)
         main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
         Clock.schedule_once(main_app.show_welcome_popup)
 
+    
 
+    def load_forgot_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        if not main_app.root_screen_manager.does_screen_exist(FORGOT_ACCOUNT_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_forgot', 'screen_forgot.kv', FORGOT_ACCOUNT_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN)

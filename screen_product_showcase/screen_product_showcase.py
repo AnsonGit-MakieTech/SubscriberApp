@@ -157,6 +157,7 @@ class ProductShowcaseScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
+        self.opacity = 0
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.cart_subscribe_icon = os.path.join(parent_dir, 'assets', 'cart_subscribe_icon.png') 
         self.product_subscribe_icon = os.path.join(parent_dir, 'assets', 'product_icon.png')
@@ -200,10 +201,42 @@ class ProductShowcaseScreen(Screen):
             for child in self.product_list.children:
                 child.update_sizing(width, height)
 
+    def on_enter(self, *args):
+        main_app  = MDApp.get_running_app()
+        
+        anim = Animation(opacity=1, duration=0.5)
+        anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
+        anim.start(self)
 
+        Clock.schedule_once(self.load_connected_screen)
+        return super().on_enter(*args)
 
-    # def on_enter(self, *args):
-    #     main_app = MDApp.get_running_app()
-    #     main_app.activate_account_modal.open()
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
+    
+
+    def goto_login_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
+
+    
+    def goto_create_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
+    
+    def load_connected_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_login', 'screen_login.kv', LOGIN_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(LOGIN_SCREEN)
+        
+        
+        if not main_app.root_screen_manager.does_screen_exist(CREATE_ACCOUNT_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_create_account', 'screen_create_account.kv', CREATE_ACCOUNT_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN)
+
 
 

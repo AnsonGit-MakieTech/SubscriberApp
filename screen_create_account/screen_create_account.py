@@ -267,8 +267,7 @@ class CreateAccountScreen(Screen):
         self.info_title_font_size = int(min( width, height) * 0.03)
         self.info_content_font_size = int(min( width, height) * 0.02)
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
-        self.adaptive_radius = [0, 0, r, r]
-        self.header_buttons.update_sizing()
+        self.adaptive_radius = [0, 0, r, r] 
         
         self.create_account_title_font_size = int(width* 0.06)
         self.create_account_content_font_size = int(width  * 0.03)
@@ -289,6 +288,9 @@ class CreateAccountScreen(Screen):
         if self.registration_form is not None:
             if len(self.registration_form.children) > 0:
                 self.registration_form.children[0].update_sizing()
+        
+        if self.header_buttons is not None:
+            self.header_buttons.update_sizing()
             
 
     def on_enter(self, *args):
@@ -302,13 +304,14 @@ class CreateAccountScreen(Screen):
 
         self.find_my_location_button.update_color("#352F44")
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind(on_complete= main_app.on_window_resize)
-        anim.start(self)
-        print("user map verification modal" , main_app.user_map_verification_modal.load_map)
-        main_app.user_map_verification_modal.load_map()
+        anim.bind(on_start= main_app.on_window_resize, on_complete = main_app.close_welcome_popup)
+        anim.start(self) 
 
-        self.header_buttons.button_1_event = self.go_back_to_login
-        self.header_buttons.button_2_event = self.go_to_forgot_account
+        self.header_buttons.customized_ui(button_text_1="Select Plan", button_text_2="Go To Login")
+        self.header_buttons.button_1_event = self.go_back_to_showcase
+        self.header_buttons.button_2_event = self.go_back_to_login
+
+        Clock.schedule_once(self.load_connected_screen)
         
         # print("entering logoin")
         return super().on_enter(*args)
@@ -332,19 +335,26 @@ class CreateAccountScreen(Screen):
 
     def find_my_location(self, *args):
         main_app = MDApp.get_running_app()
-        main_app.user_map_verification_modal.open() 
+        if main_app.user_map_verification_modal is not None:
+            main_app.user_map_verification_modal.open() 
     
     def go_back_to_login(self, *args):
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup) 
-        self.manager.current = LOGIN_SCREEN
+        Clock.schedule_once(main_app.show_welcome_popup)  
+        main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
         
-    def go_to_forgot_account(self, *args):
+    def go_back_to_showcase(self, *args):
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup) 
-        self.manager.current = FORGOT_ACCOUNT_SCREEN
+        Clock.schedule_once(main_app.show_welcome_popup)  
+        main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
     
+    def load_connected_screen(self, *args):
+        main_app = MDApp.get_running_app()
+        main_app.load_user_map_verification_modal()
+        main_app.user_map_verification_modal.load_map()
+        main_app.load_all_registrations_modal()
 
-    def on_leave(self, *args):
-        self.opacity = 0
-        return super().on_leave(*args)
+
+
+        main_app.on_window_resize()
+

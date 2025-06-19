@@ -16,8 +16,7 @@ import os
 
 from screen_components import text_input
 from variables import *
-from screen_components import app_button, top_form_buttons, text_input
-
+from screen_components import app_button, top_form_buttons, text_input 
 
 
 
@@ -90,18 +89,21 @@ class ForgotAccountScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
         # main_app.on_window_resize()
         
+        # def on_complete(*args):
+
         self.submit_button.update_color("#352F44")
         self.username_text_input.costumized_input(hint_text="Type your username here . . .")
         self.new_password_text_input.costumized_input(hint_text="Type your new password here . . .")
         self.retype_new_password_text_input.costumized_input(hint_text="Retype your new password here . . .")
         self.header_buttons.customized_ui(button_text_1 = "Login Account" , button_text_2 = "Create Account")
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind(on_complete= main_app.on_window_resize)
+        anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
         anim.start(self)
 
         self.header_buttons.button_1_event = self.go_back_to_login
         self.header_buttons.button_2_event = self.go_to_create_account
         
+        Clock.schedule_once( self.load_create_account)
         # print("entering logoin")
         return super().on_enter(*args)
 
@@ -110,13 +112,22 @@ class ForgotAccountScreen(Screen):
         self.opacity = 0
         return super().on_leave(*args)
 
+    def load_create_account(self, *args):
+        main_app  = MDApp.get_running_app()
+        if not main_app.root_screen_manager.does_screen_exist(FIRST_TIME_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_first_time', 'screen_first_time.kv', FIRST_TIME_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN ) 
+
 
     def go_back_to_login(self, *args):
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup) 
-        self.manager.current = LOGIN_SCREEN
+        main_app.root_screen_manager.change_screen(LOGIN_SCREEN) 
         
-    def go_to_create_account(self, *args):
+    def go_to_create_account(self, *args): 
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup) 
-        self.manager.current = CREATE_ACCOUNT_SCREEN
+        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_first_time', 'screen_first_time.kv', FIRST_TIME_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN ) 
+        main_app.root_screen_manager.change_screen(FIRST_TIME_SCREEN)

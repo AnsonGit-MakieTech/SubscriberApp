@@ -68,6 +68,7 @@
                     size_hint: (None , None)
                     size: (root.button_size , root.button_size)
                     md_bg_color: chex("#B9B4C7")
+                    on_release: root.goto_showcase_screen()
 
                     FloatLayout:
                         
@@ -91,6 +92,7 @@
                     size_hint: (None , None)
                     size: (root.button_size , root.button_size)
                     md_bg_color: chex("#B9B4C7")
+                    on_release: root.goto_create_screen()
 
 
                     FloatLayout:
@@ -119,7 +121,7 @@
         FloatLayout:
             size_hint: (1, 0.03)
 
-            Label: 
+            LabelClickable: 
                 size_hint: None , 1
                 text: "[u]Have an account? Tap here."
                 font_size: root.h2_font_size
@@ -131,6 +133,7 @@
                 width: self.texture_size[0] 
                 pos_hint: {'right': 0.85 , 'center_y' : 0.5}
                 markup: True
+                on_release: root.goto_login_screen()
             
         Widget:
             size_hint: (1, 0.22)
