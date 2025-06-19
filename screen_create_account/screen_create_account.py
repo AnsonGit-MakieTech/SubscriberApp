@@ -163,8 +163,8 @@ class AccountRegistrationFormLayout(
 
     def select_date(self, *args):
         
-        from kivymd.uix.pickers import MDDockedDatePicker
-        self.picker  = MDDockedDatePicker()
+        from kivymd.uix.pickers import MDDatePicker
+        self.picker  = MDDatePicker()
         self.picker.pos_hint = {"center_x": .5, "center_y": .5}
         self.picker.size_hint = [.9, .6]
         self.picker.open()
