@@ -84,6 +84,8 @@ class AccountRegistrationFormLayout(
     valid_id_image_source = StringProperty("")
 
     is_selecting_file = BooleanProperty(False)
+    
+    widget_8_height = NumericProperty(0)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,14 +108,12 @@ class AccountRegistrationFormLayout(
         # Bind button from KV to open dropdown
         self.dropdown.bind(on_select=self.on_select)
 
-
     def on_select(self, instance, value):
         self.selected_city = value.text
         print(f"Selected option: {value.text}")
         print(value)
         pass
 
-    
     def customized_ui(self):
         self.city_input.bind(on_release=self.dropdown.open)
         self.first_name_input.costumized_input( hint_text = "First Name . . ." )
@@ -130,9 +130,7 @@ class AccountRegistrationFormLayout(
         self.password_input.costumized_input( hint_text = "Password . . .", is_password = True )
         self.confirm_password_input.costumized_input( hint_text = "Confirm Password . . .", is_password = True )
 
-
-    def update_sizing(self, *args):
-        width, height = self.size
+    def update_sizing(self, width, height): 
         self.h1_font_size = int(width * 0.043)
         if self.h1_font_size > 18:
             self.h1_font_size = 18
@@ -151,6 +149,10 @@ class AccountRegistrationFormLayout(
         self.h4_font_size = int(width * 0.032)
         if self.h4_font_size > 12:
             self.h4_font_size = 12
+
+        self.widget_8_height = min(width , height) * 0.03
+
+
         # print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
         
         # cwidth = width * 0.03
@@ -261,6 +263,11 @@ class CreateAccountScreen(Screen):
     
     registration_form : BoxLayout = ObjectProperty(None)
 
+    widget_15_height = NumericProperty(10)
+    widget_25_height = NumericProperty(10)
+    widget_35_height = NumericProperty(10)
+    login_logo_height = NumericProperty(10)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
@@ -285,7 +292,7 @@ class CreateAccountScreen(Screen):
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
         self.adaptive_radius = [0, 0, r, r] 
         
-        self.create_account_title_font_size = int(width* 0.06)
+        self.create_account_title_font_size = int(width* 0.05)
         self.create_account_content_font_size = int(width  * 0.03)
         if self.create_account_title_font_size > 27:
             self.create_account_title_font_size = 27
@@ -301,9 +308,14 @@ class CreateAccountScreen(Screen):
         if self.find_my_location_button_font_size > 19:
             self.find_my_location_button_font_size = 19
         
+        self.widget_15_height = int(min(width, height) * 0.05)
+        self.widget_25_height = int(min(width, height) * 0.15)
+        self.widget_35_height = int(min(width, height) * 0.1)
+        self.login_logo_height = int(min(width, height) * 0.7)
+        
         if self.registration_form is not None:
             if len(self.registration_form.children) > 0:
-                self.registration_form.children[0].update_sizing()
+                self.registration_form.children[0].update_sizing(width , height)
         
         if self.header_buttons is not None:
             self.header_buttons.update_sizing(width=width, height=height)
@@ -341,12 +353,20 @@ class CreateAccountScreen(Screen):
             Clock.schedule_once(self.display_registration_form, 0.1)
             return
 
+
         if len(self.registration_form.children) < 1:
+            def update_sizing(*args):
+                width, height = self.size
+                if len(self.registration_form.children) > 0:
+                    self.registration_form.children[0].update_sizing(width, height)
+                else:
+                    Clock.schedule_once(update_sizing, 0.1)
             registration = AccountRegistrationFormLayout()
-            anim = Animation(opacity=1, duration=0.5)
-            anim.start(registration)
             self.registration_form.add_widget(registration) 
             registration.customized_ui()
+            anim = Animation(opacity=1, duration=0.5) 
+            anim.start(registration)
+            Clock.schedule_once(update_sizing)
 
 
     def find_my_location(self, *args):

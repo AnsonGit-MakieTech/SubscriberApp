@@ -28,7 +28,7 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 25
+                        height: root.widget_25_height
                     
                     HeaderButtons:
                         id: header_buttons
@@ -36,13 +36,13 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
         
 
                     BoxLayout:
                         size_hint: 1, None
                         orientation: 'horizontal'
-                        height: 300
+                        height: root.login_logo_height
 
 
                         Image:
@@ -83,11 +83,11 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
  
                     Label:
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                         font_size: root.h1_font_size
                         halign: 'left'
                         valign: 'middle'  # optional, keeps vertical centering
@@ -95,15 +95,12 @@
                         font_name: 'p_bold'
                         text: 'Verify Service Availability'
                         color: chex("#FFFFFF")
-
-                    Widget:
-                        size_hint: 1, None
-                        height: 15
+ 
 
                     Label:
                         size_hint: 1 , None
                         text_size: self.width, None 
-                        height: self.texture_size[1]  # Auto height based on wrapped content
+                        height: self.texture_size[1] + root.widget_15_height  # Auto height based on wrapped content
                         font_size: root.h2_font_size
                         halign: 'left'
                         valign: 'top'
@@ -113,11 +110,11 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
 
                     BoxLayout:
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
 
                         AppButton:
                             id: find_my_location_button
@@ -139,7 +136,7 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
                     
                     MDBoxLayout:
                         id: registration_form
@@ -218,7 +215,7 @@
 
     AppButton:
         size_hint: (1 , None)
-        height: 8
+        height: root.widget_8_height
         radius: [3]
         md_bg_color: chex("5C5470") 
     
@@ -257,7 +254,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput:
         id: first_name_input
@@ -266,7 +263,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: middle_name_input
@@ -275,7 +272,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: last_name_input
@@ -284,7 +281,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: email_input
@@ -294,7 +291,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     AppButton: 
         id: date_of_birth_input
@@ -330,7 +327,7 @@
  
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: street_input
@@ -339,7 +336,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: barangay_input
@@ -348,7 +345,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     AppButton: 
         id: city_input
@@ -378,7 +375,7 @@
  
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: phone1_input
@@ -387,7 +384,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: phone2_input
@@ -396,7 +393,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: phone3_input
@@ -422,7 +419,7 @@
     
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     BoxLayout:
         size_hint: 1, None
@@ -470,7 +467,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: username_input
@@ -479,7 +476,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: password_input
@@ -488,7 +485,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_8_height
 
     OneLineInput: 
         id: confirm_password_input
