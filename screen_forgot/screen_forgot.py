@@ -66,8 +66,7 @@ class ForgotAccountScreen(Screen):
         self.info_title_font_size = int(min( width, height) * 0.03)
         self.info_content_font_size = int(min( width, height) * 0.02)
         r = min(width, height) * 0.05  # You can change 0.05 to any fraction
-        self.adaptive_radius = [0, 0, r, r]
-        self.header_buttons.update_sizing()
+        self.adaptive_radius = [0, 0, r, r] 
         
         self.forgot_account_title_font_size = int(width* 0.065)
         self.forgot_account_content_font_size = int(width  * 0.03)
@@ -82,6 +81,9 @@ class ForgotAccountScreen(Screen):
         if self.submit_button_font_size > 19:
             self.submit_button_font_size = 19
     
+        if self.header_buttons is not None:
+            self.header_buttons.update_sizing(width=width, height=height)
+
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)

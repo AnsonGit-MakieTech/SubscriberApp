@@ -29,11 +29,12 @@ class HeaderButtons(BoxLayout):
         self.button_1.update_color("#5C5470")
         self.button_2.update_color("#5C5470")
     
-    def update_sizing(self, *args):
-        width, height = self.size
+    def update_sizing(self, width, height): 
         self.header_font_size = int(width * 0.03)
         if self.header_font_size > 23:
             self.header_font_size = 23
+        self.height = int(height * 0.055)   
+        print(f"header_font_size: {self.header_font_size}")
         
     def customized_ui(self, button_text_1 = None , button_text_2 = None):
         if button_text_1 is not None:
@@ -48,8 +49,7 @@ kv_header_buttons = '''
     button_2: button_2
 
     orientation: 'horizontal'
-    size_hint: 1, None
-    height: 35
+    size_hint: 1, None 
     
     Widget:
         size_hint: 0.05, 1

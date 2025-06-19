@@ -306,7 +306,7 @@ class CreateAccountScreen(Screen):
                 self.registration_form.children[0].update_sizing()
         
         if self.header_buttons is not None:
-            self.header_buttons.update_sizing()
+            self.header_buttons.update_sizing(width=width, height=height)
             
 
     def on_enter(self, *args):
