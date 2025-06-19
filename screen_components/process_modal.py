@@ -23,7 +23,7 @@ class CustomSpinner(Image):
         self.size_hint = (None, None)
         self.anim = None
 
-        # parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        # parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir) 
         # self.process_image = os.path.join(parent_dir, 'assets', 'loading_image.png')
 
         # Use canvas instructions to apply rotation
@@ -51,7 +51,7 @@ class CustomSpinner(Image):
 
     def display_done(self, *args):
         # Update the image to success icon
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir) 
         self.source = os.path.join(parent_dir, 'assets', 'success_icon.png')
         self.angle = 0 
         # Animate grow and fade out sequentially
@@ -70,7 +70,7 @@ class CustomSpinner(Image):
             
     def display_error(self, *args):
         # Update the image to error icon
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir) 
         self.source = os.path.join(parent_dir, 'assets', 'error_icon.png')
         self.angle = 0
         # Animate grow and fade out sequentially
@@ -133,7 +133,7 @@ class ProcessingLayout(ModalView):
     
     def on_pre_open(self):
         self.auto_dismiss = False
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir) 
         self.spinner.source = os.path.join(parent_dir, 'assets', 'loading_icon.png')
         return super().on_pre_open()
     def on_open(self):

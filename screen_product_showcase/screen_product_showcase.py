@@ -1,16 +1,8 @@
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
-from kivy.core.window import Window
-from kivy.uix.boxlayout import BoxLayout 
-from kivy.animation import Animation
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.image import Image
-from types import MethodType  # ✅ Import MethodType
-from kivy.clock import Clock
-from kivy.utils import platform
-from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransition, ScreenManager
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty 
+from kivy.animation import Animation 
+from kivy.uix.label import Label   
 from kivymd.app import MDApp 
 from kivy.utils import get_color_from_hex
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -91,7 +83,7 @@ class ProductShowcaseProduct(
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.selected_icon = os.path.join(parent_dir, 'assets', 'selected_icon.png')
 
     def update_sizing(self, width, height):
@@ -157,7 +149,7 @@ class ProductShowcaseScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.cart_subscribe_icon = os.path.join(parent_dir, 'assets', 'cart_subscribe_icon.png') 
         self.product_subscribe_icon = os.path.join(parent_dir, 'assets', 'product_icon.png')
         

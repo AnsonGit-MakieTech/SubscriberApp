@@ -43,7 +43,7 @@ class HeadlineLayout(MDBoxLayout):
             self.update_sizing()
     
     def setup_image(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.ticket_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.wallet_icon.sec_icon = os.path.join(parent_dir, 'assets', 'wallet_icon.png')
         # for key, widget in self.ids.items():

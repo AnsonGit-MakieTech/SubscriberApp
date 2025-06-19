@@ -45,7 +45,7 @@ class FirstTimeScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.logo = os.path.join(parent_dir, 'assets', 'app_logo.png')
         self.visit_icon = os.path.join(parent_dir, 'assets', 'visit_icon.png')
         self.has_wifi_icon = os.path.join(parent_dir, 'assets', 'has_wifi_icon.png')

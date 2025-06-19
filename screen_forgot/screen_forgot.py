@@ -47,7 +47,7 @@ class ForgotAccountScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
         self.forgot_account_logo = os.path.join(parent_dir, 'assets', 'forgot_account_logo.png')
         

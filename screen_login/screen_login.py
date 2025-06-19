@@ -1,14 +1,9 @@
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
-from kivy.core.window import Window
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty 
 from kivy.uix.boxlayout import BoxLayout 
-from kivy.animation import Animation
-from kivy.uix.button import Button
-from kivy.uix.image import Image
-from types import MethodType  # ✅ Import MethodType
-from kivy.clock import Clock
-from kivy.utils import platform
+from kivy.animation import Animation  
+from kivy.clock import Clock 
 from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransition, ScreenManager
 from kivymd.app import MDApp 
 
@@ -40,7 +35,7 @@ class FormLayout(BoxLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
         Clock.schedule_once(self.update_sizing, 0) 
         # self.bind(size=self.update_sizing)
@@ -101,7 +96,7 @@ class LogoLocation(BoxLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        parent_dir = os.path.dirname(os.path.dirname(__file__)) 
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir) 
         
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_logo.png')
 

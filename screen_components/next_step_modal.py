@@ -41,7 +41,7 @@ class NextStepModal(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.visit_icon = os.path.join(parent_dir, 'assets', 'intro_visit_icon.png')
         self.visit_unselected_icon = os.path.join(parent_dir, 'assets', 'intro_visit_unselect_icon.png')
         self.online_icon = os.path.join(parent_dir, 'assets', 'pay_online_icon.png')

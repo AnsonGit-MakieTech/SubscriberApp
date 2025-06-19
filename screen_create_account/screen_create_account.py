@@ -85,7 +85,7 @@ class AccountRegistrationFormLayout(
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.opacity = 0
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.valid_id_image_source = os.path.join(parent_dir, 'assets', 'add_id_image.png')
 
         self.dropdown = DropDown(max_height=150)
@@ -248,7 +248,7 @@ class CreateAccountScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
         self.create_account_logo = os.path.join(parent_dir, 'assets', 'create_account_logo.png')
 

@@ -42,7 +42,7 @@ class ApplicationNumberModal(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.copy_icon = os.path.join(parent_dir, 'assets', 'copy_icon.png')
 
 

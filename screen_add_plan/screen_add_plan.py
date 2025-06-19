@@ -67,7 +67,7 @@ class AddPlanInformation(
         super().__init__(**kwargs) 
         self.md_bg_color = get_color_from_hex('#FFFFFF')
         
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.bag_icon = os.path.join(parent_dir, 'assets', 'bag_black_icon.png')
 
         Clock.schedule_interval(self.test_add_name, 0.5)
@@ -138,7 +138,7 @@ class SingleMarkerMapView(MapView):
             if self.current_marker:
                 self.remove_widget(self.current_marker)
             
-            parent_dir = os.path.dirname(os.path.dirname(__file__))
+            parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
 
             # add a new one
             self.current_marker = MapMarker(
@@ -191,7 +191,7 @@ class AddPlanScreen(Screen):
         super(AddPlanScreen, self).__init__(**kwargs)
         self.opacity = 0
 
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.home_icon = os.path.join(parent_dir, 'assets', 'house_icon.png')
         self.city_icon = os.path.join(parent_dir, 'assets', 'city_icon.png')
         self.question_icon = os.path.join(parent_dir, 'assets', 'q_a_icon.png')

@@ -54,7 +54,7 @@ class AccountHeader(FloatLayout):
     
 
     def on_kv_post(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.edit_icon.source = os.path.join(parent_dir, 'assets', 'edit_icon.png')
         self.logout_icon.source = os.path.join(parent_dir, 'assets', 'logout_icon.png')
         self.refresh_icon.source = os.path.join(parent_dir, 'assets', 'refresh_icon.png')

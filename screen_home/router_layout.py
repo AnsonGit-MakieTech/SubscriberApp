@@ -1,6 +1,4 @@
-from kivy.uix.actionbar import Label
-
-
+ 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors import BackgroundColorBehavior, CommonElevationBehavior
@@ -10,6 +8,7 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.animation import Animation
 from kivy.clock import Clock
+from kivy.uix.label import Label
 import os
 
 
@@ -126,7 +125,7 @@ class PlanWidget(
             Animation(opacity=1, elevation=4, d=0.3).start(self)
     
     def update_image(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
         for key, widget in self.ids.items():
             print(f"id: {key}, widget: {widget}")
@@ -158,7 +157,7 @@ class AddPlanWidget(
 
     
     def on_parent(self, instance, parent):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.add_plan_icon = os.path.join(parent_dir, 'assets', 'add_plan.png')
         main_app = MDApp.get_running_app()
         if parent is None:
@@ -258,7 +257,7 @@ class RouterLayout(MDBoxLayout):
             self.update_sizing()
 
     def setup_image(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.router_icon.sec_icon = os.path.join(parent_dir, 'assets', 'router_icon.png')
         self.router_icon.display_additional = False
         self.router_icon.is_half_padding_left = True

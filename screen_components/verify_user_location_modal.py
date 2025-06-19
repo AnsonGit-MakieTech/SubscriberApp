@@ -197,7 +197,7 @@ class UserVerificationMapModal(ModalView):
 
                 self.map_obj.add_widget(self.mapview)
                 
-                parent_dir = os.path.dirname(os.path.dirname(__file__))  
+                parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)  
                 self.map_marker = marker_icon = Image(
                     source=os.path.join(parent_dir, 'assets', 'map_house.png'),
                     keep_ratio=True,

@@ -1,4 +1,4 @@
-from kivy.uix.actionbar import Label
+ 
 
 from kivy.uix.dropdown import ScrollView
 
@@ -11,6 +11,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.scrollview import ScrollView
 from kivymd.app import MDApp 
+from kivy.uix.label import Label
 
 from kivy.clock import Clock
 import os
@@ -72,7 +73,7 @@ class AccountLayout(MDBoxLayout):
             self.update_sizing()
 
     def setup_image(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.account_icon.sec_icon = os.path.join(parent_dir, 'assets', 'account_icon.png')
         self.account_icon.display_additional = False
         self.account_icon.is_half_padding_left = True

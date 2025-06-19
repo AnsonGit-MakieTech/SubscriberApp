@@ -10,7 +10,7 @@ from kivymd.uix.screenmanager import MDScreenManager
 from kivy.lang.builder import Builder
 from kivy.core.text import LabelBase
 from kivy.utils import platform, get_color_from_hex
-from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty
+from kivy.properties import StringProperty, NumericProperty, ListProperty, BooleanProperty, ObjectProperty, DictProperty
 
 from variables import *
 import os
@@ -147,21 +147,26 @@ class SubscriberApp(MDApp):
     on_size_events_of_all_widgets = ListProperty([])
     _resize_scheduled = False
 
+    user_data = DictProperty({})
+
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens)
-        Clock.schedule_once(self.on_window_resize, 1) 
+        Clock.schedule_once(self.on_window_resize, 0.3) 
         # self.process_modal.open()
 
     def on_stop(self):
-        try:
-            # Close communications
-            self._clear_cache_folder()
-            self.communications.kill_all_threads()
-        except Exception as e:
-            # print(f"Error saving user data: {e}")
-            pass
+        def on_stop_event(self, *args):
+            try:
+                # Close communications
+                self._clear_cache_folder()
+                self.communications.kill_all_threads()
+            except Exception as e:
+                # print(f"Error saving user data: {e}")
+                pass 
+        Clock.schedule_once(on_stop_event, 0)
+        
 
     def on_pause(self):
         Clock.schedule_once(self.show_welcome_popup, 0.1)
@@ -171,8 +176,8 @@ class SubscriberApp(MDApp):
         self.theme_cls.primary_dark = get_color_from_hex("#352F44")
 
         # Set App Icon
-        self.icon = os.path.join(os.path.dirname(__file__), 'assets', 'app_logo.png')
-        splash_image = os.path.join(os.path.dirname(__file__), 'assets', 'splash.png')
+        self.icon = os.path.join(MDApp.get_running_app().user_data_dir, 'assets', 'app_logo.png')
+        splash_image = os.path.join(MDApp.get_running_app().user_data_dir, 'assets', 'splash.png')
 
         # Load Splash Image
         self.done_load_modal = ImageModal(splash_image)
@@ -209,7 +214,7 @@ class SubscriberApp(MDApp):
         self.application_number_modal = application_number_modal.ApplicationNumberModal()
         self.activate_account_modal = activate_account_modal.ActivateAccountModal()
 
-        # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
+        # login_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_login', 'screen_login.kv')
         # Builder.load_file(login_kv_path)
          
         def change_to_login_screen(*args):   
@@ -219,7 +224,7 @@ class SubscriberApp(MDApp):
             self.root_screen_manager.add_handler_screen(PRODUCT_SHOWCASE_SCREEN, ProductShowcaseScreen)
             self.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
 
-        test_kv_path = os.path.join(os.path.dirname(__file__), 'screen_product_showcase', 'screen_product_showcase.kv')
+        test_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_product_showcase', 'screen_product_showcase.kv')
         Builder.load_file(test_kv_path)
 
         Clock.schedule_once(self.show_welcome_popup)
@@ -239,17 +244,17 @@ class SubscriberApp(MDApp):
         # Builder.load_string(router_layout.kv_router_layout)
         # Builder.load_string(tickets_layout.kv_tickets_layout)
         # Builder.load_string(account_layout.kv_account_layout)
-        # home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        # home_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_home', 'screen_home.kv')
         # Builder.load_file(home_kv_path) 
 
-        # screen_add_plan_kv_path = os.path.join(os.path.dirname(__file__), 'screen_add_plan', 'screen_add_plan.kv')
+        # screen_add_plan_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_add_plan', 'screen_add_plan.kv')
         # Builder.load_file(screen_add_plan_kv_path)
 
-        # create_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_create_account', 'screen_create_account.kv')
+        # create_account_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_create_account', 'screen_create_account.kv')
         # Builder.load_file(create_account_kv_path)
         # self.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN, CreateAccountScreen)
         
-        # forgot_account_kv_path = os.path.join(os.path.dirname(__file__), 'screen_forgot', 'screen_forgot.kv')
+        # forgot_account_kv_path = os.path.join(MDApp.get_running_app().user_data_dir, 'screen_forgot', 'screen_forgot.kv')
         # Builder.load_file(forgot_account_kv_path)
         # self.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN, ForgotAccountScreen)
         pass
@@ -271,7 +276,7 @@ class SubscriberApp(MDApp):
         self._resize_scheduled = False
 
     def _clear_cache_folder(self):
-        cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
+        cache_dir = os.path.join(MDApp.get_running_app().user_data_dir, 'cache')
         if os.path.isdir(cache_dir):
             try:
                 # delete everything inside “cached”
@@ -285,18 +290,28 @@ class SubscriberApp(MDApp):
         else:
             print("Cache directory does not exist.")
 
+    def _load_user_data(self, *args):
+        try:
+            user_data_path = os.path.join(MDApp.get_running_app().user_data_dir, 'user_data.json')
+            if os.path.exists(user_data_path):
+                with open(user_data_path, 'r') as f:
+                    self.user_data = json.load(f) 
+        except Exception as e:
+            print(f"Error loading user data: {e}")
+    
+
 
 
 if __name__ == '__main__':
-    LabelBase.register(name="p_extrabold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraBold.ttf'))
-    LabelBase.register(name="p_bold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Bold.ttf'))
-    LabelBase.register(name="p_extralight", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-ExtraLight.ttf'))
-    LabelBase.register(name="p_regular", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Regular.ttf'))
-    LabelBase.register(name="p_light", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Light.ttf'))
-    LabelBase.register(name="p_medium", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Medium.ttf'))
-    LabelBase.register(name="p_italic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Italic.ttf'))
-    LabelBase.register(name="p_mediumitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-MediumItalic.ttf'))
-    LabelBase.register(name="p_semibold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-SemiBold.ttf'))
+    LabelBase.register(name="p_extrabold", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-ExtraBold.ttf'))
+    LabelBase.register(name="p_bold", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-Bold.ttf'))
+    LabelBase.register(name="p_extralight", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-ExtraLight.ttf'))
+    LabelBase.register(name="p_regular", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-Regular.ttf'))
+    LabelBase.register(name="p_light", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-Light.ttf'))
+    LabelBase.register(name="p_medium", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-Medium.ttf'))
+    LabelBase.register(name="p_italic", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-Italic.ttf'))
+    LabelBase.register(name="p_mediumitalic", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-MediumItalic.ttf'))
+    LabelBase.register(name="p_semibold", fn_regular=os.path.join(MDApp.get_running_app().user_data_dir, 'fonts', 'Poppins-SemiBold.ttf'))
     
     
     try:

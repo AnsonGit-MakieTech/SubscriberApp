@@ -1,14 +1,9 @@
-from kivy.uix.actionbar import Button
-from kivy.uix.actionbar import Label
+ 
 
 
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
-from kivy.uix.boxlayout import BoxLayout
-from kivymd.uix.behaviors import BackgroundColorBehavior, CommonElevationBehavior
-from kivymd.uix.widget import MDWidget
-from kivymd.uix.label import MDLabel
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.floatlayout import MDFloatLayout
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty 
+from kivymd.uix.behaviors import  CommonElevationBehavior 
+from kivymd.uix.boxlayout import MDBoxLayout 
 from kivy.uix.scrollview import ScrollView
 from kivy.animation import Animation
 from kivy.clock import Clock
@@ -112,7 +107,7 @@ class TicketsLayout(MDBoxLayout):
 
 
     def setup_image(self, *args):
-        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        parent_dir = os.path.dirname(MDApp.get_running_app().user_data_dir)
         self.router_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.router_icon.display_additional = False
         self.router_icon.is_half_padding_left = True
