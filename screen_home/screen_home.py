@@ -19,6 +19,10 @@ from kivy.uix.behaviors import ButtonBehavior
 from variables import *
 import os
 
+from screen_home import (
+    headline_layout
+)
+
 
 class TappableImage(ButtonBehavior, Image):
     button_event = ObjectProperty(None)
@@ -84,15 +88,13 @@ class HomeScreen(Screen):
     
     account_header : AccountHeader = ObjectProperty(None)
     header_height : NumericProperty = NumericProperty(0)
-
-
-
-
+     
     home_screen_spacing = NumericProperty(0)
     home_screen_radius = ListProperty([0, 0, 0, 0])
     home_screen_padding = ListProperty([0, 0, 0, 0])
 
 
+    headline : headline_layout.HeadlineLayout = ObjectProperty(None)
 
 
 
@@ -129,7 +131,21 @@ class HomeScreen(Screen):
         if hpad > 20:
             hpad = 20
         self.home_screen_padding = [hpad, hpad, hpad, hpad]
-        print(f"width: {width} , height: {height}, hpad: {hpad}")
+        
+        
+        if self.headline is not None:
+            self.headline.update_sizing(width=width, height=height)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # print(f"width: {width} , height: {height}, hpad: {hpad}")
+
 
 
 
