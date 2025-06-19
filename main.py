@@ -50,7 +50,7 @@ from screen_components import (
     add_ticket_modal, app_button, 
     label_clickable, top_form_buttons, 
     verify_user_location_modal, next_step_modal,
-    application_number_modal
+    application_number_modal, activate_account_modal
 )
 from screen_home import headline_layout, router_layout, account_layout, tickets_layout 
 from screen_create_account.screen_create_account import CreateAccountScreen
@@ -142,6 +142,7 @@ class SubscriberApp(MDApp):
     user_map_verification_modal = ObjectProperty(None)
     next_step_modal = ObjectProperty(None)
     application_number_modal = ObjectProperty(None)
+    activate_account_modal = ObjectProperty(None)
 
     on_size_events_of_all_widgets = ListProperty([])
     _resize_scheduled = False
@@ -184,19 +185,21 @@ class SubscriberApp(MDApp):
         self.root_screen_manager = sm
 
 
-
+        # Important Component Desigm
         Builder.load_string(section_icon.kv_section_layout)
         Builder.load_string(text_input.text_input_kv)
-        
-        Builder.load_string(logout_modal.kv_logout_modal)
-        Builder.load_string(process_modal.kv_process_modal)
-        Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
         Builder.load_string(app_button.kv_app_button)
         Builder.load_string(label_clickable.kv_label_clickable)
         Builder.load_string(top_form_buttons.kv_header_buttons)
+        # Modal Component Design
+        # TODO: Move this modal when it will be needed and not load it first time
+        Builder.load_string(logout_modal.kv_logout_modal)
+        Builder.load_string(process_modal.kv_process_modal)
+        Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
         Builder.load_string(verify_user_location_modal.kv_verify_user_location_modal)
         Builder.load_string(next_step_modal.kv_next_step_modal)
         Builder.load_string(application_number_modal.kv_application_number_modal)
+        Builder.load_string(activate_account_modal.kv_activate_account_modal)
 
         self.process_modal = process_modal.ProcessingLayout()
         self.logout_modal = logout_modal.LogoutModal()
@@ -204,7 +207,7 @@ class SubscriberApp(MDApp):
         self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
         self.next_step_modal = next_step_modal.NextStepModal()
         self.application_number_modal = application_number_modal.ApplicationNumberModal()
-
+        self.activate_account_modal = activate_account_modal.ActivateAccountModal()
 
         # login_kv_path = os.path.join(os.path.dirname(__file__), 'screen_login', 'screen_login.kv')
         # Builder.load_file(login_kv_path)
