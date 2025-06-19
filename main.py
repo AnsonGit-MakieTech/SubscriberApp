@@ -58,6 +58,7 @@ from screen_forgot.screen_forgot import ForgotAccountScreen
 from screen_login.screen_login import LoginScreen 
 from screen_first_time.screen_first_time import FirstTimeScreen
 from screen_product_showcase.screen_product_showcase import ProductShowcaseScreen
+from screen_home.screen_home import HomeScreen
 
 class TappableImage(Image):
     def __init__(self, modal_ref, **kwargs):
@@ -216,11 +217,15 @@ class SubscriberApp(MDApp):
             # self.root_screen_manager.add_handler_screen(LOGIN_SCREEN, LoginScreen)
             # self.root_screen_manager.change_screen(LOGIN_SCREEN) 
             print("Changing to login screen")
-            self.root_screen_manager.add_handler_screen(PRODUCT_SHOWCASE_SCREEN, ProductShowcaseScreen)
-            self.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
+            self.root_screen_manager.add_handler_screen(HOME_SCREEN, HomeScreen)
+            self.root_screen_manager.change_screen(HOME_SCREEN)
 
-        test_kv_path = os.path.join(os.path.dirname(__file__), 'screen_product_showcase', 'screen_product_showcase.kv')
-        Builder.load_file(test_kv_path)
+        Builder.load_string(headline_layout.kv_headline_layout)
+        Builder.load_string(router_layout.kv_router_layout)
+        Builder.load_string(tickets_layout.kv_tickets_layout)
+        Builder.load_string(account_layout.kv_account_layout)
+        home_kv_path = os.path.join(os.path.dirname(__file__), 'screen_home', 'screen_home.kv')
+        Builder.load_file(home_kv_path) 
 
         Clock.schedule_once(self.show_welcome_popup)
         Clock.schedule_once(change_to_login_screen, 1)

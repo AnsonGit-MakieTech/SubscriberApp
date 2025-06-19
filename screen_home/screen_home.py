@@ -35,21 +35,25 @@ class AccountHeader(FloatLayout):
     edit_icon : TappableImage = ObjectProperty(None)
     logout_icon : TappableImage = ObjectProperty(None)
     refresh_icon : TappableImage = ObjectProperty(None)
+
+    buttons_spacing = NumericProperty(0)
+    account_image_size = NumericProperty(100)
+    account_fname_font_size = NumericProperty(15)
+
+    account_image_radius = ListProperty([0, 0, 0, 0])
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # self.bind(size=self.update_sizing)
-        Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
+        super().__init__(**kwargs) 
 
     
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+    # def on_parent(self, instance, parent):
+    #     main_app = MDApp.get_running_app()
+    #     if parent is None:
+    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+    #     else:
+    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
             
     
 
@@ -60,22 +64,77 @@ class AccountHeader(FloatLayout):
         self.refresh_icon.source = os.path.join(parent_dir, 'assets', 'refresh_icon.png')
         
     
-    def update_sizing(self, *args): 
-        width , height = self.size
-        multiplier = 0.1
-        self.edit_icon.size = (width * multiplier, height * multiplier)
-        self.logout_icon.size = (width * multiplier, height * multiplier)
-        self.refresh_icon.size = (width * multiplier, height * multiplier)
+    def update_sizing(self, width, height ):
+        multiplier = 0.08
+        self.edit_icon.size = (width * multiplier, width * multiplier)
+        self.logout_icon.size = (width * multiplier, width * multiplier)
+        self.refresh_icon.size = (width * multiplier, width * multiplier)
+        self.buttons_spacing = width * 0.01
+
+        self.account_image_size = min(width, height) * 0.25
+
+        self.account_fname_font_size = min(width, height) * 0.09
+
+        rad = min(width, height) * 0.05
+        if rad > 16:
+            rad = 16
+        self.account_image_radius = [rad, rad, rad, rad]
 
 class HomeScreen(Screen):
     
     account_header : AccountHeader = ObjectProperty(None)
+    header_height : NumericProperty = NumericProperty(0)
+
+
+
+
+    home_screen_spacing = NumericProperty(0)
+    home_screen_radius = ListProperty([0, 0, 0, 0])
+    home_screen_padding = ListProperty([0, 0, 0, 0])
+
+
+
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
 
 
+    def on_parent(self, instance, parent):
+        main_app = MDApp.get_running_app()
+        if parent is None:
+            if self.update_sizing in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+        else:
+            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+            self.update_sizing() 
+
+    
+    def update_sizing(self, *args):
+        width , height = self.size
+        self.header_height = min(width, height) * 0.5
+
+        if self.account_header is not None:
+            self.account_header.update_sizing(width=width, height=height)
+        
+        self.home_screen_spacing = min(width, height) * 0.05
+
+        hrad = min(width, height) * 0.05
+        if hrad > 16:
+            hrad = 16
+        self.home_screen_radius = [hrad, hrad, 0 , 0]
+        hpad = min(width, height) * 0.06
+        if hpad > 20:
+            hpad = 20
+        self.home_screen_padding = [hpad, hpad, hpad, hpad]
+        print(f"width: {width} , height: {height}, hpad: {hpad}")
+
+
+
     def on_enter(self, *args):
+        
         main_app  = MDApp.get_running_app()
         # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
         # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)

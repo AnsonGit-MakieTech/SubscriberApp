@@ -18,45 +18,45 @@
             AccountHeader:
                 id: account_header
                 size_hint: ( 1, None)
-                height: 230
+                height: root.header_height
 
             MDBoxLayout:
                 size_hint: (1 , None)
                 orientation: 'vertical'
                 adaptive_height: True
-                padding: [20 , 20 , 20 , 20]
+                padding: root.home_screen_padding
                 canvas.before:
                     Color:
                         rgba: chex("#B9B4C7")
                     RoundedRectangle:
                         pos: self.pos
                         size: self.size
-                        radius: [16 , 16 , 0 , 0]
+                        radius: root.home_screen_radius
                 
                 Widget:
                     size_hint: (1, None)
-                    height: 20
+                    height: root.home_screen_spacing
                     
                 HeadlineLayout:
                     size_hint: (1, None)
 
                 Widget:
                     size_hint: (1, None)
-                    height: 20
+                    height: root.home_screen_spacing
                 
                 RouterLayout:
                     size_hint: (1, None)
                 
                 Widget:
                     size_hint: (1, None)
-                    height: 20
+                    height: root.home_screen_spacing
 
                 TicketsLayout:
                     size_hint: (1, None)
                     
                 Widget:
                     size_hint: (1, None)
-                    height: 20
+                    height: root.home_screen_spacing
 
                 AccountLayout:
                     size_hint: (1, None)
@@ -69,14 +69,14 @@
     
     AppButton:
         md_bg_color: chex("#5C5470")
-        radius: [16]
+        radius: root.account_image_radius
         size_hint: None, None
-        size: 120, 120
+        size: root.account_image_size, root.account_image_size
         pos_hint: {'center_x': 0.5,'center_y': 0.4}
 
         Label:
             size_hint: 1, 1
-            font_size: '34px'
+            font_size: root.account_fname_font_size
             font_name: 'p_extrabold'
             text: "N"
 
@@ -91,8 +91,8 @@
     MDBoxLayout:
         orientation: 'vertical'
         adaptive_size: True
-        pos_hint: {'top': 0.95 , 'x' : 0.005}  # Only affect vertical positioning
-        spacing: 5
+        pos_hint: {'top': 0.95 , 'x' : 0.015}  # Only affect vertical positioning
+        spacing: root.buttons_spacing
         
 
 
