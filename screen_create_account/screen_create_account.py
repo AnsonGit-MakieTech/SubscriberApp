@@ -318,19 +318,19 @@ class CreateAccountScreen(Screen):
         
         self.create_account_title_font_size = int(width* 0.05)
         self.create_account_content_font_size = int(width  * 0.03)
-        if self.create_account_title_font_size > 27:
-            self.create_account_title_font_size = 27
-        if self.create_account_content_font_size > 25:
-            self.create_account_content_font_size = 25
+        # if self.create_account_title_font_size > 27:
+        #     self.create_account_title_font_size = 27
+        # if self.create_account_content_font_size > 25:
+        #     self.create_account_content_font_size = 25
         self.h1_font_size = int(width * 0.04)
-        if self.h1_font_size > 17:
-            self.h1_font_size = 17
+        # if self.h1_font_size > 17:
+        #     self.h1_font_size = 17
         self.h2_font_size = int(width * 0.03)
-        if self.h2_font_size > 15:
-            self.h2_font_size = 15
+        # if self.h2_font_size > 15:
+        #     self.h2_font_size = 15
         self.find_my_location_button_font_size = int(width * 0.03)
-        if self.find_my_location_button_font_size > 19:
-            self.find_my_location_button_font_size = 19
+        # if self.find_my_location_button_font_size > 19:
+        #     self.find_my_location_button_font_size = 19
         
         self.widget_15_height = int(min(width, height) * 0.05)
         self.widget_25_height = int(min(width, height) * 0.15)
@@ -353,7 +353,7 @@ class CreateAccountScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
         # main_app.on_window_resize()
         
-        Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
+        # Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
 
         self.find_my_location_button.update_color("#352F44")
         anim = Animation(opacity=1, duration=0.5)
@@ -386,7 +386,7 @@ class CreateAccountScreen(Screen):
             
             def display_registration_form(*args): 
                 registration.customized_ui()
-                anim = Animation(opacity=1, duration=0.5) 
+                anim = Animation(opacity=1, duration=0.5)
                 anim.start(registration)
             Clock.schedule_once(display_registration_form, 0.2)
 
