@@ -152,23 +152,23 @@ class AccountRegistrationFormLayout(
 
     def update_sizing(self, width, height): 
         self.h1_font_size = int(width * 0.043)
-        if self.h1_font_size > 18:
-            self.h1_font_size = 18
+        # if self.h1_font_size > 18:
+        #     self.h1_font_size = 18
         self.h2_font_size = int(width * 0.038)
-        if self.h2_font_size > 16:
-            self.h2_font_size = 16
+        # if self.h2_font_size > 16:
+        #     self.h2_font_size = 16
         
         self.valid_id_image_width = int(width * 0.9)
-        if self.valid_id_image_width > 250:
-            self.valid_id_image_width = 250
+        # if self.valid_id_image_width > 250:
+        #     self.valid_id_image_width = 250
         
         self.h3_font_size = int(width * 0.035)
-        if self.h3_font_size > 14:
-            self.h3_font_size = 14
+        # if self.h3_font_size > 14:
+        #     self.h3_font_size = 14
         
         self.h4_font_size = int(width * 0.032)
-        if self.h4_font_size > 12:
-            self.h4_font_size = 12
+        # if self.h4_font_size > 12:
+        #     self.h4_font_size = 12
 
         self.widget_8_height = int(min(width , height) * 0.03 )
         self.widget_15_height = int(min(width, height) * 0.05)
