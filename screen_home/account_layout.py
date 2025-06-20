@@ -71,7 +71,10 @@ class AccountLayout(MDBoxLayout):
                 main_app.on_size_events_of_all_widgets.append(self.update_sizing)
             self.update_sizing()
 
-    def setup_image(self, *args):
+    def setup_image(self, *args): 
+        if self.account_icon is None:
+            Clock.schedule_once(self.setup_image, 0.3)
+            return
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.account_icon.sec_icon = os.path.join(parent_dir, 'assets', 'account_icon.png')
         self.account_icon.display_additional = False

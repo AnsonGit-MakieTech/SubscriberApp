@@ -32,6 +32,14 @@ class HeadlineLayout(MDBoxLayout):
      
     
     def setup_image(self, *args):
+        
+        if self.ticket_icon is None:
+            Clock.schedule_once(self.setup_image, 0.3)
+            return
+        if self.wallet_icon is None:
+            Clock.schedule_once(self.setup_image, 0.3)
+            return
+        
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.ticket_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.wallet_icon.sec_icon = os.path.join(parent_dir, 'assets', 'wallet_icon.png')
