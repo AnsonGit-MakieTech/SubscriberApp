@@ -267,6 +267,10 @@ class ListOfPlans(ScrollView):
         add_plan.update_sizing()
         self.container_layout.add_widget(add_plan)
 
+        width, height = Window.size
+        self.update_sizing(width , height)
+ 
+
 
 class AdditionalPlansList(MDBoxLayout):
 
@@ -324,6 +328,7 @@ class RouterLayout(MDBoxLayout):
             self.router_icon.update_sizing(width, height)
 
         if self.plan_list is not None:
+            width , height = Window.size
             self.plan_list.update_sizing(width, height)
 
          
