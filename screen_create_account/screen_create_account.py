@@ -383,11 +383,17 @@ class CreateAccountScreen(Screen):
             registration = AccountRegistrationFormLayout()
             self.registration_form.add_widget(registration) 
             self.update_sizing()
+
+            def on_complete(*args):
+                self.update_sizing()
+                registration.update_sizing_inputs()
+                self.update_sizing()
             
             def display_registration_form(*args): 
                 registration.customized_ui()
                 anim = Animation(opacity=1, duration=0.5)
-                anim.bind(on_progress=registration.update_sizing_inputs)
+                # anim.bind(on_progress=registration.update_sizing_inputs)
+                anim.bind(on_complete=on_complete)
                 anim.start(registration)
             Clock.schedule_once(display_registration_form, 0.2)
 
