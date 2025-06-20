@@ -353,7 +353,7 @@ class CreateAccountScreen(Screen):
         # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
         # main_app.on_window_resize()
         
-        # Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
+        Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
 
         self.find_my_location_button.update_color("#352F44")
         anim = Animation(opacity=1, duration=0.5)
