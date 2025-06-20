@@ -251,9 +251,15 @@ class ListOfPlans(ScrollView):
                 widget.update_sizing()
     
     def test_adding_widget(self , *args):
-        self.container_layout.add_widget(PlanWidget())
-        self.container_layout.add_widget(EmptyPlanWidget())
-        self.container_layout.add_widget(AddPlanWidget())
+        plan = PlanWidget()
+        plan.update_sizing()
+        self.container_layout.add_widget(plan)
+        empty_plan = EmptyPlanWidget()
+        empty_plan.update_sizing()
+        self.container_layout.add_widget(empty_plan)
+        add_plan = AddPlanWidget()
+        add_plan.update_sizing()
+        self.container_layout.add_widget(add_plan)
 
 
 class AdditionalPlansList(MDBoxLayout):
