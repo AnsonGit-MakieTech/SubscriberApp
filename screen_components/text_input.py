@@ -70,6 +70,7 @@ class OneLineInput(MDBoxLayout):
             self.is_password = is_password
         if halign:
                 self.text_input.halign = halign
+        self.setup_layout()
 
     def setup_layout(self, *args):
         # Make sure our child TextInput actually exists
@@ -97,6 +98,7 @@ class OneLineInput(MDBoxLayout):
 
         # 5) Force a redraw of the text inside TextInput
         ti._refresh_text(ti.text)  # no argument needed
+        print(f"setup_font_size: {self.setup_font_size}")
 
 
 

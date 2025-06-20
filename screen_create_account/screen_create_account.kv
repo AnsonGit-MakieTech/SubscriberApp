@@ -147,7 +147,7 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 30
+                        height: root.widget_30_height
 
 
         BoxLayout:
@@ -221,7 +221,7 @@
     
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
@@ -238,11 +238,11 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -259,7 +259,7 @@
     OneLineInput:
         id: first_name_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -268,7 +268,7 @@
     OneLineInput: 
         id: middle_name_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -277,7 +277,7 @@
     OneLineInput: 
         id: last_name_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -286,7 +286,7 @@
     OneLineInput: 
         id: email_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
 
     Widget:
@@ -296,7 +296,7 @@
     AppButton: 
         id: date_of_birth_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         on_release: root.select_date()
         md_bg_color: chex('#5C5470')
 
@@ -312,11 +312,11 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -332,7 +332,7 @@
     OneLineInput: 
         id: street_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -341,7 +341,7 @@
     OneLineInput: 
         id: barangay_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -350,7 +350,7 @@
     AppButton: 
         id: city_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
         Label:
             size_hint: 1, 1
@@ -360,11 +360,11 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -380,7 +380,7 @@
     OneLineInput: 
         id: phone1_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -389,7 +389,7 @@
     OneLineInput: 
         id: phone2_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -398,17 +398,17 @@
     OneLineInput: 
         id: phone3_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
 
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -451,11 +451,11 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -472,7 +472,7 @@
     OneLineInput: 
         id: username_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -481,7 +481,7 @@
     OneLineInput: 
         id: password_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
     Widget:
         size_hint: 1, None
@@ -490,16 +490,16 @@
     OneLineInput: 
         id: confirm_password_input
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
 
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
     Label:
         size_hint: 1, None
-        height: 35
+        height: root.widget_35_height
         font_size: root.h2_font_size
         halign: 'left'
         valign: 'middle'  # optional, keeps vertical centering
@@ -511,9 +511,9 @@
 
     BoxLayout:
         size_hint: 1, None
-        height: 33
+        height: root.widget_35_height
         orientation: 'horizontal'
-        spacing: 5
+        spacing: root.widget_8_height
         
         CustomCheckbox:
             size_hint: None, None
@@ -532,13 +532,13 @@
     
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_8_height
     
     BoxLayout:
         size_hint: 1, None
-        height: 33
+        height: root.widget_35_height
         orientation: 'horizontal'
-        spacing: 5
+        spacing: root.widget_8_height
         
         CustomCheckbox:
             size_hint: None, None
@@ -557,14 +557,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
 
 
 
     BoxLayout:
         size_hint: 1, None
-        height: 30
+        height: root.widget_30_height
         orientation: 'horizontal'
 
         Widget:
@@ -587,7 +587,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_15_height
 
 
 
