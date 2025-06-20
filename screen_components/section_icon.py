@@ -31,7 +31,8 @@ class SectionIconLayout(BoxLayout):
     sec_icon = StringProperty("")
     clickable_image : ClickableImage = ObjectProperty(None)
     display_additional = BooleanProperty(True)
-    is_half_padding_left = BooleanProperty(False) 
+    is_half_padding_left = BooleanProperty(False)
+    image_size = NumericProperty(100)
 
     def setup_additional(self, main_text , additional_event, has_comming_soon):
         if main_text:
@@ -40,6 +41,58 @@ class SectionIconLayout(BoxLayout):
             self.clickable_image.additional_event = additional_event  
         self.clickable_image.has_comming_soon = has_comming_soon
         self.clickable_image.set_angle = -45 if has_comming_soon else 0
+
+    
+    def update_sizing(self, width, height):
+        
+        self.height = int(min(width, height) * 0.1)
+        self.image_size = int(self.height * 0.75)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

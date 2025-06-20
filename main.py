@@ -130,11 +130,11 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
         if not self.does_screen_exist(screen_name): 
             
  
-            # if screen_name == HOME_SCREEN:
-                # Builder.load_string(headline_layout.kv_headline_layout) 
-                # Builder.load_string(router_layout.kv_router_layout)
-                # Builder.load_string(account_layout.kv_account_layout)
-                # Builder.load_string(tickets_layout.kv_tickets_layout)
+            # if screen_name == HOME_SCREEN: 
+                # Builder.load_string(headline_layout.kv_headline_layout) USELESS LOADING THIS
+                # Builder.load_string(router_layout.kv_router_layout) USELESS LOADING THIS
+                # Builder.load_string(account_layout.kv_account_layout) USELESS LOADING THIS
+                # Builder.load_string(tickets_layout.kv_tickets_layout) USELESS LOADING THIS
 
 
             screen_kv = os.path.join(os.path.dirname(__file__), folder, file_name)
@@ -233,7 +233,7 @@ class SubscriberApp(MDApp):
 
 
         # Important Component Desigm
-        # Builder.load_string(section_icon.kv_section_layout)
+        # Builder.load_string(section_icon.kv_section_layout) USELESS LOADING THIS
         Builder.load_string(text_input.text_input_kv)
         Builder.load_string(app_button.kv_app_button)
         Builder.load_string(label_clickable.kv_label_clickable)

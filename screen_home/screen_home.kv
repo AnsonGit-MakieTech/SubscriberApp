@@ -1,5 +1,5 @@
 <SectionIconLayout>:
-    height: 30
+    # height: 30
     clickable_image : clickable_image
 
     Widget:
@@ -10,7 +10,7 @@
         allow_stretch: True
         keep_ration: True
         size_hint: None, 1
-        width: 20
+        width: root.image_size
     
     Widget:
         size_hint: (0.8, 1) if not root.is_half_padding_left else (0.85 , 1)
@@ -18,7 +18,7 @@
     ClickableImage:
         id: clickable_image
         size_hint: None, 1
-        width: 40
+        width: (root.image_size * 2)
         opacity: 1 if root.display_additional else 0
     
     Widget:
@@ -242,6 +242,7 @@
         adaptive_height: True
         radius: root.content_background_radius
         md_bg_color: chex("#5C5470")
+        pos_hint: {'top': 1}
         # canvas.before:
         #     Color:
         #         rgba: 
@@ -252,7 +253,7 @@
         
         Widget:
             size_hint: 1, None
-            height: 5
+            height: root.widget_height_5
 
         SectionIconLayout:
             id: wallet_icon
@@ -260,11 +261,11 @@
 
         Widget:
             size_hint: 1, None
-            height: 10
+            height: root.widget_height_10
 
         BoxLayout:
             size_hint: 1, None
-            height: 15
+            height: root.widget_height_15
             orientation: 'horizontal'
 
             Widget:
@@ -274,27 +275,27 @@
                 size_hint: 0.6, 1
                 text: "UNPAID"
                 font_name: 'p_bold'
-                font_size: 7
+                font_size: root.widget_height_7
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
 
         Label:
             size_hint: 1, None
-            height: 20
+            height: root.widget_height_20
             text: root.unpaid_balance
             font_name: 'p_bold'
-            font_size: 13
+            font_size: root.widget_height_13
             color: chex("#FAF0E6")
 
         Widget:
             size_hint: 1, None
-            height: 5
+            height: root.widget_height_5
 
         
         BoxLayout:
             size_hint: 1, None
-            height: 15
+            height: root.widget_height_15
             orientation: 'horizontal'
 
             Widget:
@@ -304,27 +305,27 @@
                 size_hint: 0.6, 1
                 text: "WALLET"
                 font_name: 'p_bold'
-                font_size: 5
+                font_size: root.widget_height_5
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
 
         Label:
             size_hint: 1, None
-            height: 10
+            height: root.widget_height_10
             text: root.wallet_balance
             font_name: 'p_bold'
-            font_size: 7
+            font_size: root.widget_height_7
             color: chex("#FAF0E6")
 
         Widget:
             size_hint: 1, None
-            height: 15
+            height: root.widget_height_15
 
 
         Widget:
             size_hint: 1, None
-            height: 8
+            height: root.widget_height_8
 
 
 
@@ -336,6 +337,7 @@
         adaptive_height: True
         radius: root.content_background_radius
         md_bg_color: chex("#5C5470")
+        pos_hint: {'top': 1}
         # canvas.before:
         #     Color:
         #         rgba: chex("#5C5470")
@@ -346,7 +348,7 @@
         
         Widget:
             size_hint: 1, None
-            height: 5
+            height: root.widget_height_5
 
         SectionIconLayout:
             id: ticket_icon
@@ -354,11 +356,11 @@
     
         Widget:
             size_hint: 1, None
-            height: 10
+            height: root.widget_height_10
 
         BoxLayout:
             size_hint: 1, None
-            height: 15
+            height: root.widget_height_15
             orientation: 'horizontal'
 
             Widget:
@@ -368,7 +370,7 @@
                 size_hint: 0.6, 1
                 text: root.ticket_status
                 font_name: 'p_bold'
-                font_size: 7
+                font_size: root.widget_height_7
                 text_size: self.size
                 halign: 'left'
                 valign: 'middle'
@@ -376,21 +378,20 @@
 
         Label:
             size_hint: 1, None
-            height: 20
+            height: root.widget_height_20
             text: root.ticket_number
             font_name: 'p_bold'
-            font_size: 13
+            font_size: root.widget_height_13
             color: chex("#FAF0E6")
         
             
         Widget:
             size_hint: 1, None
-            height: 35
-
+            height: root.widget_height_35 
 
         BoxLayout:
             size_hint: 1, None
-            height: 10
+            height: root.widget_height_10
             orientation: 'horizontal'
 
             Widget:
@@ -410,7 +411,7 @@
 
         Widget:
             size_hint: 1, None
-            height: 8
+            height: root.widget_height_8
 
 
 

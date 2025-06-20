@@ -7,6 +7,7 @@ from kivymd.app import MDApp
 import os
 
 from screen_components import section_icon
+from kivy.core.window import Window
 
 class HeadlineLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
@@ -21,14 +22,20 @@ class HeadlineLayout(MDBoxLayout):
     wallet_balance = StringProperty("P 0.00")
     unpaid_balance = StringProperty("P 0.00")
 
+    widget_height_5 = NumericProperty(0)
+    widget_height_7 = NumericProperty(0)
+    widget_height_8 = NumericProperty(0)
+    widget_height_10 = NumericProperty(0)
+    widget_height_13 = NumericProperty(0)
+    widget_height_15 = NumericProperty(0)
+    widget_height_20 = NumericProperty(0)
+    widget_height_35 = NumericProperty(0)
+
+ 
+
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        # self.bind(size=self.update_sizing)
-        # Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
- 
-    
+        super().__init__(**kwargs) 
      
     
     def setup_image(self, *args):
@@ -40,6 +47,10 @@ class HeadlineLayout(MDBoxLayout):
             Clock.schedule_once(self.setup_image, 0.3)
             return
         
+        
+        width , height = Window.size
+        self.ticket_icon.update_sizing(width, height)
+        self.wallet_icon.update_sizing(width, height)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.ticket_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.wallet_icon.sec_icon = os.path.join(parent_dir, 'assets', 'wallet_icon.png')
@@ -66,6 +77,64 @@ class HeadlineLayout(MDBoxLayout):
         r = min(width, height) * 0.025  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
         print(f"width: {width}, height: {height}, spacing")
+
+        width , height = Window.size
+        if self.ticket_icon is not None:
+            self.ticket_icon.update_sizing(width, height) 
+        if self.wallet_icon is not None:
+            self.wallet_icon.update_sizing(width, height)
+        
+        self.widget_height_5 = int(min( width, height) * 0.02)
+        self.widget_height_7 = int(min( width, height) * 0.03)
+        self.widget_height_8 = int(min( width, height) * 0.035)
+        self.widget_height_10 = int(min( width, height) * 0.04)
+        self.widget_height_13 = int(min( width, height) * 0.05)
+        self.widget_height_15 = int(min( width, height) * 0.055)
+        self.widget_height_20 = int(min( width, height) * 0.07)
+        self.widget_height_35 = int(min( width, height) * 0.13)
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -25,6 +25,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivymd.app import MDApp 
 
 
+from kivy.core.window import Window
 
 
 
@@ -78,10 +79,7 @@ class AdditionalPlanList(ScrollView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
-    
-    
-
+ 
 
 class PlanClickableImage(ButtonBehavior, Image):
     pass
@@ -223,12 +221,7 @@ class AdditionalPlansList(MDBoxLayout):
         super().__init__(**kwargs)
 
 
-
-
-
-
-
-
+ 
 
 class RouterLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
@@ -261,6 +254,8 @@ class RouterLayout(MDBoxLayout):
         if self.router_icon is None:
             Clock.schedule_once(self.setup_image, 0.3)
             return
+        width , height = Window.size
+        self.router_icon.update_sizing(width, height)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.router_icon.sec_icon = os.path.join(parent_dir, 'assets', 'router_icon.png')
         self.router_icon.display_additional = False
@@ -271,6 +266,9 @@ class RouterLayout(MDBoxLayout):
         self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+        width , height = Window.size
+        if self.router_icon is not None:
+            self.router_icon.update_sizing(width, height)
 
     def open_selected_layout(self, *args):
         anime = Animation(height=180,  duration=0.3)
@@ -281,6 +279,50 @@ class RouterLayout(MDBoxLayout):
         if len(self.selected_plan_layout.children) < 1:
             self.additional_plans_list = AdditionalPlansList()
             self.selected_plan_layout.add_widget(self.additional_plans_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 kv_router_layout = '''

@@ -26,6 +26,7 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 
+from kivy.core.window import Window
 
 
 class TicketWidget(
@@ -115,6 +116,8 @@ class TicketsLayout(MDBoxLayout):
         if self.router_icon is None: 
             Clock.schedule_once(self.setup_image, 0.3)
             return
+        width , height = Window.size
+        self.router_icon.update_sizing(width, height)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.router_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.router_icon.display_additional = False
@@ -124,6 +127,58 @@ class TicketsLayout(MDBoxLayout):
         width, height = self.size
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+        width , height = Window.size
+        if self.router_icon is not None:
+            self.router_icon.update_sizing(width, height)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 kv_tickets_layout = '''
 <TicketsLayout>:

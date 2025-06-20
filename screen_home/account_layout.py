@@ -24,6 +24,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
 
 from kivy.uix.image import Image
+from kivy.core.window import Window
 
 
 
@@ -75,6 +76,9 @@ class AccountLayout(MDBoxLayout):
         if self.account_icon is None:
             Clock.schedule_once(self.setup_image, 0.3)
             return
+        
+        width , height = Window.size
+        self.account_icon.update_sizing(width, height)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.account_icon.sec_icon = os.path.join(parent_dir, 'assets', 'account_icon.png')
         self.account_icon.display_additional = False
@@ -84,6 +88,47 @@ class AccountLayout(MDBoxLayout):
         width, height = self.size
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+        width , height = Window.size
+        if self.account_icon is not None:
+            self.account_icon.update_sizing(width, height)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
