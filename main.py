@@ -145,6 +145,10 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
             elif screen_name == FORGOT_ACCOUNT_SCREEN:
                 self.handler.add_widget(ForgotAccountScreen(name=screen_name))
             elif screen_name == HOME_SCREEN:
+                Builder.load_string(headline_layout.kv_headline_layout) 
+                Builder.load_string(router_layout.kv_router_layout)
+                Builder.load_string(account_layout.kv_account_layout)
+                Builder.load_string(tickets_layout.kv_tickets_layout)
                 self.handler.add_widget(HomeScreen(name=screen_name))
             elif screen_name == ADD_PLAN_SCREEN:
                 self.handler.add_widget(AddPlanScreen(name=screen_name)) 

@@ -174,7 +174,7 @@ class LoginScreen(Screen):
         anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
         anim.start(self) 
         # print("entering logoin")
-        Clock.schedule_once(self.load_forgot_screen)
+        Clock.schedule_once(self.load_connected_screen)
         return super().on_enter(*args)
 
 
@@ -185,18 +185,23 @@ class LoginScreen(Screen):
     def login_event(self):
         print("login event")
         main_app  = MDApp.get_running_app()
-        main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
-        # main_app.root_screen_manager.change_screen(HOME_SCREEN)
-        # Clock.schedule_once(main_app.show_welcome_popup)
-
-        main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN)
-        main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
-        Clock.schedule_once(main_app.show_welcome_popup)
+        Clock.schedule_once(main_app.show_welcome_popup)  
+        if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
+        main_app.root_screen_manager.change_screen(HOME_SCREEN)
 
     
 
-    def load_forgot_screen(self, *args):
+    def load_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
+        
+        if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
+            main_app.load_all_home_screen_modal()
+            main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
+
         if not main_app.root_screen_manager.does_screen_exist(FORGOT_ACCOUNT_SCREEN):
             main_app.root_screen_manager.builder_load_screen('screen_forgot', 'screen_forgot.kv', FORGOT_ACCOUNT_SCREEN )
             main_app.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN)
+        

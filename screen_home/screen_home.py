@@ -139,11 +139,6 @@ class HomeScreen(Screen):
         
         
         
-        
-        
-        
-        
-        
         # print(f"width: {width} , height: {height}, hpad: {hpad}")
 
 
@@ -161,6 +156,8 @@ class HomeScreen(Screen):
         self.account_header.logout_icon.button_event = main_app.logout_modal.open
         self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
         self.account_header.refresh_icon.button_event = main_app.process_modal.open
+
+        Clock.schedule_once(self.load_all_connected_screen, 1)
  
         return super().on_enter(*args)
  
@@ -168,6 +165,19 @@ class HomeScreen(Screen):
     def remove_outside_screens(self, *args):
         # This function used to removed the outside screens ( login, register and forgot password)
         main_app  = MDApp.get_running_app()
-        main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)
-        main_app.root_screen_manager.remove_screen(CREATE_ACCOUNT_SCREEN)
-        main_app.root_screen_manager.remove_screen(FORGOT_ACCOUNT_SCREEN)
+        # main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)
+        # main_app.root_screen_manager.remove_screen(CREATE_ACCOUNT_SCREEN)
+        # main_app.root_screen_manager.remove_screen(FORGOT_ACCOUNT_SCREEN)
+
+        main_app.close_welcome_popup()
+
+    
+    def load_all_connected_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        
+        if not main_app.root_screen_manager.does_screen_exist(ADD_PLAN_SCREEN): 
+            main_app.root_screen_manager.builder_load_screen('screen_add_plan', 'screen_add_plan.kv', ADD_PLAN_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN)
+
+
+
