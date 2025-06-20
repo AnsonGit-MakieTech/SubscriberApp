@@ -128,6 +128,15 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
 
     def builder_load_screen(self, folder , file_name, screen_name):
         if not self.does_screen_exist(screen_name): 
+            
+ 
+            if screen_name == HOME_SCREEN:
+                Builder.load_string(headline_layout.kv_headline_layout) 
+                Builder.load_string(router_layout.kv_router_layout)
+                Builder.load_string(account_layout.kv_account_layout)
+                Builder.load_string(tickets_layout.kv_tickets_layout)
+
+
             screen_kv = os.path.join(os.path.dirname(__file__), folder, file_name)
             Builder.load_file(screen_kv)
  
@@ -145,11 +154,6 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
             elif screen_name == FORGOT_ACCOUNT_SCREEN:
                 self.handler.add_widget(ForgotAccountScreen(name=screen_name))
             elif screen_name == HOME_SCREEN:
-                # Builder.load_string(section_icon.kv_section_layout)
-                Builder.load_string(headline_layout.kv_headline_layout) 
-                Builder.load_string(router_layout.kv_router_layout)
-                Builder.load_string(account_layout.kv_account_layout)
-                Builder.load_string(tickets_layout.kv_tickets_layout)
                 self.handler.add_widget(HomeScreen(name=screen_name))
             elif screen_name == ADD_PLAN_SCREEN:
                 self.handler.add_widget(AddPlanScreen(name=screen_name)) 
@@ -229,7 +233,7 @@ class SubscriberApp(MDApp):
 
 
         # Important Component Desigm
-        # Builder.load_string(section_icon.kv_section_layout)
+        Builder.load_string(section_icon.kv_section_layout)
         Builder.load_string(text_input.text_input_kv)
         Builder.load_string(app_button.kv_app_button)
         Builder.load_string(label_clickable.kv_label_clickable)
