@@ -142,7 +142,7 @@ class PlanWidget(
 
 
     def update_sizing(self, *args):
-        width, height = self.size
+        width, height = self.size 
         r = min(width, height) * 0.045
         self.content_background_radius = [r, r, r, r]
 
@@ -252,13 +252,13 @@ class ListOfPlans(ScrollView):
                 widget.update_sizing()
     
     def test_adding_widget(self , *args):
-        plan = PlanWidget()
+        plan = PlanWidget(size_hint = (None , 1))
         plan.update_sizing()
         self.container_layout.add_widget(plan)
-        plan = PlanWidget()
+        plan = PlanWidget( size_hint = (None , 1))
         plan.update_sizing()
         self.container_layout.add_widget(plan)
-        plan = PlanWidget()
+        plan = PlanWidget(size_hint = (None , 1))
         plan.update_sizing()
         self.container_layout.add_widget(plan)
         empty_plan = EmptyPlanWidget()
