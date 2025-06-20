@@ -96,44 +96,62 @@ class PlanWidget(
     view_icon : PlanClickableImage = ObjectProperty(None)
     is_viewing = BooleanProperty(False)
     widget_type = StringProperty("plan")
+    
+    is_okey_to_cliked = BooleanProperty(True)
+    is_selected = BooleanProperty(True) # it will revert into false
+
+    widget_height_8 = NumericProperty(8)
+    widget_height_10 = NumericProperty(0) 
+    widget_height_13 = NumericProperty(0) 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
-        Clock.schedule_once(self.update_sizing, 0.1)
         
         Clock.schedule_once(self.update_image, 0.1)
         self.opacity = 0
         self.elevation = 0
 
+        self.bind(on_release=self.update_image)
+
     
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
 
     def on_parent(self, instance, value):
         # Widget is now attached to the tree
         if value:
             # Animate appearance
             Animation(opacity=1, elevation=4, d=0.3).start(self)
+            self.update_sizing()
     
     def update_image(self, *args):
+        if not self.is_okey_to_cliked:
+            return
+        self.is_okey_to_cliked = False
         parent_dir = os.path.dirname(os.path.dirname(__file__))
-        self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
-        for key, widget in self.ids.items():
-            print(f"id: {key}, widget: {widget}")
+        self.is_selected = not self.is_selected
+        if self.is_selected:
+            self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_selected.png')
+        else:
+            self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
+        def update(*args):
+            self.is_okey_to_cliked = True
+        Clock.schedule_once(update, 1)
+        
+        # for key, widget in self.ids.items():
+        #     print(f"id: {key}, widget: {widget}")
+
 
     def update_sizing(self, *args):
         width, height = self.size
-        r = min(width, height) * 0.065  # You can change 0.05 to any fraction
+        r = min(width, height) * 0.045
         self.content_background_radius = [r, r, r, r]
 
+        self.width = int(self.height * 1.8)
+    
+        width, height = Window.size
+        self.widget_height_8 = int(min( width, height) * 0.025)
+        self.widget_height_10 = int(min( width, height) * 0.03) 
+        self.widget_height_13 = int(min( width, height) * 0.04)
 
 
 class AddPlanWidget(
@@ -145,6 +163,9 @@ class AddPlanWidget(
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     add_plan_icon = StringProperty("")
     widget_type = StringProperty("add_plan")
+    
+    widget_height_8 = NumericProperty(8) 
+    widget_height_30 = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -158,21 +179,26 @@ class AddPlanWidget(
     def on_parent(self, instance, parent):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.add_plan_icon = os.path.join(parent_dir, 'assets', 'add_plan.png')
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
+        
+        # Widget is now attached to the tree
+        if parent:
+            # Animate appearance
             Animation(opacity=1, elevation=4, d=0.3).start(self)
+            self.update_sizing()
             
 
     def update_sizing(self, *args):
         width, height = self.size 
-        r = min(width, height) * 0.065  # You can change 0.05 to any fraction
+        r = min(width, height) * 0.045
         self.content_background_radius = [r, r, r, r]
+        self.width = int(self.height * 1.8)
+
+
+        width, height = Window.size
+        self.widget_height_8 = int(min( width, height) * 0.025) 
+        self.widget_height_30 = int(min( width, height) * 0.1)
+
+
 
 class EmptyPlanWidget(
     CommonElevationBehavior,
@@ -183,6 +209,8 @@ class EmptyPlanWidget(
     content_background_radius = ListProperty([8, 8, 8, 8])
     widget_type = StringProperty("empty_plan")
 
+    widget_height_8 = NumericProperty(8) 
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6") 
@@ -190,27 +218,42 @@ class EmptyPlanWidget(
         self.opacity = 0
         self.elevation = 0
 
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
+    def on_parent(self, instance, parent): 
+        # Widget is now attached to the tree
+        if parent:
+            # Animate appearance
             Animation(opacity=1, elevation=4, d=0.3).start(self)
+            self.update_sizing()
 
     def update_sizing(self, *args):
         width, height = self.size
         r = min(width, height) * 0.045
         self.content_background_radius = [r, r, r, r]
+        self.width = int(self.height * 1.8)
+
+        width, height = Window.size
+        self.widget_height_8 = int(min( width, height) * 0.025) 
+
+
 
 
 class ListOfPlans(ScrollView):
     container_layout : BoxLayout = ObjectProperty(None)
 
-
+    def update_sizing(self, width , height):
+        if self.container_layout is not None:
+            self.container_layout.spacing = int(height * 0.02)
+            vpad = int(height * 0.01)
+            hpad = int(width * 0.01)
+            self.container_layout.padding = [hpad , vpad , hpad * 10 , vpad]
+        
+            for widget in self.container_layout.children:
+                widget.update_sizing()
+    
+    def test_adding_widget(self , *args):
+        self.container_layout.add_widget(PlanWidget())
+        self.container_layout.add_widget(EmptyPlanWidget())
+        self.container_layout.add_widget(AddPlanWidget())
 
 
 class AdditionalPlansList(MDBoxLayout):
@@ -229,26 +272,22 @@ class RouterLayout(MDBoxLayout):
     router_icon : section_icon.SectionIconLayout = ObjectProperty(None)
     selected_plan_layout : MDBoxLayout = ObjectProperty(None)
     additional_plans_list : AdditionalPlansList = ObjectProperty(None)
+    plan_list : ListOfPlans = ObjectProperty(None)
+
+    
+    widget_height_5 = NumericProperty(0)
+    widget_height_6 = NumericProperty(0)
+    widget_height_8 = NumericProperty(0)
+    widget_height_10 = NumericProperty(0) 
+    widget_height_15 = NumericProperty(0) 
+    widget_height_80 = NumericProperty(0)
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
+        super().__init__(**kwargs) 
 
         # Clock.schedule_once(self.setup_image, 1)
         # Clock.schedule_once(self.open_selected_layout, 8)
-    
-    
-    
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
+      
 
     def setup_image(self, *args):
         if self.router_icon is None:
@@ -261,14 +300,29 @@ class RouterLayout(MDBoxLayout):
         self.router_icon.display_additional = False
         self.router_icon.is_half_padding_left = True
 
-    def update_sizing(self, *args):
-        width, height = self.size
+
+        self.plan_list.test_adding_widget()
+
+    def update_sizing(self, width, height):
         self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
         width , height = Window.size
         if self.router_icon is not None:
             self.router_icon.update_sizing(width, height)
+
+        if self.plan_list is not None:
+            self.plan_list.update_sizing(width, height)
+
+         
+        self.widget_height_5 = int(min( width, height) * 0.02)
+        self.widget_height_6 = int(min( width, height) * 0.025)
+        self.widget_height_8 = int(min( width, height) * 0.035)
+        self.widget_height_10 = int(min( width, height) * 0.04) 
+        self.widget_height_15 = int(min( width, height) * 0.055) 
+        self.widget_height_80 = int(min( width, height) * 0.28)
+
+
 
     def open_selected_layout(self, *args):
         anime = Animation(height=180,  duration=0.3)
