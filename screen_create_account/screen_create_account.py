@@ -90,6 +90,8 @@ class AccountRegistrationFormLayout(
     widget_25_height = NumericProperty(10)
     widget_30_height = NumericProperty(10)
     widget_35_height = NumericProperty(10)
+    widget_125_height = NumericProperty(10)
+    parent_size = ListProperty([0, 0])
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -147,10 +149,13 @@ class AccountRegistrationFormLayout(
         self.username_input.setup_layout()
         self.password_input.setup_layout()
         self.confirm_password_input.setup_layout()
+        width, height = self.parent_size
+        self.update_sizing(width, height)
         print("update_sizing_inputs")
 
 
     def update_sizing(self, width, height): 
+        self.parent_size = [width, height]
         self.h1_font_size = int(width * 0.043)
         # if self.h1_font_size > 18:
         #     self.h1_font_size = 18
@@ -175,12 +180,13 @@ class AccountRegistrationFormLayout(
         self.widget_25_height = int(min(width, height) * 0.15)
         self.widget_30_height = int(min(width, height) * 0.08)
         self.widget_35_height = int(min(width, height) * 0.1) 
+        self.widget_125_height = int(min(width, height) * 0.3)
 
         # print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
         
-        # cwidth = width * 0.03
-        # cheight = width * 0.03
-        # self.checkbox_size = [cwidth, cheight]
+        cwidth = width * 0.03
+        cheight = width * 0.03
+        self.checkbox_size = [cwidth, cheight]
         # if cwidth > 35 or cheight > 35:
         #     self.checkbox_size = [35, 35]
         # print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
@@ -384,16 +390,16 @@ class CreateAccountScreen(Screen):
             self.registration_form.add_widget(registration) 
             self.update_sizing()
 
-            def on_complete(*args):
-                self.update_sizing()
-                registration.update_sizing_inputs()
-                self.update_sizing()
+            # def on_complete(*args):
+            #     self.update_sizing()
+            #     registration.update_sizing_inputs()
+            #     self.update_sizing()
             
             def display_registration_form(*args): 
                 registration.customized_ui()
                 anim = Animation(opacity=1, duration=0.5)
-                # anim.bind(on_progress=registration.update_sizing_inputs)
-                anim.bind(on_complete=on_complete)
+                anim.bind(on_progress=registration.update_sizing_inputs)
+                # anim.bind(on_complete=on_complete)
                 anim.start(registration)
             Clock.schedule_once(display_registration_form, 0.2)
 
