@@ -104,8 +104,8 @@ class UserVerificationMapModal(ModalView):
         width, height = self.size
 
         self.map_input_height = width * 0.4
-        if self.map_input_height > 100:
-            self.map_input_height = 100
+        # if self.map_input_height > 100:
+        #     self.map_input_height = 100
         
         r = int(min(width, height) * 0.03)  # You can change 0.05 to any fraction
         self.layout_radius = [r, r, r, r]
@@ -113,15 +113,15 @@ class UserVerificationMapModal(ModalView):
         self.layout_padding = [cpad, cpad, cpad, cpad]
 
         self.h4_font_size = int(min(width, height) * 0.03)
-        if self.h4_font_size > 12:
-            self.h4_font_size = 12
+        # if self.h4_font_size > 12:
+        #     self.h4_font_size = 12
         self.h2_font_size = int(min(width, height) * 0.04)
-        if self.h2_font_size > 17:
-            self.h2_font_size = 17
+        # if self.h2_font_size > 17:
+        #     self.h2_font_size = 17
         
         map_icon_size = int(min(width, height) * 0.06)
-        if map_icon_size > 30:
-            map_icon_size = 30
+        # if map_icon_size > 30:
+        #     map_icon_size = 30
         self.map_marker.size = (map_icon_size, map_icon_size)
         print(f"📍 map_icon_size: {self.map_marker.size}")
 
