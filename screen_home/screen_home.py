@@ -162,10 +162,7 @@ class HomeScreen(Screen):
         
         main_app  = MDApp.get_running_app() 
 
-        # self.headline.setup_image()
-        # self.account.setup_image()
-        # self.router.setup_image()
-        # self.tickets.setup_image()
+
 
         anim = Animation(opacity=1, duration=0.5)
         anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_outside_screens)
@@ -186,7 +183,10 @@ class HomeScreen(Screen):
         # main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)
         # main_app.root_screen_manager.remove_screen(CREATE_ACCOUNT_SCREEN)
         # main_app.root_screen_manager.remove_screen(FORGOT_ACCOUNT_SCREEN)
-
+        self.headline.setup_image()
+        self.account.setup_image()
+        self.router.setup_image()
+        self.tickets.setup_image()
         main_app.close_welcome_popup()
 
     
