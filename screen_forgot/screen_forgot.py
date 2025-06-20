@@ -118,12 +118,12 @@ class ForgotAccountScreen(Screen):
         self.retype_new_password_text_input.costumized_input(hint_text="Retype your new password here . . .")
         self.header_buttons.customized_ui(button_text_1 = "Login Account" , button_text_2 = "Create Account")
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
+        anim.bind( on_progress = self.update_sizing , on_complete = main_app.close_welcome_popup)
         anim.start(self)
 
         self.header_buttons.button_1_event = self.go_back_to_login
         self.header_buttons.button_2_event = self.go_to_create_account
-        self.update_sizing()
+        
         
         Clock.schedule_once( self.load_create_account)
         # print("entering logoin")
