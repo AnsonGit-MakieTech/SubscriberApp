@@ -248,6 +248,7 @@ class ListOfPlans(ScrollView):
             self.container_layout.padding = [hpad , vpad , hpad * 10 , vpad]
         
             for widget in self.container_layout.children:
+                print(f"widget: {widget} , widget.size: {widget.size}")
                 widget.update_sizing()
     
     def test_adding_widget(self , *args):
