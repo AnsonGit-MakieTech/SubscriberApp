@@ -87,7 +87,7 @@ class ApplicationNumberModal(ModalView):
 kv_application_number_modal = '''
 <ApplicationNumberModal>: 
     size_hint: 1, 1
-    auto_dismiss: False
+    # auto_dismiss: False
     background: ""
     background_color: 0, 0, 0, 0
     overlay_color : 0, 0, 0, 0

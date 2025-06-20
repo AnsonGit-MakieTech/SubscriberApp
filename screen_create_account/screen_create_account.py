@@ -93,6 +93,8 @@ class AccountRegistrationFormLayout(
     widget_125_height = NumericProperty(10)
     parent_size = ListProperty([0, 0])
 
+    register_event = ObjectProperty(None)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.opacity = 0
@@ -173,9 +175,9 @@ class AccountRegistrationFormLayout(
         self.widget_25_height = int(min(width, height) * 0.15)
         self.widget_30_height = int(min(width, height) * 0.08)
         self.widget_35_height = int(min(width, height) * 0.1) 
-        self.widget_125_height = int(min(width, height) * 0.3)
+        self.widget_125_height = int(min(width, height) * 0.5)
 
-        self.dropdown.max_height = self.widget_125_height + self.widget_35_height
+        self.dropdown.max_height = self.widget_125_height 
 
         # print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
         
@@ -264,7 +266,9 @@ class AccountRegistrationFormLayout(
         else:
             return os.path.expanduser("~")
 
-
+    def register_account(self, *args):
+        if self.register_event is not None:
+            self.register_event() 
 
 class CreateAccountScreen(Screen): 
     login_logo = StringProperty("")
@@ -383,6 +387,7 @@ class CreateAccountScreen(Screen):
 
         if len(self.registration_form.children) < 1:
             registration = AccountRegistrationFormLayout()
+            registration.register_event = self.register_account
             self.registration_form.add_widget(registration) 
             self.update_sizing()
 
@@ -407,6 +412,7 @@ class CreateAccountScreen(Screen):
                     btn.update_sizing()
                     btn.bind(on_release=lambda btn: registration.dropdown.select(btn))
                     registration.dropdown.add_widget(btn)
+            
             Clock.schedule_once(display_registration_form, 0.2)
 
 
@@ -436,3 +442,20 @@ class CreateAccountScreen(Screen):
 
         main_app.on_window_resize()
 
+
+
+    def register_account(self, *args):
+        main_app = MDApp.get_running_app()
+        import random
+        type_of_account = random.choice(["New", "Existing"])
+        if type_of_account == "New": 
+            main_app.next_step_modal.open()
+            def button_action_for_payment(*args):
+                print("Link to payment redirecting")
+            main_app.next_step_modal.button_action_for_online = button_action_for_payment
+            main_app.next_step_modal.button_action_for_visit = main_app.application_number_modal.open
+        else:
+            main_app.activate_account_modal.open()
+
+
+        

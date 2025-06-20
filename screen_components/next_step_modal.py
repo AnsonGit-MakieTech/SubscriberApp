@@ -37,6 +37,10 @@ class NextStepModal(ModalView):
     proceed_text = StringProperty('Proceed to Payment')
 
     content_text = StringProperty("      Decide how you'd like to complete your application" )
+    
+
+    button_action_for_online = ObjectProperty(None)
+    button_action_for_visit = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -93,10 +97,20 @@ class NextStepModal(ModalView):
         self.proceed_text = 'Generate Application Number'
         print("select_visit")
 
+    
+    def activate_event(self, *args):
+        if self.is_pay_online_selected:
+            self.button_action_for_online()
+        else:
+            self.dismiss()
+            self.button_action_for_visit()
+
+            
+
 kv_next_step_modal = '''
 <NextStepModal>: 
     size_hint: 1, 1
-    auto_dismiss: False
+    # auto_dismiss: False
     background: ""
     background_color: 0, 0, 0, 0
     overlay_color : 0, 0, 0, 0
@@ -229,6 +243,7 @@ kv_next_step_modal = '''
             md_bg_color: chex("#F98585")
             radius: root.button_radius
             pos_hint: {"right": 0.95}
+            on_release: root.activate_event()
 
             Label: 
                 size_hint: None , 1 

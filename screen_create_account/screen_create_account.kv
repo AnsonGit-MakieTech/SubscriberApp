@@ -576,12 +576,13 @@
             size_hint: 0.55, 1
             md_bg_color: chex("352F44")
 
-            Label:
+            LabelClickable:
                 size_hint: 1, 1
                 text: 'Register Account'
                 font_size: root.h3_font_size
                 font_name: 'p_bold'
                 color: chex("#FAF0E6")
+                on_release: root.register_account()
 
 
 
