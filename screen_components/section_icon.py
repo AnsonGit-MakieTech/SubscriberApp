@@ -96,65 +96,65 @@ class SectionIconLayout(BoxLayout):
 
 
 
-kv_section_layout = '''
-<SectionIconLayout>:
-    height: 30
-    clickable_image : clickable_image
+# kv_section_layout = '''
+# <SectionIconLayout>:
+#     height: 30
+#     clickable_image : clickable_image
 
-    Widget:
-        size_hint: (0.1, 1) if not root.is_half_padding_left else (0.05 , 1)
+#     Widget:
+#         size_hint: (0.1, 1) if not root.is_half_padding_left else (0.05 , 1)
     
-    Image:
-        source: root.sec_icon
-        allow_stretch: True
-        keep_ration: True
-        size_hint: None, 1
-        width: 20
+#     Image:
+#         source: root.sec_icon
+#         allow_stretch: True
+#         keep_ration: True
+#         size_hint: None, 1
+#         width: 20
     
-    Widget:
-        size_hint: (0.8, 1) if not root.is_half_padding_left else (0.85 , 1)
+#     Widget:
+#         size_hint: (0.8, 1) if not root.is_half_padding_left else (0.85 , 1)
 
-    ClickableImage:
-        id: clickable_image
-        size_hint: None, 1
-        width: 40
-        opacity: 1 if root.display_additional else 0
+#     ClickableImage:
+#         id: clickable_image
+#         size_hint: None, 1
+#         width: 40
+#         opacity: 1 if root.display_additional else 0
     
-    Widget:
-        size_hint: 0.1, 1
+#     Widget:
+#         size_hint: 0.1, 1
 
 
-<ClickableImage>:
-    clickable_label : clickable_label
+# <ClickableImage>:
+#     clickable_label : clickable_label
 
-    Label:
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
-        size_hint: 1, 1
-        font_size: root.adaptable_font_size
-        font_name: "p_bold"
-        text: root.main_text
-        markup: True
-        opacity: 0.7 if root.has_comming_soon else 1
+#     Label:
+#         pos_hint: {'center_x': 0.5,'center_y': 0.5}
+#         size_hint: 1, 1
+#         font_size: root.adaptable_font_size
+#         font_name: "p_bold"
+#         text: root.main_text
+#         markup: True
+#         opacity: 0.7 if root.has_comming_soon else 1
     
-    CustomClickableLabel:
-        id : clickable_label
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
-        size_hint: 1, 1
-        font_size: root.adaptable_font_size
-        font_name: "p_bold"
-        text: "comming soon"
-        opacity: 1 if root.has_comming_soon else 0
+#     CustomClickableLabel:
+#         id : clickable_label
+#         pos_hint: {'center_x': 0.5,'center_y': 0.5}
+#         size_hint: 1, 1
+#         font_size: root.adaptable_font_size
+#         font_name: "p_bold"
+#         text: "comming soon"
+#         opacity: 1 if root.has_comming_soon else 0
 
-        on_release: root.additional_event() if root.additional_event else None
-
-
-        canvas.before:
-            PushMatrix
-            Rotate:
-                angle: root.set_angle
-                origin: self.center
-        canvas.after:
-            PopMatrix
+#         on_release: root.additional_event() if root.additional_event else None
 
 
-'''
+#         canvas.before:
+#             PushMatrix
+#             Rotate:
+#                 angle: root.set_angle
+#                 origin: self.center
+#         canvas.after:
+#             PopMatrix
+
+
+# '''
