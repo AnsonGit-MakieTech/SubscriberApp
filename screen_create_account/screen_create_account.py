@@ -387,6 +387,7 @@ class CreateAccountScreen(Screen):
             def display_registration_form(*args): 
                 registration.customized_ui()
                 anim = Animation(opacity=1, duration=0.5)
+                anim.bind(on_progress=registration.update_sizing_inputs)
                 anim.start(registration)
             Clock.schedule_once(display_registration_form, 0.2)
 
