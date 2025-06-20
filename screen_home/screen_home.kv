@@ -3,6 +3,9 @@
     
     account_header : account_header
     headline : headline
+    router : router
+    tickets : tickets
+    account : account
         
     ScrollView:
         size_hint: (1, 1)
@@ -47,6 +50,7 @@
                     height: root.home_screen_spacing
                 
                 RouterLayout:
+                    id: router
                     size_hint: (1, None)
                 
                 Widget:
@@ -54,6 +58,7 @@
                     height: root.home_screen_spacing
 
                 TicketsLayout:
+                    id: tickets
                     size_hint: (1, None)
                     
                 Widget:
@@ -61,6 +66,7 @@
                     height: root.home_screen_spacing
 
                 AccountLayout:
+                    id: account
                     size_hint: (1, None)
 
 

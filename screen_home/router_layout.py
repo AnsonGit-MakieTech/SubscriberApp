@@ -242,8 +242,8 @@ class RouterLayout(MDBoxLayout):
 
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
-        Clock.schedule_once(self.setup_image, 1)
-        Clock.schedule_once(self.open_selected_layout, 8)
+        # Clock.schedule_once(self.setup_image, 1)
+        # Clock.schedule_once(self.open_selected_layout, 8)
     
     
     

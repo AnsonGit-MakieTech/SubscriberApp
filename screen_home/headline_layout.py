@@ -27,8 +27,7 @@ class HeadlineLayout(MDBoxLayout):
 
         # self.bind(size=self.update_sizing)
         # Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
-
-        Clock.schedule_once(self.setup_image, 1)
+ 
     
      
     

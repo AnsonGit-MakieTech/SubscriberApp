@@ -98,7 +98,7 @@ class TicketsLayout(MDBoxLayout):
 
         Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
 
-        Clock.schedule_once(self.setup_image, 1)
+        # Clock.schedule_once(self.setup_image, 1)
 
     def on_parent(self, instance, parent):
         main_app = MDApp.get_running_app()

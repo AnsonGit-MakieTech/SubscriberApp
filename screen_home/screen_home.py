@@ -20,7 +20,8 @@ from variables import *
 import os
 
 from screen_home import (
-    headline_layout
+    headline_layout, account_layout,
+    tickets_layout, router_layout
 )
 
 
@@ -45,6 +46,11 @@ class AccountHeader(FloatLayout):
     account_fname_font_size = NumericProperty(15)
 
     account_image_radius = ListProperty([0, 0, 0, 0])
+ 
+    widget_15_height = NumericProperty(10)
+    widget_25_height = NumericProperty(10)
+    widget_30_height = NumericProperty(10)
+    widget_35_height = NumericProperty(10)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -80,9 +86,16 @@ class AccountHeader(FloatLayout):
         self.account_fname_font_size = min(width, height) * 0.09
 
         rad = min(width, height) * 0.05
-        if rad > 16:
-            rad = 16
+        # if rad > 16:
+        #     rad = 16
         self.account_image_radius = [rad, rad, rad, rad]
+ 
+        
+        self.widget_15_height = int(min(width, height) * 0.05)
+        self.widget_25_height = int(min(width, height) * 0.15)
+        self.widget_30_height = int(min(width, height) * 0.08)
+        self.widget_35_height = int(min(width, height) * 0.1)
+        
 
 class HomeScreen(Screen):
     
@@ -95,6 +108,9 @@ class HomeScreen(Screen):
 
 
     headline : headline_layout.HeadlineLayout = ObjectProperty(None)
+    router : router_layout.RouterLayout = ObjectProperty(None)
+    tickets : tickets_layout.TicketsLayout = ObjectProperty(None)
+    account : account_layout.AccountLayout = ObjectProperty(None)
 
 
 
@@ -137,8 +153,6 @@ class HomeScreen(Screen):
             self.headline.update_sizing(width=width, height=height)
         
         
-        
-        
         # print(f"width: {width} , height: {height}, hpad: {hpad}")
 
 
@@ -146,9 +160,13 @@ class HomeScreen(Screen):
 
     def on_enter(self, *args):
         
-        main_app  = MDApp.get_running_app()
-        # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
-        # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
+        main_app  = MDApp.get_running_app() 
+
+        self.headline.setup_image()
+        self.account.setup_image()
+        self.router.setup_image()
+        self.tickets.setup_image()
+
         anim = Animation(opacity=1, duration=0.5)
         anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_outside_screens)
         anim.start(self)
