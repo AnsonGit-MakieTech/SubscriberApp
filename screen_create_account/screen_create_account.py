@@ -403,6 +403,7 @@ class CreateAccountScreen(Screen):
                     btn = CityDropdownButton(size_hint_y=None, height=self.widget_35_height)
                     btn.text = option
                     btn.value = option
+                    btn.update_sizing()
                     btn.bind(on_release=lambda btn: registration.dropdown.select(btn))
                     registration.dropdown.add_widget(btn)
             Clock.schedule_once(display_registration_form, 0.2)
