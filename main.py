@@ -202,6 +202,7 @@ class SubscriberApp(MDApp):
 
     def on_pause(self):
         Clock.schedule_once(self.show_welcome_popup, 0.1)
+        Clock.schedule_once(self.close_welcome_popup, 0.7)
         return super().on_pause()
 
     def build(self):

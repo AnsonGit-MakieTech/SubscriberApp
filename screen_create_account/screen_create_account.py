@@ -43,7 +43,7 @@ class CityDropdownButton(app_button.AppButton):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.md_bg_color = get_color_from_hex("#5C5470")
+        self.md_bg_color = get_color_from_hex("#352F44")
         self.opacity = 0
         self.elevation = 0
  
@@ -173,6 +173,8 @@ class AccountRegistrationFormLayout(
         self.widget_30_height = int(min(width, height) * 0.08)
         self.widget_35_height = int(min(width, height) * 0.1) 
         self.widget_125_height = int(min(width, height) * 0.3)
+
+        self.dropdown.max_height = self.widget_125_height + self.widget_35_height
 
         # print(f"width: {width}, height: {height}, h4_font_size: {self.h4_font_size}")
         
@@ -396,7 +398,7 @@ class CreateAccountScreen(Screen):
                 anim.start(registration)
                         # Create dropdown options
                 for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
-                    widget = Widget(size_hint_y=None, height=2)
+                    widget = Widget(size_hint_y=None,height=registration.widget_8_height)
                     registration.dropdown.add_widget(widget)
                     btn = CityDropdownButton(size_hint_y=None, height=self.widget_35_height)
                     btn.text = option
