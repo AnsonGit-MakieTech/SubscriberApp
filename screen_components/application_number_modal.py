@@ -150,6 +150,12 @@ kv_application_number_modal = '''
                 size_hint: None, 1
                 adaptive_width: True
                 radius: [0]
+                theme_elevation_level: "Custom"
+                elevation_level: 0
+                theme_shadow_offset: "Custom"
+                shadow_offset: 0, 0
+                theme_shadow_softness: "Custom"
+                shadow_softness: 0
 
                 Label:
                     size_hint: None , 1 
