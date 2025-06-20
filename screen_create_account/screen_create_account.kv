@@ -423,7 +423,7 @@
 
     BoxLayout:
         size_hint: 1, None
-        height: 125
+        height: root.widget_125_height
         orientation: 'horizontal'
 
         Widget:
@@ -514,6 +514,7 @@
         height: root.widget_35_height
         orientation: 'horizontal'
         spacing: root.widget_8_height
+        pos_hint: {'x' : 0.5, 'center_y' : 0.5}
         
         CustomCheckbox:
             size_hint: None, None
@@ -539,6 +540,7 @@
         height: root.widget_35_height
         orientation: 'horizontal'
         spacing: root.widget_8_height
+        pos_hint: {'x' : 0.5, 'center_y' : 0.5}
         
         CustomCheckbox:
             size_hint: None, None
