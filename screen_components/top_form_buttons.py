@@ -31,8 +31,8 @@ class HeaderButtons(BoxLayout):
     
     def update_sizing(self, width, height): 
         self.header_font_size = int(width * 0.03)
-        if self.header_font_size > 23:
-            self.header_font_size = 23
+        # if self.header_font_size > 23:
+        #     self.header_font_size = 23
         self.height = int(height * 0.055)   
         print(f"header_font_size: {self.header_font_size}")
         
