@@ -23,8 +23,7 @@ from kivy.uix.behaviors import ButtonBehavior
 
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
 
-from kivy.uix.image import Image
-
+from kivy.uix.image import Image 
 
 
 class AccountInfoWidget(
@@ -46,7 +45,19 @@ class AccountInfoWidget(
 
 
     
+class CostumeSectionIconLayout(BoxLayout):
+    sec_icon = StringProperty("")
+    clickable_image : section_icon.ClickableImage = ObjectProperty(None)
+    display_additional = BooleanProperty(True)
+    is_half_padding_left = BooleanProperty(False) 
 
+    def setup_additional(self, main_text , additional_event, has_comming_soon):
+        if main_text:
+            self.clickable_image.main_text = f"[u]{main_text}[/u]"
+        if additional_event:
+            self.clickable_image.additional_event = additional_event  
+        self.clickable_image.has_comming_soon = has_comming_soon
+        self.clickable_image.set_angle = -45 if has_comming_soon else 0
 
 class AccountLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
@@ -78,6 +89,7 @@ class AccountLayout(MDBoxLayout):
             print(f"Ids : {self.ids}")
             Clock.schedule_once(self.setup_image, 0.3)
             return
+        print(f"Account icon is not None")
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.account_icon.sec_icon = os.path.join(parent_dir, 'assets', 'account_icon.png')
         self.account_icon.display_additional = False
@@ -110,9 +122,33 @@ kv_account_layout = '''
         size_hint: 1, None
         height: 15
 
-    SectionIconLayout:
+    CostumeSectionIconLayout:
         id: account_icon
-        size_hint: 1, None 
+        size_hint: 1, None  
+        height: 30
+        clickable_image : clickable_image
+
+        Widget:
+            size_hint: (0.1, 1) if not self.parent.is_half_padding_left else (0.05 , 1)
+        
+        Image:
+            source: self.parent.sec_icon
+            allow_stretch: True
+            keep_ration: True
+            size_hint: None, 1
+            width: 20
+        
+        Widget:
+            size_hint: (0.8, 1) if not self.parent.is_half_padding_left else (0.85 , 1)
+
+        ClickableImage:
+            id: clickable_image
+            size_hint: None, 1
+            width: 40
+            opacity: 1 if self.parent.display_additional else 0
+        
+        Widget:
+            size_hint: 0.1, 1
     
     BoxLayout:
         size_hint: 1, None
