@@ -139,7 +139,6 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
 
             screen_kv = os.path.join(os.path.dirname(__file__), folder, file_name)
             Builder.load_file(screen_kv)
-            print(f"Loaded screen: {screen_name}")
  
     def add_handler_screen(self, screen_name):
         print(f"Adding screen: {screen_name}")

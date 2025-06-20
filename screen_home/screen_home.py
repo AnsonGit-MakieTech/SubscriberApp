@@ -152,6 +152,8 @@ class HomeScreen(Screen):
         if self.headline is not None:
             self.headline.update_sizing(width=width, height=height)
         
+        if self.account is not None:
+            self.account.update_sizing(width=width, height=height)
         
         # print(f"width: {width} , height: {height}, hpad: {hpad}")
 

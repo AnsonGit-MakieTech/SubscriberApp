@@ -22,7 +22,7 @@ class ClickableImage(FloatLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.adaptable_font_size = 5
+        # self.adaptable_font_size = 5
      
 
     
@@ -47,6 +47,9 @@ class SectionIconLayout(BoxLayout):
         
         self.height = int(min(width, height) * 0.1)
         self.image_size = int(self.height * 0.75)
+
+        if self.clickable_image is not None:
+            self.clickable_image.adaptable_font_size = int(min(width, height) * 0.014)
 
 
 

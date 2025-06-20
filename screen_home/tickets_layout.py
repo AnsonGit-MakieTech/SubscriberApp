@@ -180,202 +180,200 @@ class TicketsLayout(MDBoxLayout):
 
 
 
-kv_tickets_layout = '''
-<TicketsLayout>:
-    orientation: "vertical"
-    size_hint: 1, None
-    adaptive_height: True
+# kv_tickets_layout = '''
+# <TicketsLayout>:
+#     orientation: "vertical"
+#     size_hint: 1, None
+#     adaptive_height: True
 
-    router_icon : router_icon
+#     router_icon : router_icon
 
-    canvas.before:
-        Color:
-            rgba: chex("#5C5470")
-        RoundedRectangle:
-            pos: self.pos
-            size: self.size
-            radius: root.content_background_radius
+#     canvas.before:
+#         Color:
+#             rgba: chex("#5C5470")
+#         RoundedRectangle:
+#             pos: self.pos
+#             size: self.size
+#             radius: root.content_background_radius
     
-    Widget:
-        size_hint: 1, None
-        height: 15
+#     Widget:
+#         size_hint: 1, None
+#         height: 15
 
-    SectionIconLayout:
-        id: router_icon
-        size_hint: 1, None 
+#     SectionIconLayout:
+#         id: router_icon
+#         size_hint: 1, None 
  
-    Widget:
-        size_hint: 1, None
-        height: 5
+#     Widget:
+#         size_hint: 1, None
+#         height: 5
            
-    BoxLayout:
-        size_hint: 1, None
-        height: 15
-        orientation: "horizontal"
+#     BoxLayout:
+#         size_hint: 1, None
+#         height: 15
+#         orientation: "horizontal"
 
-        Widget:
-            size_hint: 0.05, 1
+#         Widget:
+#             size_hint: 0.05, 1
 
-        Label:
-            size_hint: 0.4, 1
-            font_size: 10
-            color: chex("#FFFFFF")
-            text: "List of Ticket"
-            font_name: "p_bold"
-            text_size: self.size
-            halign: "left"
-            valign: "center"
+#         Label:
+#             size_hint: 0.4, 1
+#             font_size: 10
+#             color: chex("#FFFFFF")
+#             text: "List of Ticket"
+#             font_name: "p_bold"
+#             text_size: self.size
+#             halign: "left"
+#             valign: "center"
 
-        Widget:
-            size_hint: 0.2, None
+#         Widget:
+#             size_hint: 0.2, None
         
-        CustomClickableLabel:
-            size_hint: 0.3, 1
-            font_size: 10
-            color: chex("#FFFFFF")
-            text: "[u]+Add New Ticket[/u]"
-            markup: True
-            font_name: "p_regular"
-            text_size: self.size
-            halign: "right"
-            valign: "center"
+#         CustomClickableLabel:
+#             size_hint: 0.3, 1
+#             font_size: 10
+#             color: chex("#FFFFFF")
+#             text: "[u]+Add New Ticket[/u]"
+#             markup: True
+#             font_name: "p_regular"
+#             text_size: self.size
+#             halign: "right"
+#             valign: "center"
 
-        Widget:
-            size_hint: 0.05, 1
+#         Widget:
+#             size_hint: 0.05, 1
 
-    Widget:
-        size_hint: 1, None
-        height: 15
+#     Widget:
+#         size_hint: 1, None
+#         height: 15
 
-    BoxLayout:
-        size_hint: 1, None
-        height: 100
-        orientation: "horizontal"
+#     BoxLayout:
+#         size_hint: 1, None
+#         height: 100
+#         orientation: "horizontal"
 
-        Widget:
-            size_hint: 0.1, 1
+#         Widget:
+#             size_hint: 0.1, 1
 
-        TicketList:
-            size_hint: 0.3, 1
+#         TicketList:
+#             size_hint: 0.3, 1
         
-        Widget:
-            size_hint: 0.05, 1
+#         Widget:
+#             size_hint: 0.05, 1
 
-        TicketDetailsWidget:
-            size_hint: 0.45, 1
+#         TicketDetailsWidget:
+#             size_hint: 0.45, 1
 
-        Widget:
-            size_hint: 0.1, 1
+#         Widget:
+#             size_hint: 0.1, 1
         
 
     
-    Widget:
-        size_hint: 1, None
-        height: 15 
+#     Widget:
+#         size_hint: 1, None
+#         height: 15 
 
 
-<TicketWidget>:
-    size_hint: 1, None
-    height: 20
+# <TicketWidget>:
+#     size_hint: 1, None
+#     height: 20
     
-    theme_elevation_level: "Custom"
-    elevation_level: 2
-    theme_shadow_offset: "Custom"
-    shadow_offset: 0, -3
-    theme_shadow_softness: "Custom"
-    shadow_softness: 12
-    shadow_radius: root.content_background_radius
-    radius: root.content_background_radius
+#     theme_elevation_level: "Custom"
+#     elevation_level: 2
+#     theme_shadow_offset: "Custom"
+#     shadow_offset: 0, -3
+#     theme_shadow_softness: "Custom"
+#     shadow_softness: 12
+#     shadow_radius: root.content_background_radius
+#     radius: root.content_background_radius
 
-    Label:
-        size_hint: 1, 1
-        text : root.ticket_number
-        font_name: "p_bold"
-        font_size: 10
-        color: chex("#5C5470")
+#     Label:
+#         size_hint: 1, 1
+#         text : root.ticket_number
+#         font_name: "p_bold"
+#         font_size: 10
+#         color: chex("#5C5470")
         
         
 
-<TicketList>:
-    do_scroll_x: False
-    do_scroll_y: True
-    bar_width: 0  # Optional: hide bar
+# <TicketList>:
+#     do_scroll_x: False
+#     do_scroll_y: True
+#     bar_width: 0  # Optional: hide bar
 
-    MDBoxLayout:
-        orientation: "vertical"
-        size_hint: (1, None)
-        adaptive_height: True
-        spacing: 5
+#     MDBoxLayout:
+#         orientation: "vertical"
+#         size_hint: (1, None)
+#         adaptive_height: True
+#         spacing: 5
         
-        TicketWidget:
+#         TicketWidget:
         
-        TicketWidget:
+#         TicketWidget:
         
             
 
 
 
-<TicketDetailsWidget>:
-    orientation: "vertical" 
+# <TicketDetailsWidget>:
+#     orientation: "vertical" 
 
-    theme_elevation_level: "Custom"
-    elevation_level: 2
-    theme_shadow_offset: "Custom"
-    shadow_offset: 0, -3
-    theme_shadow_softness: "Custom"
-    shadow_softness: 12
-    shadow_radius: root.content_background_radius
-    radius: root.content_background_radius
-    padding: 10, 10
-    spacing: 4
+#     theme_elevation_level: "Custom"
+#     elevation_level: 2
+#     theme_shadow_offset: "Custom"
+#     shadow_offset: 0, -3
+#     theme_shadow_softness: "Custom"
+#     shadow_softness: 12
+#     shadow_radius: root.content_background_radius
+#     radius: root.content_background_radius
+#     padding: 10, 10
+#     spacing: 4
 
     
-    Label:
-        size_hint: 1, 0.2
-        font_name: "p_bold"
-        font_size: 11
-        color: chex("#5C5470")
-        text: "Ticket Details"
-        halign: "left"
-        valign: "middle"
-        markup: True
-        text_size: self.size
+#     Label:
+#         size_hint: 1, 0.2
+#         font_name: "p_bold"
+#         font_size: 11
+#         color: chex("#5C5470")
+#         text: "Ticket Details"
+#         halign: "left"
+#         valign: "middle"
+#         markup: True
+#         text_size: self.size
     
         
-    Label:
-        size_hint: 1, 0.2
-        font_name: "p_light"
-        font_size: 9
-        color: chex("#5C5470")
-        text: "[font=p_regular]TICKET NO:[/font] 90DFENA6"
-        halign: "left"
-        valign: "middle"
-        markup: True
-        text_size: self.width - 20, None 
+#     Label:
+#         size_hint: 1, 0.2
+#         font_name: "p_light"
+#         font_size: 9
+#         color: chex("#5C5470")
+#         text: "[font=p_regular]TICKET NO:[/font] 90DFENA6"
+#         halign: "left"
+#         valign: "middle"
+#         markup: True
+#         text_size: self.width - 20, None 
     
-    Label:
-        size_hint: 1, 0.2
-        font_name: "p_light"
-        font_size: 9
-        color: chex("#5C5470")
-        text: "[font=p_regular]STATUS:[/font] OPEN"
-        halign: "left"
-        valign: "middle"
-        markup: True
-        text_size: self.width - 20, None 
+#     Label:
+#         size_hint: 1, 0.2
+#         font_name: "p_light"
+#         font_size: 9
+#         color: chex("#5C5470")
+#         text: "[font=p_regular]STATUS:[/font] OPEN"
+#         halign: "left"
+#         valign: "middle"
+#         markup: True
+#         text_size: self.width - 20, None 
 
-    Label:
-        size_hint: 1, 0.2
-        font_name: "p_light"
-        font_size: 9
-        color: chex("#5C5470")
-        text: "[font=p_regular]TYPE:[/font] REPAIR"
-        halign: "left"
-        valign: "middle"
-        markup: True
-        text_size: self.width - 20, None 
-
-
+#     Label:
+#         size_hint: 1, 0.2
+#         font_name: "p_light"
+#         font_size: 9
+#         color: chex("#5C5470")
+#         text: "[font=p_regular]TYPE:[/font] REPAIR"
+#         halign: "left"
+#         valign: "middle"
+#         markup: True
+#         text_size: self.width - 20, None 
 
 
 
@@ -385,4 +383,6 @@ kv_tickets_layout = '''
 
 
 
-'''
+
+
+# '''

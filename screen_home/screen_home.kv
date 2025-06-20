@@ -67,6 +67,8 @@
     adaptive_height: True
 
     account_icon : account_icon
+    primary : primary
+    secondary : secondary
 
     canvas.before:
         Color:
@@ -78,7 +80,7 @@
     
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_height_15
 
     SectionIconLayout:
         id: account_icon
@@ -86,7 +88,7 @@
     
     BoxLayout:
         size_hint: 1, None
-        height: 15
+        height: root.widget_height_15
         orientation: "horizontal"
 
         Widget:
@@ -94,7 +96,7 @@
 
         Label:
             size_hint: 0.95, 1
-            font_size: 10
+            font_size: root.widget_height_10
             color: chex("#FFFFFF")
             text: "Account Information"
             font_name: "p_bold"
@@ -104,7 +106,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 10
+        height: root.widget_height_10
 
     MDBoxLayout:
         size_hint: 1, None
@@ -114,19 +116,20 @@
 
         Widget:
             size_hint: 0.1, None
-            height: 60
+            height: root.widget_height_60
             
         AccountInfoWidget:
+            id: primary
             size_hint: 0.8, None
 
         Widget:
             size_hint: 0.1, None
-            height: 60
+            height: root.widget_height_60
 
 
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_height_8
         
     MDBoxLayout:
         size_hint: 1, None
@@ -136,18 +139,19 @@
 
         Widget:
             size_hint: 0.1, None
-            height: 60
+            height: root.widget_height_60
             
         AccountInfoWidget:
+            id: secondary
             size_hint: 0.8, None
 
         Widget:
             size_hint: 0.1, None
-            height: 60
+            height: root.widget_height_60
             
     Widget:
         size_hint: 1, None
-        height: 8
+        height: root.widget_height_8
 
 
 
@@ -177,7 +181,7 @@
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 9
+        font_size: root.info_font_size
         color: chex("#352F44")
         text: root.info_1
         halign: "left"
@@ -190,7 +194,7 @@
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 9
+        font_size: root.info_font_size
         color: chex("#352F44")
         text: root.info_2
         halign: "left"
@@ -203,7 +207,7 @@
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 9
+        font_size: root.info_font_size
         color: chex("#352F44")
         text: root.info_3
         halign: "left"
@@ -216,7 +220,7 @@
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 9
+        font_size: root.info_font_size
         color: chex("#352F44")
         text: root.info_4
         halign: "left"

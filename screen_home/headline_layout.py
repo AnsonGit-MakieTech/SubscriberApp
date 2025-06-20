@@ -139,190 +139,190 @@ class HeadlineLayout(MDBoxLayout):
 
 
 
-kv_headline_layout = '''
-<HeadlineLayout>:
-    orientation: 'horizontal'
-    size_hint: 1, None
-    adaptive_height: True
+# kv_headline_layout = '''
+# <HeadlineLayout>:
+#     orientation: 'horizontal'
+#     size_hint: 1, None
+#     adaptive_height: True
 
-    wallet_icon : wallet_icon
-    ticket_icon : ticket_icon
+#     wallet_icon : wallet_icon
+#     ticket_icon : ticket_icon
     
-    AppButton:
-        orientation: 'vertical'
-        size_hint: 0.5, None
-        adaptive_height: True
-        radius: root.content_background_radius
-        md_bg_color: chex("#5C5470")
-        # canvas.before:
-        #     Color:
-        #         rgba: 
-        #     RoundedRectangle:
-        #         pos: self.pos
-        #         size: self.size
+#     AppButton:
+#         orientation: 'vertical'
+#         size_hint: 0.5, None
+#         adaptive_height: True
+#         radius: root.content_background_radius
+#         md_bg_color: chex("#5C5470")
+#         # canvas.before:
+#         #     Color:
+#         #         rgba: 
+#         #     RoundedRectangle:
+#         #         pos: self.pos
+#         #         size: self.size
                 
         
-        Widget:
-            size_hint: 1, None
-            height: 5
+#         Widget:
+#             size_hint: 1, None
+#             height: 5
 
-        SectionIconLayout:
-            id: wallet_icon
-            size_hint: 1, None 
+#         SectionIconLayout:
+#             id: wallet_icon
+#             size_hint: 1, None 
 
-        Widget:
-            size_hint: 1, None
-            height: 10
+#         Widget:
+#             size_hint: 1, None
+#             height: 10
 
-        BoxLayout:
-            size_hint: 1, None
-            height: 15
-            orientation: 'horizontal'
+#         BoxLayout:
+#             size_hint: 1, None
+#             height: 15
+#             orientation: 'horizontal'
 
-            Widget:
-                size_hint: 0.2, 1
+#             Widget:
+#                 size_hint: 0.2, 1
             
-            Label:
-                size_hint: 0.6, 1
-                text: "UNPAID"
-                font_name: 'p_bold'
-                font_size: 7
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+#             Label:
+#                 size_hint: 0.6, 1
+#                 text: "UNPAID"
+#                 font_name: 'p_bold'
+#                 font_size: 7
+#                 text_size: self.size
+#                 halign: 'left'
+#                 valign: 'middle'
 
-        Label:
-            size_hint: 1, None
-            height: 20
-            text: root.unpaid_balance
-            font_name: 'p_bold'
-            font_size: 13
-            color: chex("#FAF0E6")
+#         Label:
+#             size_hint: 1, None
+#             height: 20
+#             text: root.unpaid_balance
+#             font_name: 'p_bold'
+#             font_size: 13
+#             color: chex("#FAF0E6")
 
-        Widget:
-            size_hint: 1, None
-            height: 5
+#         Widget:
+#             size_hint: 1, None
+#             height: 5
 
         
-        BoxLayout:
-            size_hint: 1, None
-            height: 15
-            orientation: 'horizontal'
+#         BoxLayout:
+#             size_hint: 1, None
+#             height: 15
+#             orientation: 'horizontal'
 
-            Widget:
-                size_hint: 0.2, 1
+#             Widget:
+#                 size_hint: 0.2, 1
             
-            Label:
-                size_hint: 0.6, 1
-                text: "WALLET"
-                font_name: 'p_bold'
-                font_size: 5
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
+#             Label:
+#                 size_hint: 0.6, 1
+#                 text: "WALLET"
+#                 font_name: 'p_bold'
+#                 font_size: 5
+#                 text_size: self.size
+#                 halign: 'left'
+#                 valign: 'middle'
 
-        Label:
-            size_hint: 1, None
-            height: 10
-            text: root.wallet_balance
-            font_name: 'p_bold'
-            font_size: 7
-            color: chex("#FAF0E6")
+#         Label:
+#             size_hint: 1, None
+#             height: 10
+#             text: root.wallet_balance
+#             font_name: 'p_bold'
+#             font_size: 7
+#             color: chex("#FAF0E6")
 
-        Widget:
-            size_hint: 1, None
-            height: 15
+#         Widget:
+#             size_hint: 1, None
+#             height: 15
 
 
-        Widget:
-            size_hint: 1, None
-            height: 8
+#         Widget:
+#             size_hint: 1, None
+#             height: 8
 
 
 
 
     
-    AppButton:
-        orientation: 'vertical'
-        size_hint: 0.5, 1
-        adaptive_height: True
-        radius: root.content_background_radius
-        md_bg_color: chex("#5C5470")
-        # canvas.before:
-        #     Color:
-        #         rgba: chex("#5C5470")
-        #     RoundedRectangle:
-        #         pos: self.pos
-        #         size: self.size
-        #         radius: root.content_background_radius
+#     AppButton:
+#         orientation: 'vertical'
+#         size_hint: 0.5, 1
+#         adaptive_height: True
+#         radius: root.content_background_radius
+#         md_bg_color: chex("#5C5470")
+#         # canvas.before:
+#         #     Color:
+#         #         rgba: chex("#5C5470")
+#         #     RoundedRectangle:
+#         #         pos: self.pos
+#         #         size: self.size
+#         #         radius: root.content_background_radius
         
-        Widget:
-            size_hint: 1, None
-            height: 5
+#         Widget:
+#             size_hint: 1, None
+#             height: 5
 
-        SectionIconLayout:
-            id: ticket_icon
-            size_hint: 1, None 
+#         SectionIconLayout:
+#             id: ticket_icon
+#             size_hint: 1, None 
     
-        Widget:
-            size_hint: 1, None
-            height: 10
+#         Widget:
+#             size_hint: 1, None
+#             height: 10
 
-        BoxLayout:
-            size_hint: 1, None
-            height: 15
-            orientation: 'horizontal'
+#         BoxLayout:
+#             size_hint: 1, None
+#             height: 15
+#             orientation: 'horizontal'
 
-            Widget:
-                size_hint: 0.2, 1
+#             Widget:
+#                 size_hint: 0.2, 1
             
-            Label:
-                size_hint: 0.6, 1
-                text: root.ticket_status
-                font_name: 'p_bold'
-                font_size: 7
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
-                opacity: 1 if root.has_pending_ticket else 0
+#             Label:
+#                 size_hint: 0.6, 1
+#                 text: root.ticket_status
+#                 font_name: 'p_bold'
+#                 font_size: 7
+#                 text_size: self.size
+#                 halign: 'left'
+#                 valign: 'middle'
+#                 opacity: 1 if root.has_pending_ticket else 0
 
-        Label:
-            size_hint: 1, None
-            height: 20
-            text: root.ticket_number
-            font_name: 'p_bold'
-            font_size: 13
-            color: chex("#FAF0E6")
+#         Label:
+#             size_hint: 1, None
+#             height: 20
+#             text: root.ticket_number
+#             font_name: 'p_bold'
+#             font_size: 13
+#             color: chex("#FAF0E6")
         
             
-        Widget:
-            size_hint: 1, None
-            height: 35
+#         Widget:
+#             size_hint: 1, None
+#             height: 35
 
 
-        BoxLayout:
-            size_hint: 1, None
-            height: 10
-            orientation: 'horizontal'
+#         BoxLayout:
+#             size_hint: 1, None
+#             height: 10
+#             orientation: 'horizontal'
 
-            Widget:
-                size_hint: 0.1, 1
+#             Widget:
+#                 size_hint: 0.1, 1
             
-            Label:
-                size_hint: 0.9, 1
-                text: root.ticket_type
-                font_name: 'p_bold'
-                font_size: 6
-                text_size: self.size
-                halign: 'left'
-                valign: 'middle'
-                color: chex("#FAF0E6")
-                opacity: 1 if root.has_pending_ticket else 0
+#             Label:
+#                 size_hint: 0.9, 1
+#                 text: root.ticket_type
+#                 font_name: 'p_bold'
+#                 font_size: 6
+#                 text_size: self.size
+#                 halign: 'left'
+#                 valign: 'middle'
+#                 color: chex("#FAF0E6")
+#                 opacity: 1 if root.has_pending_ticket else 0
 
 
-        Widget:
-            size_hint: 1, None
-            height: 8
+#         Widget:
+#             size_hint: 1, None
+#             height: 8
 
 
 
@@ -334,4 +334,4 @@ kv_headline_layout = '''
 
 
     
-'''
+# '''
