@@ -24,19 +24,19 @@
 
                     Widget:
                         size_hint: 1, None
-                        height: 25
+                        height: root.widget_25_height
                     
                     HeaderButtons:
                         id: header_buttons
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
         
 
                     BoxLayout:
                         size_hint: 1, None
                         orientation: 'horizontal'
-                        height: 300
+                        height: root.widget_300_height
 
 
                         Image:
@@ -75,11 +75,11 @@
                                 text: "Enter your username and a new password below. We'll send a verification link to your email—click that link to confirm and complete the change."
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
  
                     Label:
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                         font_size: root.h1_font_size
                         halign: 'left'
                         valign: 'middle'  # optional, keeps vertical centering
@@ -89,31 +89,31 @@
                         color: chex("#FFFFFF")
                     Widget:
                         size_hint: 1, None
-                        height: 15
+                        height: root.widget_15_height
                     OneLineInput:
                         id: username_text_input
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                     Widget:
                         size_hint: 1, None
-                        height: 10
+                        height: root.widget_15_height
                     OneLineInput:
                         id: new_password_text_input
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                     Widget:
                         size_hint: 1, None
-                        height: 10
+                        height: root.widget_15_height
                     OneLineInput:
                         id: retype_new_password_text_input
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                     Widget:
                         size_hint: 1, None
-                        height: 35
+                        height: root.widget_35_height
                     BoxLayout:
                         size_hint: 1 , None
-                        height: 35
+                        height: root.widget_35_height
 
                         Widget:
                             size_hint: 0.6, 1
@@ -134,7 +134,7 @@
         BoxLayout:
             size_hint: (1, 0.2)
             orientation: 'horizontal'
-            padding: 10
+            padding: root.widget_15_height
 
             Image:
                 allow_stretch: True

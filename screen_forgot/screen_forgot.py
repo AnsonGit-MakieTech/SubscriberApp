@@ -42,6 +42,12 @@ class ForgotAccountScreen(Screen):
     submit_button_font_size = NumericProperty(14)
     
     h1_font_size = NumericProperty(14)
+    widget_15_height = NumericProperty(10)
+    widget_25_height = NumericProperty(10)
+    widget_30_height = NumericProperty(10)
+    widget_35_height = NumericProperty(10)
+    widget_300_height = NumericProperty(10)
+    login_logo_height = NumericProperty(10)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -70,17 +76,30 @@ class ForgotAccountScreen(Screen):
         
         self.forgot_account_title_font_size = int(width* 0.065)
         self.forgot_account_content_font_size = int(width  * 0.03)
-        if self.forgot_account_title_font_size > 29:
-            self.forgot_account_title_font_size = 29
-        if self.forgot_account_content_font_size > 25:
-            self.forgot_account_content_font_size = 25
+        # if self.forgot_account_title_font_size > 29:
+        #     self.forgot_account_title_font_size = 29
+        # if self.forgot_account_content_font_size > 25:
+        #     self.forgot_account_content_font_size = 25
         self.h1_font_size = int(width * 0.04)
-        if self.h1_font_size > 17:
-            self.h1_font_size = 17
+        # if self.h1_font_size > 17:
+        #     self.h1_font_size = 17
         self.submit_button_font_size = int(width * 0.03)
-        if self.submit_button_font_size > 19:
-            self.submit_button_font_size = 19
+        # if self.submit_button_font_size > 19:
+        #     self.submit_button_font_size = 19
     
+        self.widget_15_height = int(min(width, height) * 0.05)
+        self.widget_25_height = int(min(width, height) * 0.15)
+        self.widget_30_height = int(min(width, height) * 0.08)
+        self.widget_35_height = int(min(width, height) * 0.1)
+        self.widget_300_height = int(min(width, height) * 0.8)
+        self.login_logo_height = int(min(width, height) * 0.7)
+
+        
+        self.username_text_input.setup_layout()
+        self.new_password_text_input.setup_layout()
+        self.retype_new_password_text_input.setup_layout() 
+        self.username_text_input.setup_layout()
+
         if self.header_buttons is not None:
             self.header_buttons.update_sizing(width=width, height=height)
 
@@ -104,6 +123,7 @@ class ForgotAccountScreen(Screen):
 
         self.header_buttons.button_1_event = self.go_back_to_login
         self.header_buttons.button_2_event = self.go_to_create_account
+        self.update_sizing()
         
         Clock.schedule_once( self.load_create_account)
         # print("entering logoin")

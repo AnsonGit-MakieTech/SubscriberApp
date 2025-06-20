@@ -141,6 +141,7 @@ class AccountRegistrationFormLayout(
         self.username_input.setup_layout()
         self.password_input.setup_layout()
         self.confirm_password_input.setup_layout()
+        self.first_name_input.setup_layout()
         width, height = self.parent_size
         self.update_sizing(width, height)
         print("update_sizing_inputs")
