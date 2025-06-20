@@ -113,6 +113,7 @@ class TicketsLayout(MDBoxLayout):
 
     def setup_image(self, *args):
         if self.router_icon is None:
+            print("Router icon is None, setting up image...")
             Clock.schedule_once(self.setup_image, 0.3)
             return
         parent_dir = os.path.dirname(os.path.dirname(__file__))
