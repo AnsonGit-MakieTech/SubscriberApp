@@ -101,15 +101,7 @@ class AccountRegistrationFormLayout(
 
         self.dropdown = DropDown(max_height=150)
 
-        # Create dropdown options
-        for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
-            widget = Widget(size_hint_y=None, height=2)
-            self.dropdown.add_widget(widget)
-            btn = CityDropdownButton(size_hint_y=None, height=34)
-            btn.text = option
-            btn.value = option
-            btn.bind(on_release=lambda btn: self.dropdown.select(btn))
-            self.dropdown.add_widget(btn)
+
 
         # Bind button from KV to open dropdown
         self.dropdown.bind(on_select=self.on_select)
@@ -402,10 +394,20 @@ class CreateAccountScreen(Screen):
                 # anim.bind(on_progress=registration.update_sizing_inputs)
                 anim.bind(on_complete=on_complete)
                 anim.start(registration)
+                        # Create dropdown options
+                for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
+                    widget = Widget(size_hint_y=None, height=2)
+                    registration.dropdown.add_widget(widget)
+                    btn = CityDropdownButton(size_hint_y=None, height=self.widget_35_height)
+                    btn.text = option
+                    btn.value = option
+                    btn.bind(on_release=lambda btn: registration.dropdown.select(btn))
+                    registration.dropdown.add_widget(btn)
             Clock.schedule_once(display_registration_form, 0.2)
 
 
     def find_my_location(self, *args):
+        
         main_app = MDApp.get_running_app()
         if main_app.user_map_verification_modal is not None:
             main_app.user_map_verification_modal.open() 
