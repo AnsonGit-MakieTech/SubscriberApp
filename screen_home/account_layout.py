@@ -74,7 +74,8 @@ class AccountLayout(MDBoxLayout):
     def setup_image(self, *args): 
         if self.account_icon is None:
             print(f"Account icon is None")
-            self.account_icon = self.ids.account_icon
+            # self.account_icon = self.ids.account_icon
+            print(f"Ids : {self.ids}")
             Clock.schedule_once(self.setup_image, 0.3)
             return
         parent_dir = os.path.dirname(os.path.dirname(__file__))
