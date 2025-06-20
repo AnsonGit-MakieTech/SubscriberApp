@@ -189,7 +189,8 @@ class AccountRegistrationFormLayout(
         self.checkbox_size = [cwidth, cheight]
         # if cwidth > 35 or cheight > 35:
         #     self.checkbox_size = [35, 35]
-        # print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
+        print(f"widget_125_height: {self.widget_125_height}")
+        print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
  
 
     def select_date(self, *args):
