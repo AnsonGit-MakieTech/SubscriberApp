@@ -1,3 +1,1152 @@
+<SectionIconLayout>:
+    height: 30
+    clickable_image : clickable_image
+
+    Widget:
+        size_hint: (0.1, 1) if not root.is_half_padding_left else (0.05 , 1)
+    
+    Image:
+        source: root.sec_icon
+        allow_stretch: True
+        keep_ration: True
+        size_hint: None, 1
+        width: 20
+    
+    Widget:
+        size_hint: (0.8, 1) if not root.is_half_padding_left else (0.85 , 1)
+
+    ClickableImage:
+        id: clickable_image
+        size_hint: None, 1
+        width: 40
+        opacity: 1 if root.display_additional else 0
+    
+    Widget:
+        size_hint: 0.1, 1
+
+
+<ClickableImage>:
+    clickable_label : clickable_label
+
+    Label:
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: 1, 1
+        font_size: root.adaptable_font_size
+        font_name: "p_bold"
+        text: root.main_text
+        markup: True
+        opacity: 0.7 if root.has_comming_soon else 1
+    
+    CustomClickableLabel:
+        id : clickable_label
+        pos_hint: {'center_x': 0.5,'center_y': 0.5}
+        size_hint: 1, 1
+        font_size: root.adaptable_font_size
+        font_name: "p_bold"
+        text: "comming soon"
+        opacity: 1 if root.has_comming_soon else 0
+
+        on_release: root.additional_event() if root.additional_event else None
+
+
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: root.set_angle
+                origin: self.center
+        canvas.after:
+            PopMatrix
+
+
+
+
+
+<AccountLayout>:
+    orientation: "vertical"
+    size_hint: 1, None
+    adaptive_height: True
+
+    account_icon : account_icon
+
+    canvas.before:
+        Color:
+            rgba: chex("#5C5470")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: root.content_background_radius
+    
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    SectionIconLayout:
+        id: account_icon
+        size_hint: 1, None 
+    
+    BoxLayout:
+        size_hint: 1, None
+        height: 15
+        orientation: "horizontal"
+
+        Widget:
+            size_hint: 0.05, 1
+
+        Label:
+            size_hint: 0.95, 1
+            font_size: 10
+            color: chex("#FFFFFF")
+            text: "Account Information"
+            font_name: "p_bold"
+            text_size: self.size
+            halign: "left"
+            valign: "center"
+
+    Widget:
+        size_hint: 1, None
+        height: 10
+
+    MDBoxLayout:
+        size_hint: 1, None
+        orientation: 'horizontal'
+        adaptive_height: True
+        # md_bg_color: chex("#FFFFFF")
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+        AccountInfoWidget:
+            size_hint: 0.8, None
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+
+
+    Widget:
+        size_hint: 1, None
+        height: 8
+        
+    MDBoxLayout:
+        size_hint: 1, None
+        orientation: 'horizontal'
+        adaptive_height: True
+        # md_bg_color: chex("#FFFFFF")
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+        AccountInfoWidget:
+            size_hint: 0.8, None
+
+        Widget:
+            size_hint: 0.1, None
+            height: 60
+            
+    Widget:
+        size_hint: 1, None
+        height: 8
+
+
+
+
+
+
+
+
+<AccountInfoWidget>:
+    orientation: "vertical" 
+    
+    adaptive_height: True
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 10, 10
+    spacing: 4
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_1
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+    
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_2
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+        
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_3
+        halign: "left"
+        valign: "middle"
+        markup: True
+    
+        
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#352F44")
+        text: root.info_4
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+
+
+
+
+
+<HeadlineLayout>:
+    orientation: 'horizontal'
+    size_hint: 1, None
+    adaptive_height: True
+
+    wallet_icon : wallet_icon
+    ticket_icon : ticket_icon
+    
+    AppButton:
+        orientation: 'vertical'
+        size_hint: 0.5, None
+        adaptive_height: True
+        radius: root.content_background_radius
+        md_bg_color: chex("#5C5470")
+        # canvas.before:
+        #     Color:
+        #         rgba: 
+        #     RoundedRectangle:
+        #         pos: self.pos
+        #         size: self.size
+                
+        
+        Widget:
+            size_hint: 1, None
+            height: 5
+
+        SectionIconLayout:
+            id: wallet_icon
+            size_hint: 1, None 
+
+        Widget:
+            size_hint: 1, None
+            height: 10
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 15
+            orientation: 'horizontal'
+
+            Widget:
+                size_hint: 0.2, 1
+            
+            Label:
+                size_hint: 0.6, 1
+                text: "UNPAID"
+                font_name: 'p_bold'
+                font_size: 7
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+
+        Label:
+            size_hint: 1, None
+            height: 20
+            text: root.unpaid_balance
+            font_name: 'p_bold'
+            font_size: 13
+            color: chex("#FAF0E6")
+
+        Widget:
+            size_hint: 1, None
+            height: 5
+
+        
+        BoxLayout:
+            size_hint: 1, None
+            height: 15
+            orientation: 'horizontal'
+
+            Widget:
+                size_hint: 0.2, 1
+            
+            Label:
+                size_hint: 0.6, 1
+                text: "WALLET"
+                font_name: 'p_bold'
+                font_size: 5
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+
+        Label:
+            size_hint: 1, None
+            height: 10
+            text: root.wallet_balance
+            font_name: 'p_bold'
+            font_size: 7
+            color: chex("#FAF0E6")
+
+        Widget:
+            size_hint: 1, None
+            height: 15
+
+
+        Widget:
+            size_hint: 1, None
+            height: 8
+
+
+
+
+    
+    AppButton:
+        orientation: 'vertical'
+        size_hint: 0.5, 1
+        adaptive_height: True
+        radius: root.content_background_radius
+        md_bg_color: chex("#5C5470")
+        # canvas.before:
+        #     Color:
+        #         rgba: chex("#5C5470")
+        #     RoundedRectangle:
+        #         pos: self.pos
+        #         size: self.size
+        #         radius: root.content_background_radius
+        
+        Widget:
+            size_hint: 1, None
+            height: 5
+
+        SectionIconLayout:
+            id: ticket_icon
+            size_hint: 1, None 
+    
+        Widget:
+            size_hint: 1, None
+            height: 10
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 15
+            orientation: 'horizontal'
+
+            Widget:
+                size_hint: 0.2, 1
+            
+            Label:
+                size_hint: 0.6, 1
+                text: root.ticket_status
+                font_name: 'p_bold'
+                font_size: 7
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                opacity: 1 if root.has_pending_ticket else 0
+
+        Label:
+            size_hint: 1, None
+            height: 20
+            text: root.ticket_number
+            font_name: 'p_bold'
+            font_size: 13
+            color: chex("#FAF0E6")
+        
+            
+        Widget:
+            size_hint: 1, None
+            height: 35
+
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 10
+            orientation: 'horizontal'
+
+            Widget:
+                size_hint: 0.1, 1
+            
+            Label:
+                size_hint: 0.9, 1
+                text: root.ticket_type
+                font_name: 'p_bold'
+                font_size: 6
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                color: chex("#FAF0E6")
+                opacity: 1 if root.has_pending_ticket else 0
+
+
+        Widget:
+            size_hint: 1, None
+            height: 8
+
+
+
+
+
+
+
+<TicketsLayout>:
+    orientation: "vertical"
+    size_hint: 1, None
+    adaptive_height: True
+
+    router_icon : router_icon
+
+    canvas.before:
+        Color:
+            rgba: chex("#5C5470")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: root.content_background_radius
+    
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    SectionIconLayout:
+        id: router_icon
+        size_hint: 1, None 
+ 
+    Widget:
+        size_hint: 1, None
+        height: 5
+           
+    BoxLayout:
+        size_hint: 1, None
+        height: 15
+        orientation: "horizontal"
+
+        Widget:
+            size_hint: 0.05, 1
+
+        Label:
+            size_hint: 0.4, 1
+            font_size: 10
+            color: chex("#FFFFFF")
+            text: "List of Ticket"
+            font_name: "p_bold"
+            text_size: self.size
+            halign: "left"
+            valign: "center"
+
+        Widget:
+            size_hint: 0.2, None
+        
+        CustomClickableLabel:
+            size_hint: 0.3, 1
+            font_size: 10
+            color: chex("#FFFFFF")
+            text: "[u]+Add New Ticket[/u]"
+            markup: True
+            font_name: "p_regular"
+            text_size: self.size
+            halign: "right"
+            valign: "center"
+
+        Widget:
+            size_hint: 0.05, 1
+
+    Widget:
+        size_hint: 1, None
+        height: 15
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 100
+        orientation: "horizontal"
+
+        Widget:
+            size_hint: 0.1, 1
+
+        TicketList:
+            size_hint: 0.3, 1
+        
+        Widget:
+            size_hint: 0.05, 1
+
+        TicketDetailsWidget:
+            size_hint: 0.45, 1
+
+        Widget:
+            size_hint: 0.1, 1
+        
+
+    
+    Widget:
+        size_hint: 1, None
+        height: 15 
+
+
+<TicketWidget>:
+    size_hint: 1, None
+    height: 20
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+
+    Label:
+        size_hint: 1, 1
+        text : root.ticket_number
+        font_name: "p_bold"
+        font_size: 10
+        color: chex("#5C5470")
+        
+        
+
+<TicketList>:
+    do_scroll_x: False
+    do_scroll_y: True
+    bar_width: 0  # Optional: hide bar
+
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint: (1, None)
+        adaptive_height: True
+        spacing: 5
+        
+        TicketWidget:
+        
+        TicketWidget:
+        
+            
+
+
+
+<TicketDetailsWidget>:
+    orientation: "vertical" 
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 10, 10
+    spacing: 4
+
+    
+    Label:
+        size_hint: 1, 0.2
+        font_name: "p_bold"
+        font_size: 11
+        color: chex("#5C5470")
+        text: "Ticket Details"
+        halign: "left"
+        valign: "middle"
+        markup: True
+        text_size: self.size
+    
+        
+    Label:
+        size_hint: 1, 0.2
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#5C5470")
+        text: "[font=p_regular]TICKET NO:[/font] 90DFENA6"
+        halign: "left"
+        valign: "middle"
+        markup: True
+        text_size: self.width - 20, None 
+    
+    Label:
+        size_hint: 1, 0.2
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#5C5470")
+        text: "[font=p_regular]STATUS:[/font] OPEN"
+        halign: "left"
+        valign: "middle"
+        markup: True
+        text_size: self.width - 20, None 
+
+    Label:
+        size_hint: 1, 0.2
+        font_name: "p_light"
+        font_size: 9
+        color: chex("#5C5470")
+        text: "[font=p_regular]TYPE:[/font] REPAIR"
+        halign: "left"
+        valign: "middle"
+        markup: True
+        text_size: self.width - 20, None 
+
+
+
+
+
+
+
+
+<RouterLayout>:
+    orientation: "vertical"
+    size_hint: 1, None
+    adaptive_height: True
+
+    router_icon : router_icon
+    selected_plan_layout : selected_plan_layout
+
+    canvas.before:
+        Color:
+            rgba: chex("#5C5470")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: root.content_background_radius
+    
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    SectionIconLayout:
+        id: router_icon
+        size_hint: 1, None 
+    
+    BoxLayout:
+        size_hint: 1, None
+        height: 15
+        orientation: "horizontal"
+
+        Widget:
+            size_hint: 0.05, 1
+
+        Label:
+            size_hint: 0.95, 1
+            font_size: 10
+            color: chex("#FFFFFF")
+            text: "All Plans Subscribed"
+            font_name: "p_bold"
+            text_size: self.size
+            halign: "left"
+            valign: "center"
+
+    BoxLayout:
+        size_hint: 1, None
+        height: 80
+
+        Widget:
+            size_hint: 0.05, 1
+
+        ListOfPlans:
+            size_hint: 0.95, 1
+    
+    Widget:
+        size_hint: 1, None
+        height: 10
+
+    
+    MDBoxLayout:
+        id: selected_plan_layout
+        size_hint: 1, None
+        height: 0
+
+
+        # AdditionalPlansList:
+
+
+
+
+
+
+<AdditionalPlansList>:
+    size_hint: 1, None
+    orientation: "vertical"
+    height: 180
+    
+    Widget:
+        size_hint: 1, 0.05
+
+    BoxLayout:
+        size_hint: 1, 0.10
+        orientation: "horizontal"
+        Widget:
+            size_hint: 0.05, 1
+        Label:
+            size_hint: 0.95, 1
+            font_name: "p_light"
+            font_size: 8
+            color: chex("#FFFFFF")
+            text: "[font=p_bold]Selected Plan :[/font]   Home Plan"
+            halign: "left"
+            valign : "center"
+            text_size: self.size
+            markup: True
+    
+    Widget:
+        size_hint: 1, 0.05
+
+    BoxLayout:
+        size_hint: 1, 0.7
+
+        Widget:
+            size_hint: 0.05, 1
+
+        BoxLayout:
+            size_hint: 0.44, 1
+            orientation: "vertical"
+            
+            Label:
+                size_hint: 1, 0.1
+                font_name: "p_bold"
+                font_size: 6
+                color: chex("#FFFFFF")
+                text: "Available Add-ons Plan"
+                halign: "left"
+                valign : "center"
+                text_size: self.size
+                markup: True
+            
+            Widget:
+                size_hint: 1, 0.05
+
+            AdditionalPlanList:
+                size_hint: 1, 0.85
+
+
+        Widget:
+            size_hint: 0.02, 1
+
+        BoxLayout:
+            size_hint: 0.44, 1
+            orientation: "vertical"
+
+            Label:
+                size_hint: 1, 0.1
+                font_name: "p_bold"
+                font_size: 6
+                color: chex("#FFFFFF")
+                text: "Available Add-ons Plan"
+                halign: "left"
+                valign : "center"
+                text_size: self.size
+                markup: True
+            
+            Widget:
+                size_hint: 1, 0.05
+
+            AdditionalPlanList:
+                size_hint: 1, 0.85
+
+
+        Widget:
+            size_hint: 0.05, 1
+
+    Widget:
+        size_hint: 1, 0.1
+
+
+<AdditionalPlanList>:
+    do_scroll_x: False
+    do_scroll_y: True
+    bar_width: 0  # Optional: hide bar
+
+    plan_list_container: plan_list_container
+
+    MDBoxLayout:
+        id: plan_list_container
+        orientation: "vertical"
+        size_hint: (1, None)
+        adaptive_height: True
+        spacing: 5
+
+        PlansInstallmentWidget:
+        PlansAddsOnsWidget:
+        
+
+<PlansAddsOnsWidget>:
+    size_hint: 1, None
+    adaptive_height: True
+    orientation: "vertical"
+    opacity: 0
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 15, 5
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "Home Plan Add Ons"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Monthly:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+
+
+<PlansInstallmentWidget>:
+    size_hint: 1, None
+    adaptive_height: True
+    orientation: "vertical"
+    
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+    padding: 15, 5
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "Home Plan Add Ons"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Monthly:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Months To Pay:[/font] 11"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Months Remaining[/font] 11"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 5
+
+    Label:
+        size_hint_y: None
+        text_size: self.width, None  # Enables wrapping
+        height: self.texture_size[1]  # Auto height based on wrapped content
+        font_name: "p_light"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[font=p_bold]Total Amount:[/font] P 1,500"
+        halign: "left"
+        valign: "middle"
+        markup: True
+
+    Widget:
+        size_hint: 1, None
+        height: 7
+
+
+    
+
+<PlanWidget>:
+    size_hint: None, 1
+    width: 120
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+ 
+    view_icon : view_icon
+
+    BoxLayout:
+        size_hint: 1, 1
+        pos_hint: {"center_x": 0.5,"center_y": 0.5}
+        orientation: "vertical"
+
+        Label:
+            size_hint: 1, 0.2
+            font_name: "p_light"
+            font_size: 7
+            color: chex("#352F44")
+            text: "    Registering"
+            halign: "left"
+            valign: "middle" 
+            text_size: self.size
+        
+        Widget:
+            size_hint: 1, 0.15
+        
+        Label:
+            size_hint: 1, 0.3
+            font_name: "p_bold"
+            font_size: 10
+            color: chex("#352F44")
+            text: "Home Plan"
+
+        Widget:
+            size_hint: 1, 0.15
+
+            
+        BoxLayout:
+            size_hint: 1, 0.2
+            orientation: "horizontal"
+
+            Label:
+                size_hint: 1, 1
+                font_name: "p_light"
+                font_size: 7
+                color: chex("#352F44")
+                text: "    [font=p_regular]Monthly:[/font] P 1,500"
+                halign: "left"
+                valign: "middle" 
+                text_size: self.size
+                markup: True
+        
+    PlanClickableImage:
+        id: view_icon
+        size_hint: None, None
+        height: 13
+        width: 13
+        pos_hint: {"right": 0.95,"y": 0.05}
+        opacity: 1 if not root.is_viewing else 0.7
+
+        on_release: root.is_viewing = True
+
+
+
+    
+
+
+<AddPlanWidget>:
+    orientation: "vertical"
+    size_hint: None, 1
+    width: 120
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+        
+
+
+    Widget:
+        size_hint: 1, 0.23
+
+    FloatLayout:
+        size_hint: 1, 0.3
+
+        Image:
+            pos_hint: {"center_x": 0.5,"center_y": 0.5}
+            source: root.add_plan_icon
+            allow_stretch: True
+            keep_ration: True
+            size_hint: None, 1
+            width: 30
+        
+    Widget:
+        size_hint: 1, 0.05
+
+    Label:
+        size_hint: 1, 0.1
+        font_name: "p_extralight"
+        font_size: 8
+        color: chex("#352F44")
+        text: "Add New Plan"
+
+    Widget:
+        size_hint: 1, 0.22
+
+
+
+
+        
+
+<EmptyPlanWidget>:
+    orientation: "vertical"
+    size_hint: None, 1
+    width: 120
+
+    theme_elevation_level: "Custom"
+    elevation_level: 2
+    theme_shadow_offset: "Custom"
+    shadow_offset: 0, -3
+    theme_shadow_softness: "Custom"
+    shadow_softness: 12
+    shadow_radius: root.content_background_radius
+    radius: root.content_background_radius
+ 
+
+    Widget:
+        size_hint: 1, 0.4
+
+    Label:
+        size_hint: 1, 0.1
+        font_name: "p_bold"
+        font_size: 8
+        color: chex("#352F44")
+        text: "No plan yet?"
+
+    Widget:
+        size_hint: 1, 0.05
+
+    Label:
+        size_hint: 1, 0.1
+        font_name: "p_extralight"
+        font_size: 8
+        color: chex("#352F44")
+        text: "[u]Apply now[/u]"
+        markup: True
+
+    Widget:
+        size_hint: 1, 0.35
+
+    
+
+
+
+
+<ListOfPlans>:
+    do_scroll_x: True
+    do_scroll_y: False
+    bar_width: 0  # Optional: hide bar
+
+    container_layout : container_layout
+
+    BoxLayout:
+        id: container_layout
+        orientation: "horizontal"
+        size_hint: (None, 1)
+        width: self.minimum_width
+        spacing: 20  # space between cards
+        padding: 10, 5
+
+        PlanWidget:
+
+        EmptyPlanWidget:
+
+        AddPlanWidget:
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <HomeScreen>:
     
@@ -121,36 +1270,5 @@
             size_hint: (None , None)
             allow_stretch: True
 
-
-<ClickableImage>:
-    clickable_label : clickable_label
-
-    Label:
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
-        size_hint: 1, 1
-        font_size: root.adaptable_font_size
-        font_name: "p_bold"
-        text: root.main_text
-        markup: True
-        opacity: 0.7 if root.has_comming_soon else 1
     
-    CustomClickableLabel:
-        id : clickable_label
-        pos_hint: {'center_x': 0.5,'center_y': 0.5}
-        size_hint: 1, 1
-        font_size: root.adaptable_font_size
-        font_name: "p_bold"
-        text: "comming soon"
-        opacity: 1 if root.has_comming_soon else 0
-
-        on_release: root.additional_event() if root.additional_event else None
-
-
-        canvas.before:
-            PushMatrix
-            Rotate:
-                angle: root.set_angle
-                origin: self.center
-        canvas.after:
-            PopMatrix
 
