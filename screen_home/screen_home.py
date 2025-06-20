@@ -162,10 +162,10 @@ class HomeScreen(Screen):
         
         main_app  = MDApp.get_running_app() 
 
-        self.headline.setup_image()
-        self.account.setup_image()
-        self.router.setup_image()
-        self.tickets.setup_image()
+        # self.headline.setup_image()
+        # self.account.setup_image()
+        # self.router.setup_image()
+        # self.tickets.setup_image()
 
         anim = Animation(opacity=1, duration=0.5)
         anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_outside_screens)
