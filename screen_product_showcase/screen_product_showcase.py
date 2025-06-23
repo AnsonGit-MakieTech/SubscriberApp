@@ -154,9 +154,9 @@ class ProductShowcaseScreen(Screen):
 
     product_list : MDBoxLayout = ObjectProperty(None)
 
-    is_outside = BooleanProperty(True) # Use to identify if used outside of the screen
+    login_text = StringProperty("[u]Have an account? Tap here.")
 
-
+    
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
         self.opacity = 0
@@ -165,7 +165,6 @@ class ProductShowcaseScreen(Screen):
         self.product_subscribe_icon = os.path.join(parent_dir, 'assets', 'product_icon.png')
         
 
-        
     def on_parent(self, instance, parent):
         main_app = MDApp.get_running_app()
         if parent is None:
@@ -205,6 +204,10 @@ class ProductShowcaseScreen(Screen):
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app()
+        if main_app.is_outside:
+            self.login_text = "[u]Have an account? Tap here."
+        else:
+            self.login_text = "[u]Go Back? Tap here."
         
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
@@ -219,30 +222,35 @@ class ProductShowcaseScreen(Screen):
     
 
     def goto_login_screen(self, *args):
-        if self.is_outside:
-            main_app  = MDApp.get_running_app()
-            Clock.schedule_once(main_app.show_welcome_popup) 
-            main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
-        
-
-    
-    def goto_create_screen(self, *args):
         main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup)
+        if main_app.is_outside: 
+            main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
+        else:
+            main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+
+        
+    def goto_create_screen(self, *args):
+        main_app  = MDApp.get_running_app() 
         Clock.schedule_once(main_app.show_welcome_popup) 
-        if self.is_outside:
+        if main_app.is_outside: 
             main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
+        else:
+            main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+
     
     def load_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
-        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN) and self.is_outside:
+        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN) and main_app.is_outside:
             main_app.root_screen_manager.builder_load_screen('screen_login', 'screen_login.kv', LOGIN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(LOGIN_SCREEN)
         
         
-        if not main_app.root_screen_manager.does_screen_exist(CREATE_ACCOUNT_SCREEN) and self.is_outside:
+        if not main_app.root_screen_manager.does_screen_exist(CREATE_ACCOUNT_SCREEN) and main_app.is_outside:
             main_app.root_screen_manager.builder_load_screen('screen_create_account', 'screen_create_account.kv', CREATE_ACCOUNT_SCREEN )
             main_app.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN)
+ 
 
-
-
-
+        if not main_app.root_screen_manager.does_screen_exist(ADD_PLAN_SCREEN) and not main_app.is_outside: 
+            main_app.root_screen_manager.builder_load_screen('screen_add_plan', 'screen_add_plan.kv', ADD_PLAN_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN) 

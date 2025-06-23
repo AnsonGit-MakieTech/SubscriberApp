@@ -22,7 +22,7 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivymd.app import MDApp 
-
+from variables  import *
 
 from kivy.core.window import Window
 
@@ -260,6 +260,12 @@ class AddPlanWidget(
         self.widget_height_8 = int(min( width, height) * 0.025) 
         self.widget_height_30 = int(min( width, height) * 0.1)
 
+    def on_release(self):
+        main_app  = MDApp.get_running_app()
+        main_app.is_outside = False
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+        return super().on_release()
 
 
 class EmptyPlanWidget(
@@ -295,6 +301,13 @@ class EmptyPlanWidget(
 
         width, height = Window.size
         self.widget_height_8 = int(min( width, height) * 0.025) 
+    
+    def on_release(self):
+        main_app  = MDApp.get_running_app()
+        main_app.is_outside = False
+        Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+        return super().on_release()
 
 
 

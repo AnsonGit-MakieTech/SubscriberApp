@@ -49,6 +49,7 @@ class AddPlanInformation(
     MDBoxLayout
 ):
     content_background_radius = ListProperty([ 8 , 8, 0 , 0 ])
+    button_background_radius = ListProperty([ 8 , 8, 0 , 0 ])
 
     header_font_size = NumericProperty(20)
     content_font_size = NumericProperty(15)
@@ -82,6 +83,9 @@ class AddPlanInformation(
         width , height = self.size 
         rad = int(min(width, height) * 0.10)
         self.content_background_radius = [rad, rad, 0, 0]
+
+        rad = int(min(width, height) * 0.03)
+        self.button_background_radius = [rad, rad, rad, rad]
 
         self.header_font_size = int( width  * 0.04)
         if self.header_font_size > 13:
@@ -235,16 +239,32 @@ class AddPlanScreen(Screen):
         return super().on_touch_down(touch)
 
     
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app() 
         anim = Animation(opacity=1, duration=0.5)
-        anim.bind( on_start= main_app.on_window_resize)
+        anim.bind( on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
         anim.start(self)
         Clock.schedule_once(self.load_map_view, 0.1)
 
+        Clock.schedule_once(self.load_connected_screen)
+
         return super().on_enter(*args)
 
+    def load_connected_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        
+        if not main_app.root_screen_manager.does_screen_exist(PRODUCT_SHOWCASE_SCREEN):
+            main_app.root_screen_manager.builder_load_screen('screen_product_showcase', 'screen_product_showcase.kv', PRODUCT_SHOWCASE_SCREEN )
+            main_app.root_screen_manager.add_handler_screen(PRODUCT_SHOWCASE_SCREEN)
+
+    def select_available_plan(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup)
+        main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
 
     def check_is_map_clicked_not_colliding(self, *args):
         return self.is_map_clicked_not_colliding

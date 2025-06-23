@@ -158,8 +158,7 @@ class HomeScreen(Screen):
             self.account.update_sizing(width=width, height=height)
         
         if self.router is not None:
-            self.router.update_sizing(width=width, height=height)
-        # print(f"width: {width} , height: {height}, hpad: {hpad}")
+            self.router.update_sizing(width=width, height=height) 
 
         if self.tickets is not None:
             self.tickets.update_sizing(width=width, height=height)
@@ -182,7 +181,7 @@ class HomeScreen(Screen):
         self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
         self.account_header.refresh_icon.button_event = main_app.process_modal.open
 
-        Clock.schedule_once(self.load_all_connected_screen, 1)
+        Clock.schedule_once(self.load_all_connected_screen)
  
         return super().on_enter(*args)
  
@@ -194,7 +193,7 @@ class HomeScreen(Screen):
     
     def load_all_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
-        
+        main_app.is_outside = False
         
         self.headline.setup_image()
         self.account.setup_image()
@@ -207,6 +206,3 @@ class HomeScreen(Screen):
 
         self.is_all_loaded = True
 
-    def change_to_add_plan_screen(self, *args):
-        main_app  = MDApp.get_running_app()
-        main_app.root_screen_manager.change_to_screen(ADD_PLAN_SCREEN)

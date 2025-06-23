@@ -43,10 +43,11 @@
                     size_hint: (1, 1)
                     md_bg_color: chex("#FFFFFF")
                     padding: root.header_button_padding
+                    on_release: root.select_available_plan()
 
                     Label:
                         size_hint: 1, 1
-                        text: root.selected_city
+                        text: root.selected_plan
                         font_size: root.header_font_size
                         color: chex("#26221F")
                         font_name: 'p_light'
@@ -55,7 +56,7 @@
                         valign: 'middle'
 
                     Image:
-                        source: root.city_icon
+                        source: root.bag_icon
                         size_hint: (None , 1)
                         width: root.header_height
                         allow_stretch: False
@@ -74,48 +75,6 @@
                     width: root.header_height
                     md_bg_color: chex("#352F44")
                     padding: root.header_button_padding
-
-                    Image:
-                        source: root.question_icon
-                        allow_stretch: False
-                        keep_ratio: True
-                        size_hint: 1, 1
-                
-                AppButton:
-                    size_hint: (1, 1)
-                    md_bg_color: chex("#5C5470")
-                    padding: root.header_button_padding
-
-                    Label:
-                        size_hint: 1, 1
-                        text: root.selected_plan
-                        font_size: root.header_font_size
-                        color: chex("#FAF0E6")
-                        font_name: 'p_bold'
-                        text_size: self.size
-                        halign: 'left'
-                        valign: 'middle'
-
-                    Image:
-                        source: root.bag_icon
-                        size_hint: (None , 1)
-                        width: root.header_height
-                        allow_stretch: False
-                        keep_ratio: True
-
-
-            MDBoxLayout:
-                    # Header Buttons for selecting plan and how to use
-                size_hint: (1, None)
-                orientation: 'horizontal'
-                height: root.header_height
-                spacing: root.header_button_spacing
-                
-                AppButton:
-                    size_hint: (None , 1)
-                    width: root.header_height
-                    md_bg_color: chex("#352F44")
-                    padding: root.header_button_padding
                     on_release: root.change_map_source()
 
                     Image:
@@ -123,9 +82,54 @@
                         allow_stretch: False
                         keep_ratio: True
                         size_hint: 1, 1
-
+                
                 Widget:
                     size_hint: (1, 1)
+                # AppButton:
+                #     size_hint: (1, 1)
+                #     md_bg_color: chex("#5C5470")
+                #     padding: root.header_button_padding
+
+                #     Label:
+                #         size_hint: 1, 1
+                #         text: root.selected_plan
+                #         font_size: root.header_font_size
+                #         color: chex("#FAF0E6")
+                #         font_name: 'p_bold'
+                #         text_size: self.size
+                #         halign: 'left'
+                #         valign: 'middle'
+
+                #     Image:
+                #         source: root.bag_icon
+                #         size_hint: (None , 1)
+                #         width: root.header_height
+                #         allow_stretch: False
+                #         keep_ratio: True
+
+
+            # MDBoxLayout:
+            #         # Header Buttons for selecting plan and how to use
+            #     size_hint: (1, None)
+            #     orientation: 'horizontal'
+            #     height: root.header_height
+            #     spacing: root.header_button_spacing
+                
+            #     AppButton:
+            #         size_hint: (None , 1)
+            #         width: root.header_height
+            #         md_bg_color: chex("#352F44")
+            #         padding: root.header_button_padding
+            #         on_release: root.change_map_source()
+
+            #         Image:
+            #             source: root.change_map_icon
+            #             allow_stretch: False
+            #             keep_ratio: True
+            #             size_hint: 1, 1
+
+            #     Widget:
+            #         size_hint: (1, 1)
 
         
 
@@ -157,13 +161,14 @@
         size_hint: (1 , 0.05)
     Label:
         size_hint: 1, 0.2
-        text: "        Plan Selected Information"
+        text: "Plan Selected Information"
         font_size: root.header_font_size
         color: chex("#352F44")
         font_name: 'p_bold'
         text_size: self.size
         halign: 'left'
         valign: 'middle'
+        pos_hint: {'x' : 0.05}
 
         # canvas.before:
         #     Color:
@@ -172,9 +177,11 @@
         #         pos: self.pos
         #         size: self.size
     
+    Widget:
+        size_hint: (1 , 0.05)
 
     BoxLayout:
-        size_hint: (1 , 0.2)
+        size_hint: (1 , 0.1)
         orientation: 'horizontal'
 
         Widget:
@@ -216,5 +223,126 @@
             valign: 'middle'
             markup: True
 
+
     Widget:
+        size_hint: (1 , 0.05)
+
+    BoxLayout:
+        size_hint: (1 , 0.1)
+        orientation: 'horizontal'
+
+        Widget:
+            size_hint: 0.1 , 1
+        Image:
+            size_hint: None , 1
+            width: self.parent.height
+            allow_stretch: False
+            keep_ratio: True
+            source: root.bag_icon
         
+        Widget:
+            size_hint: 0.05 , 1
+        
+        Label:
+            id: plan_name_label
+            size_hint: None , 1 
+            text: "Name :"
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_bold'
+            text_size: None, self.height
+            halign: 'left'
+            valign: 'middle' 
+            width: self.texture_size[0]
+
+        Widget:
+            size_hint: 0.02 , 1
+            
+        Label:
+            id: plan_name_label
+            size_hint: 0.83, 1
+            text: root.plan_name_text 
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_light'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            markup: True
+ 
+    
+    Widget:
+        size_hint: (1 , 0.05)
+
+    BoxLayout:
+        size_hint: (1 , 0.1)
+        orientation: 'horizontal'
+
+        Widget:
+            size_hint: 0.1 , 1
+        Image:
+            size_hint: None , 1
+            width: self.parent.height
+            allow_stretch: False
+            keep_ratio: True
+            source: root.bag_icon
+        
+        Widget:
+            size_hint: 0.05 , 1
+        
+        Label:
+            id: plan_name_label
+            size_hint: None , 1 
+            text: "Name :"
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_bold'
+            text_size: None, self.height
+            halign: 'left'
+            valign: 'middle' 
+            width: self.texture_size[0]
+
+        Widget:
+            size_hint: 0.02 , 1
+            
+        Label:
+            id: plan_name_label
+            size_hint: 0.83, 1
+            text: root.plan_name_text 
+            font_size: root.header_font_size
+            color: chex("#352F44")
+            font_name: 'p_light'
+            text_size: self.size
+            halign: 'left'
+            valign: 'middle'
+            markup: True
+
+
+    Widget:
+        size_hint: (1 , 0.05)
+
+    BoxLayout:
+        size_hint: ( 1, 0.15)
+
+        Widget:
+            size_hint: (0.05 , 1)
+        AppButton:
+            size_hint: (0.425 , 1)
+            md_bg_color: chex("5C5470")
+            shadow_radius: root.button_background_radius
+            radius: root.button_background_radius
+
+        Widget:
+            size_hint: (0.05 , 1)
+        AppButton:
+            size_hint: (0.425 , 1)
+            md_bg_color: chex("05B51A")
+            shadow_radius: root.button_background_radius
+            radius: root.button_background_radius
+
+        Widget:
+            size_hint: (0.05 , 1)
+
+
+    Widget:
+        size_hint: (1 , 0.1)

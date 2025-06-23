@@ -193,6 +193,8 @@ class SubscriberApp(MDApp):
 
     user_data = DictProperty({})
 
+    is_outside = BooleanProperty(True) # Use to identify if used outside of the screen
+
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
@@ -299,11 +301,7 @@ class SubscriberApp(MDApp):
         #     self.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN)
         #     self.root_screen_manager.change_screen(FIRST_TIME_SCREEN)
         pass
-
-
-
-
-
+ 
     def load_user_map_verification_modal(self, *args):
         Builder.load_string(verify_user_location_modal.kv_verify_user_location_modal)
         self.user_map_verification_modal = verify_user_location_modal.UserVerificationMapModal()
@@ -319,14 +317,13 @@ class SubscriberApp(MDApp):
 
 
     def load_all_home_screen_modal(self, *args):
-        Builder.load_string(logout_modal.kv_logout_modal)
-        Builder.load_string(add_ticket_modal.kv_add_ticket_modal)
+        if self.logout_modal is None:
+            Builder.load_string(logout_modal.kv_logout_modal)
+            self.logout_modal = logout_modal.LogoutModal()
 
-        self.logout_modal = logout_modal.LogoutModal()
-        self.add_ticket_modal = add_ticket_modal.AddTicketModal()
-
-
-
+        if self.logout_modal is not None: 
+            Builder.load_string(add_ticket_modal.kv_add_ticket_modal) 
+            self.add_ticket_modal = add_ticket_modal.AddTicketModal() 
 
 
     def on_window_resize(self, *args):
