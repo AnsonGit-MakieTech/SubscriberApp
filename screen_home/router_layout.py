@@ -1,12 +1,11 @@
-from kivy.uix.actionbar import Label
 
-
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors import BackgroundColorBehavior, CommonElevationBehavior
 from kivymd.uix.widget import MDWidget
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.relativelayout import MDRelativeLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.animation import Animation
 from kivy.clock import Clock
@@ -39,6 +38,12 @@ class PlansAddsOnsWidget(
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     widget_type = StringProperty("addons") 
 
+    widget_height_5 = NumericProperty(8)
+    widget_height_7 = NumericProperty(8)
+    widget_height_8 = NumericProperty(8)
+    widget_height_15 = NumericProperty(8)
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
@@ -50,6 +55,18 @@ class PlansAddsOnsWidget(
         if value:
             # Animate appearance
             Animation(opacity=1, elevation=4, d=0.3).start(self)
+
+    def update_sizing(self, *args):
+        width, height = Window.size
+
+        self.content_background_radius = [self.widget_height_5, self.widget_height_5, self.widget_height_5, self.widget_height_5]
+
+        self.widget_height_5 = int(min( width, height) * 0.017)
+        self.widget_height_7 = int(min( width, height) * 0.022)
+        self.widget_height_8 = int(min( width, height) * 0.025)
+        self.widget_height_15 = int(min( width, height) * 0.04)
+        
+        self.padding = [self.widget_height_15, self.widget_height_5]
 
 class PlansInstallmentWidget(
     CommonElevationBehavior,
@@ -60,6 +77,12 @@ class PlansInstallmentWidget(
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     widget_type = StringProperty("addons") 
 
+    
+    widget_height_5 = NumericProperty(8)
+    widget_height_7 = NumericProperty(8)
+    widget_height_8 = NumericProperty(8)
+    widget_height_15 = NumericProperty(8)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
@@ -71,14 +94,40 @@ class PlansInstallmentWidget(
         if value:
             # Animate appearance
             Animation(opacity=1, elevation=4, d=0.3).start(self)
+    
+    def update_sizing(self, *args):
+        width, height = Window.size
+
+        self.content_background_radius = [self.widget_height_5, self.widget_height_5, self.widget_height_5, self.widget_height_5]
+        
+        self.widget_height_5 = int(min( width, height) * 0.017)
+        self.widget_height_7 = int(min( width, height) * 0.022)
+        self.widget_height_8 = int(min( width, height) * 0.025)
+        self.widget_height_15 = int(min( width, height) * 0.04)
+
+        self.padding = [self.widget_height_15, self.widget_height_5]
 
 class AdditionalPlanList(ScrollView):
     
     plan_list_container : MDBoxLayout = ObjectProperty(None)
+    widget_height_5 = NumericProperty(8)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+    
+    def clear_list_content(self, *args):
+        if self.plan_list_container is not None:
+            self.plan_list_container.clear_widgets()
+        else:
+            print("Plan list container is None")
 
+    def update_sizing(self, *args):
+        width, height = Window.size
+        self.widget_height_5 = int(min( width, height) * 0.017)
+        
+        for widget in self.plan_list_container.children:
+            widget.update_sizing()
+        
  
 
 class PlanClickableImage(ButtonBehavior, Image):
@@ -89,7 +138,7 @@ class PlanWidget(
     CommonElevationBehavior,
     RectangularRippleBehavior,
     ButtonBehavior,
-    MDFloatLayout
+    MDRelativeLayout
 ):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     plan_icon = StringProperty("")
@@ -104,8 +153,12 @@ class PlanWidget(
     widget_height_10 = NumericProperty(0) 
     widget_height_13 = NumericProperty(0) 
 
+    click_event_open = ObjectProperty(None)
+    click_event_close = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.size_hint_x = None
         self.md_bg_color = get_color_from_hex("#FAF0E6")
         
         Clock.schedule_once(self.update_image, 0.1)
@@ -131,8 +184,12 @@ class PlanWidget(
         self.is_selected = not self.is_selected
         if self.is_selected:
             self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_selected.png')
+            if self.click_event_open is not None:
+                self.click_event_open()
         else:
             self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
+            if self.click_event_close is not None:
+                self.click_event_close()
         def update(*args):
             self.is_okey_to_cliked = True
         Clock.schedule_once(update, 1)
@@ -140,6 +197,11 @@ class PlanWidget(
         # for key, widget in self.ids.items():
         #     print(f"id: {key}, widget: {widget}")
 
+
+    def close_image_plan(self, *args):
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
+        self.is_selected = False
 
     def update_sizing(self, *args):
         width, height = self.size 
@@ -239,6 +301,8 @@ class EmptyPlanWidget(
 
 class ListOfPlans(ScrollView):
     container_layout : BoxLayout = ObjectProperty(None)
+    plan_click_event_open = ObjectProperty(None)
+    plan_click_event_close = ObjectProperty(None)
 
     def update_sizing(self, width , height):
         if self.container_layout is not None:
@@ -251,16 +315,30 @@ class ListOfPlans(ScrollView):
                 print(f"widget: {widget} , widget.size: {widget.size}")
                 widget.update_sizing()
     
+    def close_unselected_plans(self, *args):
+        for widget in self.container_layout.children:
+            if widget.widget_type == "plan":
+                widget.close_image_plan()
+    
     def test_adding_widget(self , *args):
-        plan = PlanWidget(size_hint = (None , 1))
+        plan = PlanWidget()
         plan.update_sizing()
+        plan.click_event_open = self.plan_click_event_open
+        plan.click_event_close = self.plan_click_event_close
+
         self.container_layout.add_widget(plan)
-        plan = PlanWidget( size_hint = (None , 1))
+        plan = PlanWidget()
         plan.update_sizing()
+        plan.click_event_open = self.plan_click_event_open
+        plan.click_event_close = self.plan_click_event_close
         self.container_layout.add_widget(plan)
-        plan = PlanWidget(size_hint = (None , 1))
+
+        plan = PlanWidget()
         plan.update_sizing()
+        plan.click_event_open = self.plan_click_event_open
+        plan.click_event_close = self.plan_click_event_close
         self.container_layout.add_widget(plan)
+
         empty_plan = EmptyPlanWidget()
         empty_plan.update_sizing()
         self.container_layout.add_widget(empty_plan)
@@ -275,10 +353,38 @@ class ListOfPlans(ScrollView):
 
 class AdditionalPlansList(MDBoxLayout):
 
+    selected_additional_plan_list : AdditionalPlanList = ObjectProperty(None)
+    selected_installment_plan_list : AdditionalPlanList = ObjectProperty(None)
+ 
+     
+    widget_height_6 = NumericProperty(0) 
+    widget_height_8 = NumericProperty(0)
 
-    
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    
+    def update_container(self , additional_plan_list = None , installment_plan_list = None):
+        if self.selected_additional_plan_list is not None:
+            # self.selected_additional_plan_list.clear_list_content()
+            print("Display the additional plans")
+        
+        if self.selected_installment_plan_list is not None:
+            # self.selected_installment_plan_list.clear_list_content()
+            print("Display the installment plans")
+        
+        print(f"additional_plan_list: {additional_plan_list} ,\n installment_plan_list: {installment_plan_list}")
+    
+    def update_sizing(self, *args):
+        width , height = Window.size 
+        self.widget_height_6 = int(min( width, height) * 0.022)
+        self.widget_height_8 = int(min( width, height) * 0.032)
+
+        if self.selected_additional_plan_list is not None:
+            self.selected_additional_plan_list.update_sizing()
+        if self.selected_installment_plan_list is not None:
+            self.selected_installment_plan_list.update_sizing()
+
 
 
  
@@ -298,6 +404,9 @@ class RouterLayout(MDBoxLayout):
     widget_height_10 = NumericProperty(0) 
     widget_height_15 = NumericProperty(0) 
     widget_height_80 = NumericProperty(0)
+    widget_height_180 = NumericProperty(0)
+
+    selected_plan_data = DictProperty({})
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -318,6 +427,8 @@ class RouterLayout(MDBoxLayout):
         self.router_icon.is_half_padding_left = True
 
 
+        self.plan_list.plan_click_event_open = self.open_selected_layout
+        self.plan_list.plan_click_event_close = self.close_selected_layout
         self.plan_list.test_adding_widget()
 
     def update_sizing(self, width, height):
@@ -331,6 +442,9 @@ class RouterLayout(MDBoxLayout):
         if self.plan_list is not None:
             width , height = Window.size
             self.plan_list.update_sizing(width, height)
+        
+        if self.additional_plans_list is not None:
+            self.additional_plans_list.update_sizing()
 
          
         self.widget_height_5 = int(min( width, height) * 0.02)
@@ -339,18 +453,37 @@ class RouterLayout(MDBoxLayout):
         self.widget_height_10 = int(min( width, height) * 0.04) 
         self.widget_height_15 = int(min( width, height) * 0.055) 
         self.widget_height_80 = int(min( width, height) * 0.28)
+        self.widget_height_180 = int(min( width, height) * 0.5)
 
 
 
     def open_selected_layout(self, *args):
-        anime = Animation(height=180,  duration=0.3)
-        anime.bind(on_complete=self.on_animation_complete)
+        anime = Animation(height=self.widget_height_180,  duration=0.3)
+        anime.bind(on_complete=self.on_selected_animation_complete)
         anime.start(self.selected_plan_layout)
     
-    def on_animation_complete(self, *args):
+    def on_selected_animation_complete(self, *args):
         if len(self.selected_plan_layout.children) < 1:
             self.additional_plans_list = AdditionalPlansList()
+            self.additional_plans_list.update_sizing()
+
+            print("Updating content of selected layout using : ", self.selected_plan_data)
+
             self.selected_plan_layout.add_widget(self.additional_plans_list)
+        else:
+            # Just update the content of the selected layout
+            print("Updating content of selected layout using : ", self.selected_plan_data)
+            
+            
+    
+    def close_selected_layout(self, *args):
+        anime = Animation(height=0,  duration=0.3)
+        anime.bind(on_start=self.on_unselected_animation_complete)
+        anime.start(self.selected_plan_layout)
+    
+    def on_unselected_animation_complete(self, *args): 
+        self.selected_plan_layout.clear_widgets()
+        self.selected_plan_data = {}
 
 
 

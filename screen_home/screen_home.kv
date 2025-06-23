@@ -678,10 +678,6 @@
             id: plan_list
             size_hint: 0.95, 1 
     
-    Widget:
-        size_hint: 1, None
-        height: root.widget_height_10
-
     
     MDBoxLayout:
         id: selected_plan_layout
@@ -697,9 +693,11 @@
 
 
 <AdditionalPlansList>:
-    size_hint: 1, None
+    size_hint: 1, 1
     orientation: "vertical"
-    height: 180
+
+    selected_additional_plan_list : selected_additional_plan_list
+    selected_installment_plan_list : selected_installment_plan_list
     
     Widget:
         size_hint: 1, 0.05
@@ -712,7 +710,7 @@
         Label:
             size_hint: 0.95, 1
             font_name: "p_light"
-            font_size: 8
+            font_size: root.widget_height_8
             color: chex("#FFFFFF")
             text: "[font=p_bold]Selected Plan :[/font]   Home Plan"
             halign: "left"
@@ -736,7 +734,7 @@
             Label:
                 size_hint: 1, 0.1
                 font_name: "p_bold"
-                font_size: 6
+                font_size: root.widget_height_6
                 color: chex("#FFFFFF")
                 text: "Available Add-ons Plan"
                 halign: "left"
@@ -748,6 +746,7 @@
                 size_hint: 1, 0.05
 
             AdditionalPlanList:
+                id: selected_additional_plan_list
                 size_hint: 1, 0.85
 
 
@@ -761,7 +760,7 @@
             Label:
                 size_hint: 1, 0.1
                 font_name: "p_bold"
-                font_size: 6
+                font_size: root.widget_height_6
                 color: chex("#FFFFFF")
                 text: "Available Add-ons Plan"
                 halign: "left"
@@ -773,6 +772,7 @@
                 size_hint: 1, 0.05
 
             AdditionalPlanList:
+                id: selected_installment_plan_list
                 size_hint: 1, 0.85
 
 
@@ -795,7 +795,7 @@
         orientation: "vertical"
         size_hint: (1, None)
         adaptive_height: True
-        spacing: 5
+        spacing: root.widget_height_5
 
         PlansInstallmentWidget:
         PlansAddsOnsWidget:
@@ -815,17 +815,17 @@
     shadow_softness: 12
     shadow_radius: root.content_background_radius
     radius: root.content_background_radius
-    padding: 15, 5
+    # padding: 15, 5
 
     Widget:
         size_hint: 1, None
-        height: 7
+        height: root.widget_height_7
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "Home Plan Add Ons"
         halign: "left"
@@ -834,14 +834,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
 
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "[font=p_bold]Monthly:[/font] P 1,500"
         halign: "left"
@@ -850,7 +850,7 @@
 
     Widget:
         size_hint: 1, None
-        height: 7
+        height: root.widget_height_7
 
 
 <PlansInstallmentWidget>:
@@ -866,17 +866,17 @@
     shadow_softness: 12
     shadow_radius: root.content_background_radius
     radius: root.content_background_radius
-    padding: 15, 5
+    # padding: 15, 5
 
     Widget:
         size_hint: 1, None
-        height: 7
+        height: root.widget_height_7
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "Home Plan Add Ons"
         halign: "left"
@@ -885,14 +885,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
 
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "[font=p_bold]Monthly:[/font] P 1,500"
         halign: "left"
@@ -901,14 +901,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
 
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "[font=p_bold]Months To Pay:[/font] 11"
         halign: "left"
@@ -917,14 +917,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
 
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "[font=p_bold]Months Remaining[/font] 11"
         halign: "left"
@@ -933,14 +933,14 @@
 
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
 
     Label:
         size_hint_y: None
         text_size: self.width, None  # Enables wrapping
         height: self.texture_size[1]  # Auto height based on wrapped content
         font_name: "p_light"
-        font_size: 8
+        font_size: root.widget_height_8
         color: chex("#352F44")
         text: "[font=p_bold]Total Amount:[/font] P 1,500"
         halign: "left"
@@ -949,13 +949,13 @@
 
     Widget:
         size_hint: 1, None
-        height: 7
+        height: root.widget_height_7
 
 
     
 
 <PlanWidget>:
-    # size_hint: None, 1 
+    size_hint: None, 1 
     theme_elevation_level: "Custom"
     elevation_level: 2
     theme_shadow_offset: "Custom"
@@ -1126,15 +1126,7 @@
         id: container_layout
         orientation: "horizontal"
         size_hint: (None, 1)
-        adaptive_width: True 
-
-        # PlanWidget:
-
-        # EmptyPlanWidget:
-
-        # PlanWidget:
-            
-        # AddPlanWidget:
+        adaptive_width: True  
         
 
 
