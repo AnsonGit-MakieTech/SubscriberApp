@@ -91,7 +91,7 @@ class FirstTimeScreen(Screen):
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
         anim.start(self)
-
+ 
         Clock.schedule_once(self.load_connected_screen)
         return super().on_enter(*args)
 
@@ -119,6 +119,8 @@ class FirstTimeScreen(Screen):
 
 
     def load_connected_screen(self, *args):
+        # self.fetch_all_plan_products()
+
         main_app  = MDApp.get_running_app()
         if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
             main_app.root_screen_manager.builder_load_screen('screen_login', 'screen_login.kv', LOGIN_SCREEN )
@@ -134,7 +136,86 @@ class FirstTimeScreen(Screen):
 
 
 
+    def fetch_all_plan_products(self, *args):
+        main_app  = MDApp.get_running_app()
+        key = "all_plan_products"
+        action = "fetch_all_plan_products"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+        
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}') 
+                main_app.process_modal.open()
+                main_app.process_modal.proccess_text = "Checking for products"
+                Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
+                return False
+            
+            data = com_data.get('data', None)
+            print(f'data: {data}')
+            
+            return False
+        
+        print(f'fetch_all_plan_products')
+        Clock.schedule_interval(check_response, 1)
+
+
+        
 
 
 
+    # def register_pin(self, *args):
+    #     if len(self.pin_input.text) > 4:
+    #         # print("Pin is too long")
+    #         return
+    #     if self.pin_input.text != self.pin_input_2.text:
+    #         # print("Pins do not match")
+    #         return
+        
+    #     register_screen = self.manager.get_screen(LOGIN_SCREEN_REGISTER_ACCOUNT_SCREEN)
+    #     username = register_screen.username_input.text
+    #     password = register_screen.password_input.text
+    #     pin = self.pin_input.text
+    #     app = MDApp.get_running_app()
+    #     if self.manager.parent.user_screen_action == LOGIN_SCREEN_ACTION_REGISTER:
+    #         app.communications.register_pin(username, password, pin)
+    #         self.manager.popup.open()
+
+    #         def done_registering(*args):
+    #             self.manager.custom_popup.dismiss()
+                
+            
+    #         def continue_registering(*args):
+    #             self.manager.custom_popup.dismiss()
+    #             self.manager.current = LOGIN_SCREEN_PIN_LOGIN_SCREEN
+            
+    #         def communication_event(*args):
+    #             data = app.communications.get_and_remove("REGISTER_PIN")
+    #             if data:
+    #                 self.manager.popup.dismiss() 
+    #                 if data.get("result", None) == "NA":
+    #                     self.manager.custom_popup.my_text = data.get("message", "No Internet Connection")
+    #                     Clock.schedule_once(done_registering, 1)
+    #                     return False
+                    
+    #                 if data.get("result", False):
+    #                     self.manager.custom_popup.my_text = "Successfully registered"
+    #                     self.manager.custom_popup.auto_dismiss = False 
+    #                     Clock.schedule_once(continue_registering, 2) 
+    #                 else:
+    #                     text = data.get("message", "Pin is incorrect")
+    #                     self.manager.custom_popup.my_text = text
+    #                     Clock.schedule_once(done_registering, 2)
+    #                 self.manager.custom_popup.open()
+    #                 return False
+                
+            
+    #         Clock.schedule_interval(communication_event, 1)
+    #         return
 

@@ -203,12 +203,14 @@ class SubscriberApp(MDApp):
 
     is_outside = BooleanProperty(True) # Use to identify if used outside of the screen
 
+    app_data = DictProperty({}) # Store app data here while the app is running
+
     def on_start(self):
         """ Check and request storage permission on Android """ 
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens, 0.1)
         Clock.schedule_once(self.on_window_resize, 1) 
-        
+
         if platform == "android":
             self.request_android_permissions() 
      

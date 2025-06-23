@@ -25,6 +25,7 @@ requirements = kivy==2.3.1, \
     kivy-garden, \
     kivy-garden.mapview
 
+pip.options = --no-binary=pillow
 
 orientation = portrait
 icon.filename = assets/app_logo.png
