@@ -436,9 +436,7 @@ class CreateAccountScreen(Screen):
         main_app = MDApp.get_running_app()
         main_app.load_user_map_verification_modal()
         main_app.user_map_verification_modal.load_map()
-        main_app.load_all_registrations_modal()
-
-
+        main_app.load_all_registrations_modal() 
 
         main_app.on_window_resize()
 

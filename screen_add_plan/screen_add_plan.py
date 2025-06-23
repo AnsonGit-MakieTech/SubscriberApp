@@ -44,8 +44,7 @@ map_source_satlite = MapSource(
 
 
 class AddPlanInformation(
-    CommonElevationBehavior,
-    RectangularRippleBehavior, 
+    CommonElevationBehavior, 
     MDBoxLayout
 ):
     content_background_radius = ListProperty([ 8 , 8, 0 , 0 ])
@@ -70,13 +69,6 @@ class AddPlanInformation(
         
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.bag_icon = os.path.join(parent_dir, 'assets', 'bag_black_icon.png')
-
-        Clock.schedule_interval(self.test_add_name, 0.5)
-    
-    def test_add_name(self, *args):
-        self.plan_name_label.text += "1"
-        self.update_content_font_size()
-        
  
 
     def update_sizing(self, *args):
@@ -124,6 +116,16 @@ class AddPlanInformation(
 
             # (optional) force the label to reflow
             self.plan_name_label.texture_update()
+
+ 
+    def proceed_to_payment(self, *args):
+        main_app  = MDApp.get_running_app()  
+        if main_app.next_step_modal is not None: 
+            main_app.next_step_modal.open()
+            def button_action_for_payment(*args):
+                print("Link to payment redirecting")
+            main_app.next_step_modal.button_action_for_online = button_action_for_payment
+            main_app.next_step_modal.button_action_for_visit = main_app.application_number_modal.open 
 
 
 class SingleMarkerMapView(MapView):
@@ -256,6 +258,9 @@ class AddPlanScreen(Screen):
 
     def load_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
+        main_app.load_all_registrations_modal()
+        main_app.on_window_resize()
+        
         
         if not main_app.root_screen_manager.does_screen_exist(PRODUCT_SHOWCASE_SCREEN):
             main_app.root_screen_manager.builder_load_screen('screen_product_showcase', 'screen_product_showcase.kv', PRODUCT_SHOWCASE_SCREEN )
@@ -265,6 +270,12 @@ class AddPlanScreen(Screen):
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup)
         main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
+    
+    def go_to_home(self, *args):
+        main_app  = MDApp.get_running_app()
+        Clock.schedule_once(main_app.show_welcome_popup)
+        main_app.root_screen_manager.change_screen(HOME_SCREEN)
+
 
     def check_is_map_clicked_not_colliding(self, *args):
         return self.is_map_clicked_not_colliding

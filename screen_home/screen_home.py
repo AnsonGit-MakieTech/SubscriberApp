@@ -170,9 +170,6 @@ class HomeScreen(Screen):
     
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app() 
-
-
-
         anim = Animation(opacity=1, duration=1)
         anim.bind( on_start= main_app.on_window_resize, on_complete=self.remove_outside_screens)
         anim.start(self)
@@ -190,6 +187,9 @@ class HomeScreen(Screen):
         main_app  = MDApp.get_running_app() 
         main_app.close_welcome_popup()
 
+    def on_leave(self, *args):
+        self.opacity = 0
+        return super().on_leave(*args)
     
     def load_all_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()

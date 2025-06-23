@@ -32,6 +32,7 @@
                     width: root.header_height
                     md_bg_color: chex("#352F44")
                     padding: root.header_button_padding
+                    on_release: root.go_to_home()
 
                     Image:
                         source: root.home_icon
@@ -332,6 +333,12 @@
             shadow_radius: root.button_background_radius
             radius: root.button_background_radius
 
+            Label:
+                text: "Verify Selected Plan"
+                font_size: root.content_font_size
+                color: chex("#FFFFFF")
+                font_name: 'p_bold'
+
         Widget:
             size_hint: (0.05 , 1)
         AppButton:
@@ -339,6 +346,14 @@
             md_bg_color: chex("05B51A")
             shadow_radius: root.button_background_radius
             radius: root.button_background_radius
+            on_release: root.proceed_to_payment()
+ 
+            Label:
+                text: "Proceed to Payment"
+                font_size: root.content_font_size
+                color: chex("#FFFFFF")
+                font_name: 'p_bold'
+                
 
         Widget:
             size_hint: (0.05 , 1)
