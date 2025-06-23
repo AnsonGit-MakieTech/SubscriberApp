@@ -119,7 +119,6 @@ class FirstTimeScreen(Screen):
 
 
     def load_connected_screen(self, *args):
-        # self.fetch_all_plan_products()
 
         main_app  = MDApp.get_running_app()
         if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
@@ -152,9 +151,9 @@ class FirstTimeScreen(Screen):
             
             if not com_data.get('result'):
                 print(f'Error: {com_data.get("message", None)}') 
-                main_app.process_modal.open()
-                main_app.process_modal.proccess_text = "Checking for products"
-                Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
+                # main_app.process_modal.open()
+                # main_app.process_modal.proccess_text = "Checking for products"
+                # Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
                 return False
             
             data = com_data.get('data', None)

@@ -298,6 +298,8 @@ class CreateAccountScreen(Screen):
     widget_35_height = NumericProperty(10)
     login_logo_height = NumericProperty(10)
 
+    is_creating_account = BooleanProperty(False)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
@@ -443,17 +445,55 @@ class CreateAccountScreen(Screen):
 
 
     def register_account(self, *args):
+        if self.is_creating_account:
+            return
+        self.is_creating_account = True
+
         main_app = MDApp.get_running_app()
+        key = "all_plan_products"
+        action = "fetch_all_plan_products"
+        need_data = {}
+        main_app.communications.post_data_action(need_data , key, action)
+
         import random
         type_of_account = random.choice(["New", "Existing"])
-        if type_of_account == "New": 
-            main_app.next_step_modal.open()
-            def button_action_for_payment(*args):
-                print("Link to payment redirecting")
-            main_app.next_step_modal.button_action_for_online = button_action_for_payment
-            main_app.next_step_modal.button_action_for_visit = main_app.application_number_modal.open
-        else:
-            main_app.activate_account_modal.open()
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            # if not com_data.get('result'):
+            #     print(f'Error: {com_data.get("message", None)}') 
+                # main_app.process_modal.open()
+                # main_app.process_modal.proccess_text = ""
+                # Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
+                # self.is_logging_in = False
+                # return False
+            
+            data = com_data.get('data', None)
+            print(f'data: {data}')
+
+            if type_of_account == "New": 
+                main_app.next_step_modal.open()
+                def button_action_for_payment(*args):
+                    print("Link to payment redirecting")
+                main_app.next_step_modal.button_action_for_online = button_action_for_payment
+                main_app.next_step_modal.button_action_for_visit = main_app.application_number_modal.open
+            else:
+                main_app.activate_account_modal.open()
+
+            self.is_creating_account = False
+            return False
+        
+        Clock.schedule_interval(check_response, 1)
+
+
+
+
+
+
 
 
         

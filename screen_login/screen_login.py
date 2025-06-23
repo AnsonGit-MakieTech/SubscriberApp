@@ -1,6 +1,6 @@
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -131,15 +131,11 @@ class LoginScreen(Screen):
     adaptive_radius = ListProperty([24, 24, 0, 0])
     container_box : FormLayout = ObjectProperty(None)
 
+    is_logging_in = BooleanProperty(False)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-
-    # def on_kv_post(self, base_widget):
-        
-    #     container = self.ids.container_box
-    #     container.bind(size=self.update_radius)
-
 
     def on_parent(self, instance, parent):
         main_app = MDApp.get_running_app()
@@ -153,10 +149,6 @@ class LoginScreen(Screen):
         if parent:
             self.container_box.login_event = self.login_event
 
-
-    # def on_parent(self, instance, parent):
-    #     if parent:
-    #         self.container_box.login_event = self.login_event
 
     def update_radius(self, *args):
         if self.container_box:
@@ -184,12 +176,42 @@ class LoginScreen(Screen):
 
     def login_event(self):
         print("login event")
+        if self.is_logging_in:
+            return
+        self.is_logging_in = True
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup)  
-        if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
-            main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
-            main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
-        main_app.root_screen_manager.change_screen(HOME_SCREEN)
+        key = "all_plan_products"
+        action = "fetch_all_plan_products"
+        need_data = {}
+        main_app.communications.post_data_action(need_data , key, action)
+        
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            # if not com_data.get('result'):
+            #     print(f'Error: {com_data.get("message", None)}') 
+                # main_app.process_modal.open()
+                # main_app.process_modal.proccess_text = ""
+                # Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
+                # self.is_logging_in = False
+                # return False
+            
+            data = com_data.get('data', None)
+            print(f'data: {data}')
+    
+            Clock.schedule_once(main_app.show_welcome_popup)  
+            if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
+                main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
+                main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
+            main_app.root_screen_manager.change_screen(HOME_SCREEN)
+            
+            self.is_logging_in = False
+            return False
+        Clock.schedule_interval(check_response, 1)
+
 
     
 
@@ -205,3 +227,7 @@ class LoginScreen(Screen):
             main_app.root_screen_manager.builder_load_screen('screen_forgot', 'screen_forgot.kv', FORGOT_ACCOUNT_SCREEN )
             main_app.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN)
         
+ 
+
+         
+       

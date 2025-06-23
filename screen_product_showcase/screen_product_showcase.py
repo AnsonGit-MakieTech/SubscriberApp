@@ -254,3 +254,48 @@ class ProductShowcaseScreen(Screen):
         if not main_app.root_screen_manager.does_screen_exist(ADD_PLAN_SCREEN) and not main_app.is_outside: 
             main_app.root_screen_manager.builder_load_screen('screen_add_plan', 'screen_add_plan.kv', ADD_PLAN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN) 
+
+        self.fetch_all_plan_products()
+
+
+    def fetch_all_plan_products(self, *args):
+        main_app  = MDApp.get_running_app()
+        key = "all_plan_products"
+        action = "fetch_all_plan_products"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+        
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we fetch our products"
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                main_app.process_modal.display_error(com_data.get('message', None))
+                return False
+            
+            data = com_data.get('data', None)
+            print(f'data: {data}')
+            
+            main_app.process_modal.display_error(com_data.get('message', None))
+            return False
+        
+        print(f'fetch_all_plan_products')
+        Clock.schedule_interval(check_response, 1)
+
+
+
+
+
+
+
+
+
+
+
+

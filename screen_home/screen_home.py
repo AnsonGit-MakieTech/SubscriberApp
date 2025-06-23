@@ -194,6 +194,7 @@ class HomeScreen(Screen):
     def load_all_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
         main_app.is_outside = False
+
         
         self.headline.setup_image()
         self.account.setup_image()
@@ -206,3 +207,38 @@ class HomeScreen(Screen):
 
         self.is_all_loaded = True
 
+        
+        self.fetch_account_data()
+
+
+
+    def fetch_account_data(self, *args):
+        main_app  = MDApp.get_running_app()
+        key = "fetch_account_data"
+        action = "fetch_account_data"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+        
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we fetch your account data"
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}') 
+                main_app.process_modal.display_error(com_data.get('message', None))
+                return False
+            
+            data = com_data.get('data', None)
+            print(f'data: {data}')
+
+            main_app.process_modal.display_error(com_data.get('message', None))
+            
+            return False
+        
+        print(f'fetch_account_data')
+        Clock.schedule_interval(check_response, 1)
