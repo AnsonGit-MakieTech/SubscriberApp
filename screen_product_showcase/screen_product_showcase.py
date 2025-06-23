@@ -154,6 +154,8 @@ class ProductShowcaseScreen(Screen):
 
     product_list : MDBoxLayout = ObjectProperty(None)
 
+    is_outside = BooleanProperty(True) # Use to identify if used outside of the screen
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -217,26 +219,30 @@ class ProductShowcaseScreen(Screen):
     
 
     def goto_login_screen(self, *args):
-        main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup) 
-        main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
+        if self.is_outside:
+            main_app  = MDApp.get_running_app()
+            Clock.schedule_once(main_app.show_welcome_popup) 
+            main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
+        
 
     
     def goto_create_screen(self, *args):
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup) 
-        main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
+        if self.is_outside:
+            main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
     
     def load_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
-        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
+        if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN) and self.is_outside:
             main_app.root_screen_manager.builder_load_screen('screen_login', 'screen_login.kv', LOGIN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(LOGIN_SCREEN)
         
         
-        if not main_app.root_screen_manager.does_screen_exist(CREATE_ACCOUNT_SCREEN):
+        if not main_app.root_screen_manager.does_screen_exist(CREATE_ACCOUNT_SCREEN) and self.is_outside:
             main_app.root_screen_manager.builder_load_screen('screen_create_account', 'screen_create_account.kv', CREATE_ACCOUNT_SCREEN )
             main_app.root_screen_manager.add_handler_screen(CREATE_ACCOUNT_SCREEN)
+
 
 
 

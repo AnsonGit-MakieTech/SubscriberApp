@@ -1,7 +1,7 @@
 
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -112,6 +112,8 @@ class HomeScreen(Screen):
     tickets : tickets_layout.TicketsLayout = ObjectProperty(None)
     account : account_layout.AccountLayout = ObjectProperty(None)
 
+    is_all_loaded = BooleanProperty(False)
+
 
 
     def __init__(self, **kwargs):
@@ -163,9 +165,11 @@ class HomeScreen(Screen):
             self.tickets.update_sizing(width=width, height=height)
 
 
-
+    def on_pre_enter(self, *args):
+        self.is_all_loaded = False
+        return super().on_pre_enter(*args)
+    
     def on_enter(self, *args):
-        
         main_app  = MDApp.get_running_app() 
 
 
@@ -183,12 +187,8 @@ class HomeScreen(Screen):
         return super().on_enter(*args)
  
     
-    def remove_outside_screens(self, *args):
-        # This function used to removed the outside screens ( login, register and forgot password)
-        main_app  = MDApp.get_running_app()
-        # main_app.root_screen_manager.remove_screen(LOGIN_SCREEN)
-        # main_app.root_screen_manager.remove_screen(CREATE_ACCOUNT_SCREEN)
-        # main_app.root_screen_manager.remove_screen(FORGOT_ACCOUNT_SCREEN)
+    def remove_outside_screens(self, *args): 
+        main_app  = MDApp.get_running_app() 
         main_app.close_welcome_popup()
 
     
@@ -205,5 +205,8 @@ class HomeScreen(Screen):
             main_app.root_screen_manager.builder_load_screen('screen_add_plan', 'screen_add_plan.kv', ADD_PLAN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN)
 
+        self.is_all_loaded = True
 
-
+    def change_to_add_plan_screen(self, *args):
+        main_app  = MDApp.get_running_app()
+        main_app.root_screen_manager.change_to_screen(ADD_PLAN_SCREEN)
