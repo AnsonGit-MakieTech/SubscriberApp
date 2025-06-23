@@ -429,6 +429,8 @@
     adaptive_height: True
 
     router_icon : router_icon
+    ticket_list: ticket_list
+    ticket_details : ticket_details
 
     canvas.before:
         Color:
@@ -440,7 +442,7 @@
     
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_height_15
 
     SectionIconLayout:
         id: router_icon
@@ -448,11 +450,11 @@
  
     Widget:
         size_hint: 1, None
-        height: 5
+        height: root.widget_height_5
            
     BoxLayout:
         size_hint: 1, None
-        height: 15
+        height: root.widget_height_15
         orientation: "horizontal"
 
         Widget:
@@ -460,7 +462,7 @@
 
         Label:
             size_hint: 0.4, 1
-            font_size: 10
+            font_size: root.widget_height_10
             color: chex("#FFFFFF")
             text: "List of Ticket"
             font_name: "p_bold"
@@ -473,7 +475,7 @@
         
         CustomClickableLabel:
             size_hint: 0.3, 1
-            font_size: 10
+            font_size: root.widget_height_8
             color: chex("#FFFFFF")
             text: "[u]+Add New Ticket[/u]"
             markup: True
@@ -487,23 +489,25 @@
 
     Widget:
         size_hint: 1, None
-        height: 15
+        height: root.widget_height_15
 
     BoxLayout:
         size_hint: 1, None
-        height: 100
+        height: root.widget_height_100
         orientation: "horizontal"
 
         Widget:
             size_hint: 0.1, 1
 
         TicketList:
+            id: ticket_list
             size_hint: 0.3, 1
         
         Widget:
             size_hint: 0.05, 1
 
         TicketDetailsWidget:
+            id: ticket_details
             size_hint: 0.45, 1
 
         Widget:
@@ -513,12 +517,11 @@
     
     Widget:
         size_hint: 1, None
-        height: 15 
+        height: root.widget_height_15 
 
 
 <TicketWidget>:
-    size_hint: 1, None
-    height: 20
+    size_hint: 1, None 
     
     theme_elevation_level: "Custom"
     elevation_level: 2
@@ -533,21 +536,23 @@
         size_hint: 1, 1
         text : root.ticket_number
         font_name: "p_bold"
-        font_size: 10
+        font_size: root.widget_height_10
         color: chex("#5C5470")
         
         
 
 <TicketList>:
+    ticket_container : ticket_container
     do_scroll_x: False
     do_scroll_y: True
     bar_width: 0  # Optional: hide bar
 
     MDBoxLayout:
+        id : ticket_container
         orientation: "vertical"
         size_hint: (1, None)
         adaptive_height: True
-        spacing: 5
+        spacing: root.widget_height_5
         
         TicketWidget:
         
@@ -568,14 +573,14 @@
     shadow_softness: 12
     shadow_radius: root.content_background_radius
     radius: root.content_background_radius
-    padding: 10, 10
-    spacing: 4
+    # padding: 10, 10
+    # spacing: 4
 
     
     Label:
         size_hint: 1, 0.2
         font_name: "p_bold"
-        font_size: 11
+        font_size: root.widget_height_11
         color: chex("#5C5470")
         text: "Ticket Details"
         halign: "left"
@@ -587,35 +592,35 @@
     Label:
         size_hint: 1, 0.2
         font_name: "p_light"
-        font_size: 9
+        font_size: root.widget_height_9
         color: chex("#5C5470")
         text: "[font=p_regular]TICKET NO:[/font] 90DFENA6"
         halign: "left"
         valign: "middle"
         markup: True
-        text_size: self.width - 20, None 
+        text_size: [self.width - root.widget_height_10, None ]
     
     Label:
         size_hint: 1, 0.2
         font_name: "p_light"
-        font_size: 9
+        font_size: root.widget_height_9
         color: chex("#5C5470")
         text: "[font=p_regular]STATUS:[/font] OPEN"
         halign: "left"
         valign: "middle"
         markup: True
-        text_size: self.width - 20, None 
+        text_size: [self.width - root.widget_height_10, None ]
 
     Label:
         size_hint: 1, 0.2
         font_name: "p_light"
-        font_size: 9
+        font_size: root.widget_height_9
         color: chex("#5C5470")
         text: "[font=p_regular]TYPE:[/font] REPAIR"
         halign: "left"
         valign: "middle"
         markup: True
-        text_size: self.width - 20, None 
+        text_size: [self.width - root.widget_height_10, None ]
 
 
 

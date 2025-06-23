@@ -38,6 +38,9 @@ class TicketWidget(
     
     content_background_radius = ListProperty([ 16 , 16, 16 , 16 ])
     ticket_number = StringProperty("123456789")
+
+    
+    widget_height_10 = NumericProperty(0) 
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -46,22 +49,19 @@ class TicketWidget(
         Clock.schedule_once(self.update_sizing, 0.1)
         self.opacity = 0
         self.elevation = 0
-    
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
-
 
     def update_sizing(self, *args):
+        
+        width, height = Window.size
+        self.height = int(min( width, height) * 0.1)
+        self.widget_height_10 = int(min( width, height) * 0.035) 
+
+
         width, height = self.size
         r = min(width, height) * 0.2  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+
+        
 
     def on_parent(self, instance, value):
         # Widget is now attached to the tree
@@ -70,9 +70,21 @@ class TicketWidget(
             Animation(opacity=1, elevation=4, d=0.3).start(self)
 
 class TicketList(ScrollView):
+
+    ticket_container : MDBoxLayout = ObjectProperty(None)
+
+    widget_height_5 = NumericProperty(0) 
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
     
+    def update_sizing(self, *args):
+        width, height = Window.size
+
+        self.widget_height_5 = int(min( width, height) * 0.02) 
+        for child in self.ticket_container.children:
+            child.update_sizing()
 
 
 
@@ -84,34 +96,52 @@ class TicketDetailsWidget(
 ):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
 
+
+    widget_height_4 = NumericProperty(0) 
+    widget_height_9 = NumericProperty(0) 
+    widget_height_10 = NumericProperty(0) 
+    widget_height_11 = NumericProperty(0) 
+ 
+
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#FAF0E6")
+
+    def update_sizing(self, *args):
+        width, height = Window.size
+
+        self.widget_height_4 = int(min( width, height) * 0.02)
+        self.widget_height_9 = int(min( width, height) * 0.028)
+        self.widget_height_10 = int(min( width, height) * 0.035)
+        self.widget_height_11 = int(min( width, height) * 0.037)
+
+
+        self.padding = [ self.widget_height_10, self.widget_height_10]
+        self.spacing = self.widget_height_4
+ 
+
+        width, height = self.size
+        r = min(width, height) * 0.04 # You can change 0.05 to any fraction
+        self.content_background_radius = [r, r, r, r]
 
 
 class TicketsLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
 
     router_icon : section_icon.SectionIconLayout = ObjectProperty(None)
+    ticket_list: TicketList = ObjectProperty(None)
+    ticket_details : TicketDetailsWidget = ObjectProperty(None)
+
+    widget_height_5 = NumericProperty(0) 
+    widget_height_8 = NumericProperty(0)
+    widget_height_10 = NumericProperty(0) 
+    widget_height_15 = NumericProperty(0) 
+    widget_height_100 = NumericProperty(0)
     
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        Clock.schedule_once(self.update_sizing, 0.1)  # Delay to ensure size is ready
-
-        # Clock.schedule_once(self.setup_image, 1)
-
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
-
-
+        super().__init__(**kwargs) 
+ 
     def setup_image(self, *args):
         if self.router_icon is None: 
             Clock.schedule_once(self.setup_image, 0.3)
@@ -122,15 +152,28 @@ class TicketsLayout(MDBoxLayout):
         self.router_icon.sec_icon = os.path.join(parent_dir, 'assets', 'ticket_icon.png')
         self.router_icon.display_additional = False
         self.router_icon.is_half_padding_left = True
+        print("Ticket is ")     
 
-    def update_sizing(self, *args):
-        width, height = self.size
+    def update_sizing(self, width, height):
+        
         r = min(width, height) * 0.035  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
+        
         width , height = Window.size
         if self.router_icon is not None:
             self.router_icon.update_sizing(width, height)
+        
+        if self.ticket_list is not None:
+            self.ticket_list.update_sizing()
+        
+        if self.ticket_details is not None:
+            self.ticket_details.update_sizing()
 
+        self.widget_height_5 = int(min( width, height) * 0.02) 
+        self.widget_height_8 = int(min( width, height) * 0.03)
+        self.widget_height_10 = int(min( width, height) * 0.04) 
+        self.widget_height_15 = int(min( width, height) * 0.055)  
+        self.widget_height_100 = int(min( width, height) * 0.4) 
 
 
 

@@ -159,6 +159,8 @@ class HomeScreen(Screen):
             self.router.update_sizing(width=width, height=height)
         # print(f"width: {width} , height: {height}, hpad: {hpad}")
 
+        if self.tickets is not None:
+            self.tickets.update_sizing(width=width, height=height)
 
 
 
