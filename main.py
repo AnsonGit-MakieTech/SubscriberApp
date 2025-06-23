@@ -36,13 +36,11 @@ if platform == "android":
 
 if platform == "ios":
     pass
-
-Window.show_cursor = True
-
-
+ 
 if platform == "win":
     # Simulate a mid-sized Android phone
     Window.size = (360, 780)
+    Window.show_cursor = True
 
 
 from screen_components import (
