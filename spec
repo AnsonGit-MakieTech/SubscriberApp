@@ -1,28 +1,16 @@
 [app]
 
-# (str) Title of your application
 title = Subscriber App
-
-
-# (str) Package name (must remain the same for updates)
-package.name = techapp 
-# (str) Package domain (also must remain the same)
+package.name = techapp
 package.domain = org.billingko
+
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt,otf
-# --- Versioning: ---
-# (str) Human-readable version name (optional, shown to users)
-#      Bump this whenever you make a new release, e.g. "0.1" → "0.2" → "1.0" → etc.
-version = 0.1
 
-# (int) Android version code
-#      This is what Android actually checks to see if the APK is “newer.” 
-#      Must increase by at least +1 from the last build (e.g. 1, 2, 3, …).
-#      If your previous APK had version_code = 1, set this to 2 for the next release.
+version = 0.1
 android.version_code = 1
 
-requirements = \
-    kivy==2.3.1, \
+requirements = kivy==2.3.1, \
     kivymd@https://github.com/kivymd/KivyMD/archive/master.zip, \
     asyncgui, \
     asynckivy, \
@@ -33,7 +21,10 @@ requirements = \
     urllib3, \
     idna, \
     certifi, \
-    charset_normalizer
+    charset_normalizer, \
+    kivy-garden, \
+    kivy-garden.mapview
+
 
 orientation = portrait
 icon.filename = assets/app_logo.png
@@ -41,20 +32,14 @@ presplash.filename = assets/splash.png
 android.presplash_color = #352F44
 
 android.api = 34
-android.minapi = 26
+android.minapi = 28
 android.ndk = 25b
 android.accept_sdk_license = True
 
-# Bundle both 32-bit and 64-bit ARM into one “universal” APK:
 android.archs = arm64-v8a, armeabi-v7a
-android.multi_apk = False
 
+android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_EXTERNAL_STORAGE,READ_MEDIA_IMAGES,READ_MEDIA_VIDEO,READ_MEDIA_AUDIO
 
-# Permissions you might need based on your dependencies (Mapview, Storage, Webview, etc.) 
-android.permissions = INTERNET
-
-
-# P4A settings
 p4a.branch = master
 p4a.python_version = 3.10
 

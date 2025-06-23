@@ -62,6 +62,16 @@ from screen_product_showcase.screen_product_showcase import ProductShowcaseScree
 from screen_home.screen_home import HomeScreen
 from screen_add_plan.screen_add_plan import AddPlanScreen
 
+if platform == "android":
+    from android.permissions import request_permissions, Permission
+    REQUIRED_PERMISSIONS = [
+        Permission.ACCESS_FINE_LOCATION,
+        Permission.ACCESS_COARSE_LOCATION,
+        Permission.READ_EXTERNAL_STORAGE,
+        Permission.READ_MEDIA_IMAGES,
+    ]
+
+
 class TappableImage(Image):
     def __init__(self, modal_ref, **kwargs):
         super().__init__(**kwargs)
@@ -201,6 +211,26 @@ class SubscriberApp(MDApp):
         Clock.schedule_once(self.load_screens, 0.1)
         Clock.schedule_once(self.on_window_resize, 1) 
         # self.process_modal.open()
+    
+    def on_start(self):
+        if platform == "android":
+            self.request_android_permissions()
+
+    def request_android_permissions(self):
+        def callback(permissions, grants):
+            granted = [p for p, g in zip(permissions, grants) if g]
+            denied = [p for p, g in zip(permissions, grants) if not g]
+
+            print("Granted permissions:", granted)
+            print("Denied permissions:", denied)
+
+            if all(check_permission(p) for p in REQUIRED_PERMISSIONS):
+                print("✅ All permissions granted!")
+            else:
+                print("❌ Some permissions were denied.")
+                self.stop()
+
+        request_permissions(REQUIRED_PERMISSIONS, callback)
 
     def on_stop(self):
         try:
