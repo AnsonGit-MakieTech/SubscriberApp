@@ -208,11 +208,10 @@ class SubscriberApp(MDApp):
         # Defer screen loading after UI is visible
         Clock.schedule_once(self.load_screens, 0.1)
         Clock.schedule_once(self.on_window_resize, 1) 
-        # self.process_modal.open()
-    
-    def on_start(self):
+        
         if platform == "android":
-            self.request_android_permissions()
+            self.request_android_permissions() 
+     
 
     def request_android_permissions(self):
         def callback(permissions, grants):
