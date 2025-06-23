@@ -23,10 +23,10 @@ class AddTicketModalDetailsTextInput(
     # RectangularRippleBehavior,
     MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
-    details_font_size = NumericProperty(15)
+    details_font_size = NumericProperty(0)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.md_bg_color = get_color_from_hex("#5C5470")
+        self.md_bg_color = get_color_from_hex("#352F44")
 
     
     def update_sizing(self, *args):
@@ -68,28 +68,22 @@ class AddTicketModal(ModalView):
     h1_font_size = NumericProperty(20)
     main_layout = ObjectProperty()
 
+    widget_height_2 = NumericProperty(0)
+    widget_height_34 = NumericProperty(0)
+
     details_input : AddTicketModalDetailsTextInput = ObjectProperty(None)
     dropdown_btn : app_button.AppButton = ObjectProperty(None)
     canncel_btn : app_button.AppButton = ObjectProperty(None)
     submit_btn : app_button.AppButton = ObjectProperty(None)
+
+    dropdown : DropDown = ObjectProperty(None)
 
     selected_plan = StringProperty("Click Here To Select")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        self.dropdown = DropDown(max_height=150)
-
-        # Create dropdown options
-        for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
-            widget = Widget(size_hint_y=None, height=2)
-            self.dropdown.add_widget(widget)
-            btn = DropdownButton(size_hint_y=None, height=34)
-            btn.text = option
-            btn.value = option
-            btn.bind(on_release=lambda btn: self.dropdown.select(btn))
-            self.dropdown.add_widget(btn)
-
+        self.dropdown = DropDown(max_height=150) 
         # Bind button from KV to open dropdown
         self.dropdown_btn.bind(on_release=self.dropdown.open)
         self.dropdown.bind(on_select=self.on_select)
@@ -102,23 +96,14 @@ class AddTicketModal(ModalView):
         self.selected_plan = value.text
         print(f"Selected option: {value.text}")
         print(value)
-        pass
-    
-    # def on_parent(self, instance, parent):
-    #     main_app = MDApp.get_running_app()
-        
-    #     if parent is None:
-    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-    #     else:
-    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-    #         self.update_sizing()
-    
+        pass 
+
     def update_sizing(self, *args):
         width, height = self.size
         self.h1_font_size = int(min(width, height) * 0.05)
         self.h2_font_size = int(min(width, height) * 0.04)
+        self.widget_height_2 = int(min(width, height) * 0.009)
+        self.widget_height_34 = int(min(width, height) * 0.14)
         self.details_input.update_sizing()
  
     
@@ -126,6 +111,19 @@ class AddTicketModal(ModalView):
         anim = Animation(opacity=1, d=0.3)
         anim.bind(on_start=self.update_sizing)
         anim.start(self)
+
+        
+        # Create dropdown options
+        for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
+            widget = Widget(size_hint_y=None, height=self.widget_height_2)
+            self.dropdown.add_widget(widget)
+            btn = DropdownButton(size_hint_y=None, height=self.widget_height_34)
+            btn.text = option
+            btn.value = option
+            btn.bind(on_release=lambda btn: self.dropdown.select(btn))
+            self.dropdown.add_widget(btn)
+
+
         return super().on_open()
 
     def on_pre_dismiss(self):
