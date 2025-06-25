@@ -227,9 +227,9 @@ class SubscriberApp(MDApp):
                 print("✅ All permissions granted!")
             else:
                 print("❌ Some permissions were denied.")
-                def stop_app(*args):
-                    self.stop()
-                Clock.schedule_once(stop_app, 0.1)
+                # def stop_app(*args):
+                #     self.stop()
+                # Clock.schedule_once(stop_app, 0.1)
 
         request_permissions(REQUIRED_PERMISSIONS, callback)
 
