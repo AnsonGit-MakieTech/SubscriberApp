@@ -1,8 +1,8 @@
 [app]
 
 title = Subscriber App
-package.name = techapp
-package.domain = org.billingko
+package.name = billingko.subscriber
+package.domain = org.billingko.subscriber
 
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt,otf
@@ -21,7 +21,7 @@ requirements = kivy==2.3.1, \
     urllib3, \
     idna, \
     certifi, \
-    charset_normalizer, \
+    charset-normalizer==2.1.1, \
     kivy-garden, \
     kivy-garden.mapview
 
@@ -38,8 +38,13 @@ android.ndk = 25b
 android.accept_sdk_license = True
 
 android.archs = arm64-v8a, armeabi-v7a
+android.multi_apk = False
 
 android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,READ_EXTERNAL_STORAGE,READ_MEDIA_IMAGES,READ_MEDIA_VIDEO,READ_MEDIA_AUDIO
+
+garden_requirements = mapview
+android.gradle_dependencies = com.google.android.gms:play-services-location:21.0.1
+
 
 p4a.branch = master
 p4a.python_version = 3.10
