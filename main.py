@@ -63,10 +63,14 @@ from screen_add_plan.screen_add_plan import AddPlanScreen
 if platform == "android":
     from android.permissions import request_permissions, Permission
     REQUIRED_PERMISSIONS = [
+        Permission.INTERNET,
         Permission.ACCESS_FINE_LOCATION,
         Permission.ACCESS_COARSE_LOCATION,
-        Permission.READ_EXTERNAL_STORAGE,
         Permission.READ_MEDIA_IMAGES,
+        Permission.READ_MEDIA_VIDEO,
+        Permission.READ_MEDIA_AUDIO,
+        Permission.READ_EXTERNAL_STORAGE,
+        Permission.WRITE_EXTERNAL_STORAGE,
     ]
 
 
@@ -212,10 +216,10 @@ class SubscriberApp(MDApp):
         Clock.schedule_once(self.on_window_resize, 1) 
 
         if platform == "android":
-            self.request_android_permissions() 
+            Clock.schedule_once(self.request_android_permissions_if_not_granted, 0.1)
      
 
-    def request_android_permissions(self):
+    def request_android_permissions(self , *args):
         def callback(permissions, grants):
             granted = [p for p, g in zip(permissions, grants) if g]
             denied = [p for p, g in zip(permissions, grants) if not g]
@@ -226,14 +230,19 @@ class SubscriberApp(MDApp):
             if all(check_permission(p) for p in REQUIRED_PERMISSIONS):
                 print("✅ All permissions granted!")
             else:
-                print("❌ Some permissions were denied.")
-                # def stop_app(*args):
-                #     self.stop()
-                # Clock.schedule_once(stop_app, 0.1)
+                print("❌ Some permissions were denied.") 
 
         request_permissions(REQUIRED_PERMISSIONS, callback)
+    
+    def request_android_permissions_if_not_granted(self, *args):
+        if not all(check_permission(p) for p in REQUIRED_PERMISSIONS):
+            self.activate_account_modal.content_text = "Please grant the required permissions to continue. You can do this by going to your app settings and enabling the permissions for this app."
+            self.activate_account_modal.proceed_text = "Okey"
+            self.activate_account_modal.click_event = self.request_android_permissions
+        
 
     def on_stop(self):
+        
         try:
             # Close communications
             self._clear_cache_folder()
@@ -274,7 +283,10 @@ class SubscriberApp(MDApp):
 
         
         Builder.load_string(process_modal.kv_process_modal)
-        self.process_modal = process_modal.ProcessingLayout()  
+        self.process_modal = process_modal.ProcessingLayout()   
+
+        Builder.load_string(activate_account_modal.kv_activate_account_modal)
+        self.activate_account_modal = activate_account_modal.ActivateAccountModal()
 
         Clock.schedule_once(self.show_welcome_popup)
         
@@ -340,11 +352,9 @@ class SubscriberApp(MDApp):
     def load_all_registrations_modal(self, *args): 
         Builder.load_string(next_step_modal.kv_next_step_modal)
         Builder.load_string(application_number_modal.kv_application_number_modal)
-        Builder.load_string(activate_account_modal.kv_activate_account_modal)
 
         self.next_step_modal = next_step_modal.NextStepModal()
         self.application_number_modal = application_number_modal.ApplicationNumberModal()
-        self.activate_account_modal = activate_account_modal.ActivateAccountModal()
 
 
     def load_all_home_screen_modal(self, *args):

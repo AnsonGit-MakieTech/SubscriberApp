@@ -26,6 +26,8 @@ class ActivateAccountModal(ModalView):
     content_text = StringProperty("We've just sent an email with your activation link. Please check your inbox (and spam folder) and click the link to complete your registration.")
     proceed_text = StringProperty('Returns to home screen')
 
+    click_event = ObjectProperty(None)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0 
@@ -62,6 +64,10 @@ class ActivateAccountModal(ModalView):
     def on_pre_dismiss(self):
         self.opacity = 0
         return super().on_pre_dismiss()
+
+    def on_click_proceed(self):
+        self.dismiss()
+        self.click_event()
     
 
 kv_activate_account_modal = '''
