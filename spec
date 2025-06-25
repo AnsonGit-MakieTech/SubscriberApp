@@ -22,7 +22,9 @@ requirements = python3,kivy==2.3.1,pillow==10.4.0,charset-normalizer==2.1.1, \
     certifi, \ 
     kivy-garden, \
     kivy-garden.mapview, \
-    exceptiongroup
+    exceptiongroup, \
+    https://github.com/HyTurtle/plyer/archive/master.zip, \
+    androidstorage4kivy
 
 pip.options = --no-binary=pillow
 
