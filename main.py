@@ -236,7 +236,7 @@ class SubscriberApp(MDApp):
     
     def request_android_permissions_if_not_granted(self, *args):
         if not all(check_permission(p) for p in REQUIRED_PERMISSIONS):
-            self.activate_account_modal.content_text = "Please grant the required permissions to continue. You can do this by going to your app settings and enabling the permissions for this app."
+            self.activate_account_modal.content_text = "Please grant the required permissions to continue. You can do this by going to your app settings or clicking yes in the popup."
             self.activate_account_modal.proceed_text = "Okey"
             self.activate_account_modal.click_event = self.request_android_permissions
         
