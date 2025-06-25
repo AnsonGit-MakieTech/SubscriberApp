@@ -10,22 +10,19 @@ source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt,otf
 version = 0.1
 android.version_code = 1
 
-requirements = python3,kivy==2.3.1, \
+requirements = python3,kivy==2.3.1,pillow==10.4.0,charset-normalizer==2.1.1, \
     kivymd@https://github.com/kivymd/KivyMD/archive/master.zip, \
     asyncgui, \
     asynckivy, \
     filetype, \
-    materialyoucolor, \
-    pillow, \
+    materialyoucolor, \ 
     requests, \
     urllib3, \
     idna, \
-    certifi, \
-    charset-normalizer==2.1.1, \
+    certifi, \ 
     kivy-garden, \
     kivy-garden.mapview, \
-    exceptiongroup, \
-    android
+    exceptiongroup
 
 pip.options = --no-binary=pillow
 
