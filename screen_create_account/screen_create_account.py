@@ -357,8 +357,7 @@ class CreateAccountScreen(Screen):
 
     def on_enter(self, *args):
         main_app  = MDApp.get_running_app() 
-        
-        Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
+         
 
         self.find_my_location_button.update_color("#352F44")
         anim = Animation(opacity=1, duration=0.5)
@@ -424,8 +423,16 @@ class CreateAccountScreen(Screen):
         
         main_app = MDApp.get_running_app()
         if main_app.user_map_verification_modal is not None:
-            main_app.user_map_verification_modal.open() 
+            main_app.user_map_verification_modal.parent_event = self.update_location
+            main_app.user_map_verification_modal.submit_event = self.display_registration_form
+            main_app.user_map_verification_modal.open()
     
+    def update_location(self, lat, lon ):
+        main_app = MDApp.get_running_app()  
+        if main_app.app_data.get(CREATE_KEY, None) is None:
+            return        
+        main_app.app_data[CREATE_KEY]["geolocation"] = [lat, lon] 
+
     def go_back_to_login(self, *args):
         main_app  = MDApp.get_running_app() 
         if main_app.app_data.get(CREATE_KEY, None): 

@@ -16,7 +16,7 @@ from kivy.properties import ObjectProperty, NumericProperty, DictProperty
 
 from kivy.utils import get_color_from_hex as chex 
 from kivy.utils import platform
-# from utils.app_utils import is_valid_latlon 
+from utils.app_utils import is_valid_latlon 
 from kivymd.app  import MDApp
 from kivy.animation import Animation
 
@@ -71,7 +71,8 @@ class UserVerificationMapModal(ModalView):
     is_valid_location : bool = BooleanProperty(False)
     mapview : MapView = ObjectProperty(None)
 
-    parent_event : object = ObjectProperty(None)
+    parent_event = ObjectProperty(None)
+    submit_event = ObjectProperty(None)
 
     layout_spacing = NumericProperty(10)
     layout_padding = ListProperty([10, 10, 10, 10])
@@ -82,6 +83,7 @@ class UserVerificationMapModal(ModalView):
     h2_font_size = NumericProperty(18) 
 
     map_marker = ObjectProperty(None)
+ 
 
 
 
@@ -153,18 +155,18 @@ class UserVerificationMapModal(ModalView):
         anim.bind(on_start=self.update_sizing, on_progress=self.location_input.setup_layout)
         anim.start(self)
 
-        # if platform == "android":
-        #     try:
-        #         gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
-        #         gps.start(minTime=1000, minDistance=1)
-        #     except NotImplementedError:
-        #         print("GPS not implemented on this platform")
-        #         self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
-        #     except Exception as e:
-        #         print(f"Error starting GPS: {e}")
-        #         self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
-        # else:
-        #     self.go_to_location(DEFAULT_LAT, DEFAULT_LON)  # fallback
+        if platform == "android":
+            try:
+                gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
+                gps.start(minTime=1000, minDistance=1)
+            except NotImplementedError:
+                print("GPS not implemented on this platform")
+                self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+            except Exception as e:
+                print(f"Error starting GPS: {e}")
+                self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+        else:
+            self.go_to_location(DEFAULT_LAT, DEFAULT_LON)  # fallback
 
     def gps_status(self, status_type, status):
         # print(f"GPS Status → {status_type}: {status}")
@@ -218,7 +220,7 @@ class UserVerificationMapModal(ModalView):
             self.lon_data = self.mapview.lon 
             # print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
             if self.parent_event is not None:
-                self.parent_event(lat_data = self.lat_data, lon_data = self.lon_data)
+                self.parent_event(self.lat_data, self.lon_data)
             lat = f"{round(self.lat_data, 25)}.." if len(str(self.lat_data)) > 25 else self.lat_data
             lon = f"{round(self.lon_data, 25)}.." if len(str(self.lon_data)) > 25 else self.lon_data
             self.lat = f"[font=p_bold]Latitude :[/font] [font=p_light]{lat}[/font]"
@@ -238,14 +240,18 @@ class UserVerificationMapModal(ModalView):
                 self.mapview.center_on(new_lat, new_lon)
                 self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
                 self.mapview.min_zoom = 1
-                self.mapview.max_zoom = 17
+                self.mapview.max_zoom = 17 
             else:
                 Clock.schedule_once(self.load_map, 0.3)
                 Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)
         except Exception as e:
             # print(f"Error: {e}")
             pass
-
+    
+    def submit(self, *args):
+        if self.submit_event is not None:
+            self.submit_event()
+            self.dismiss()
 
 kv_verify_user_location_modal = '''
 
@@ -381,6 +387,7 @@ kv_verify_user_location_modal = '''
                 AppButton: 
                     size_hint: 0.4, 1 
                     md_bg_color: chex("#A30000")
+                    on_release: root.dismiss()
                     Label:
                         text: "Cancel"
                         font_size: root.h2_font_size
@@ -393,6 +400,7 @@ kv_verify_user_location_modal = '''
                 AppButton: 
                     size_hint: 0.4, 1 
                     md_bg_color: chex("#05B51A")
+                    on_release: root.submit()
                     Label:
                         text: "Submit"
                         font_size: root.h2_font_size
