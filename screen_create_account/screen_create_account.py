@@ -300,6 +300,7 @@ class CreateAccountScreen(Screen):
 
     is_creating_account = BooleanProperty(False)
 
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
@@ -355,11 +356,7 @@ class CreateAccountScreen(Screen):
             
 
     def on_enter(self, *args):
-        main_app  = MDApp.get_running_app()
-        # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
-        # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
-        # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
-        # main_app.on_window_resize()
+        main_app  = MDApp.get_running_app() 
         
         Clock.schedule_once(self.display_registration_form, 1) # Used to display the registration form
 
@@ -368,13 +365,18 @@ class CreateAccountScreen(Screen):
         anim.bind(on_start= main_app.on_window_resize, on_complete = main_app.close_welcome_popup)
         anim.start(self) 
 
-        self.header_buttons.customized_ui(button_text_1="Select Plan", button_text_2="Go To Login")
-        self.header_buttons.button_1_event = self.go_back_to_showcase
+        create_data = main_app.app_data.get(CREATE_KEY, {})
+        if create_data.get("is_applying", False):
+            self.header_buttons.customized_ui(button_text_1="Select Plan", button_text_2="Go To Login")
+            self.header_buttons.button_1_event = self.go_back_to_showcase
+        else:
+            self.header_buttons.customized_ui(button_text_1="", button_text_2="Go To Login" , display_button_1=False)
+            
+         
         self.header_buttons.button_2_event = self.go_back_to_login
 
         Clock.schedule_once(self.load_connected_screen)
-        
-        # print("entering logoin")
+         
         return super().on_enter(*args)
 
     def on_leave(self, *args):
@@ -425,7 +427,9 @@ class CreateAccountScreen(Screen):
             main_app.user_map_verification_modal.open() 
     
     def go_back_to_login(self, *args):
-        main_app  = MDApp.get_running_app()
+        main_app  = MDApp.get_running_app() 
+        if main_app.app_data.get(CREATE_KEY, None): 
+            del main_app.app_data[CREATE_KEY]
         Clock.schedule_once(main_app.show_welcome_popup)  
         main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
         

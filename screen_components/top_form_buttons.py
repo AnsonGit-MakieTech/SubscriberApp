@@ -36,11 +36,14 @@ class HeaderButtons(BoxLayout):
         self.height = int(height * 0.055)   
         print(f"header_font_size: {self.header_font_size}")
         
-    def customized_ui(self, button_text_1 = None , button_text_2 = None):
+    def customized_ui(self, button_text_1 = None , button_text_2 = None , display_button_1 = True, display_button_2 = True):
         if button_text_1 is not None:
             self.button_1_text = button_text_1
         if button_text_2 is not None:
             self.button_2_text = button_text_2
+        self.button_1.opacity = 1 if display_button_1 else 0
+        self.button_2.opacity = 1 if display_button_2 else 0
+
         
         
 kv_header_buttons = '''

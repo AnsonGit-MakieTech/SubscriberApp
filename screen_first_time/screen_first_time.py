@@ -108,12 +108,24 @@ class FirstTimeScreen(Screen):
 
     def goto_showcase_screen(self, *args):
         main_app  = MDApp.get_running_app()
+
+        main_app.app_data[CREATE_KEY] = {
+            'is_applying' : True
+        }
+
         Clock.schedule_once(main_app.show_welcome_popup) 
         main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
+
+
 
  
     def goto_create_screen(self, *args):
         main_app  = MDApp.get_running_app()
+        
+        main_app.app_data[CREATE_KEY] = {
+            'is_applying' : False
+        }
+        
         Clock.schedule_once(main_app.show_welcome_popup) 
         main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
 

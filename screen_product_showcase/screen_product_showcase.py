@@ -254,6 +254,8 @@ class ProductShowcaseScreen(Screen):
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup)
         if main_app.is_outside: 
+            if main_app.app_data.get(CREATE_KEY, None): 
+                del main_app.app_data[CREATE_KEY]
             main_app.root_screen_manager.change_screen(LOGIN_SCREEN)
         else:
             main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
@@ -263,8 +265,12 @@ class ProductShowcaseScreen(Screen):
         main_app  = MDApp.get_running_app() 
         Clock.schedule_once(main_app.show_welcome_popup) 
         if main_app.is_outside: 
+            if main_app.app_data.get(CREATE_KEY, None) is None:
+                print("No created key found <-------------------")
+                return
+            main_app.app_data[CREATE_KEY]['plan_id'] = self.selected_product.get('id', None) 
             main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
-        else:
+        else: 
             main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
 
     
@@ -290,14 +296,14 @@ class ProductShowcaseScreen(Screen):
             main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN) 
 
         
-    def display_product(self, selected_widget = None): 
+    def display_product(self, selected_widget): 
 
         self.selected_product = self.products_data.get(selected_widget.plan_id, None)
         print(f"Selected product: {self.selected_product}")
         if self.selected_product is None:
             print("Product not found")
             return
-        
+         
         self.category_text = self.selected_product.get('category', 'unknown')
         self.plan_name = self.selected_product.get('name', 'unknown')
         self.plan_description = self.selected_product.get('description', 'unknown')

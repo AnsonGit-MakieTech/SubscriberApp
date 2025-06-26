@@ -14,3 +14,9 @@ ADD_PLAN_SCREEN = 'add_plan_screen'
 
 DEFAULT_LAT = 12.367796960
 DEFAULT_LON = 123.62151820
+
+
+
+CREATE_KEY = 'create_key'
+
+
