@@ -3,6 +3,7 @@
     circle_widget : circle_widget
     subscribe_button : subscribe_button
     product_list : product_list
+    alternate_button : alternate_button
     
     FloatLayout:
         size_hint: 1, 1
@@ -27,7 +28,7 @@
 
                 Label: 
                     size_hint: None , 1 
-                    text: "Recommended for you"
+                    text: root.category_text
                     font_size: root.h2_font_size
                     color: chex("#B9B4C7")
                     font_name: 'p_regular'
@@ -43,7 +44,7 @@
 
                 Label: 
                     size_hint: None , 1 
-                    text: "Home Plan 50150"
+                    text: root.plan_name
                     font_size: root.h1_font_size
                     color: chex("#FFFFFF")
                     font_name: 'p_extrabold'
@@ -58,7 +59,7 @@
 
                 Label: 
                     size_hint: 0.55 , 1 
-                    text: "With Home Plan 50150, everyone at home can stream, work, and game at the same time—zero slow-downs. Perfect for families who demand reliable Wi-Fi on every device. Get connected today!"
+                    text: root.plan_description
                     font_size: root.h3_font_size
                     color: chex("#FFFFFF")
                     font_name: 'p_extralight'
@@ -73,7 +74,7 @@
 
                 Label: 
                     size_hint: None , 1 
-                    text: "Rate:  [font=p_extralight]P 1,499 /mo (all-in, no hidden fees)"
+                    text: root.plan_price
                     font_size: root.h3_font_size
                     color: chex("#FFFFFF")
                     font_name: 'p_extrabold'
@@ -89,23 +90,7 @@
 
                 Label: 
                     size_hint: None , 1 
-                    text: "Speed:  [font=p_extralight]Up to 150 Mbps download / 50 Mbps"
-                    font_size: root.h3_font_size
-                    color: chex("#FFFFFF")
-                    font_name: 'p_extrabold'
-                    text_size: None, self.height
-                    halign: 'left'
-                    valign: 'middle' 
-                    width: self.texture_size[0]
-                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
-                    markup: True
-
-            FloatLayout:
-                size_hint: 1, 0.05
- 
-                Label: 
-                    size_hint: None , 1 
-                    text: "Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
+                    text: root.plan_speed #"Speed:  [font=p_extralight]Up to 150 Mbps download / 50 Mbps"
                     font_size: root.h3_font_size
                     color: chex("#FFFFFF")
                     font_name: 'p_extrabold'
@@ -121,7 +106,23 @@
  
                 Label: 
                     size_hint: None , 1 
-                    text: "Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
+                    text: root.additional_text # "Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
+                    font_size: root.h3_font_size
+                    color: chex("#FFFFFF")
+                    font_name: 'p_extrabold'
+                    text_size: None, self.height
+                    halign: 'left'
+                    valign: 'middle' 
+                    width: self.texture_size[0]
+                    pos_hint: {'x': 0.05 , 'center_y' : 0.5}  
+                    markup: True
+
+            FloatLayout:
+                size_hint: 1, 0.05
+ 
+                Label: 
+                    size_hint: None , 1 
+                    text: root.additional_1_text #"Free Setup:  [font=p_extralight]Professional installation + Wi-Fi router"
                     font_size: root.h3_font_size
                     color: chex("#FFFFFF")
                     font_name: 'p_extrabold'
@@ -136,7 +137,7 @@
                 size_hint: 1, 0.04
             
                 AppButton:
-                    id: subscribe_button
+                    id: subscribe_button 
                     size_hint: None, 1
                     adaptive_width: True
                     md_bg_color: chex("#FF9393")
@@ -188,6 +189,8 @@
                 size_hint: 1, 0.03
 
                 LabelClickable: 
+                    opacity: 0
+                    id: alternate_button
                     size_hint: None , 1 
                     text:  root.login_text
                     font_size: root.h3_font_size
@@ -291,7 +294,7 @@
 
 
 <ProductShowcaseCategory>: 
-    text: "Recommended for you" 
+    # text: "Recommended for you" 
     color: chex("#B9B4C7")
     font_name: 'p_regular'
     size_hint: (1 , None) 

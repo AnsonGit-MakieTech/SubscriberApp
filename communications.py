@@ -8,8 +8,8 @@ import base64
 from utils.app_utils import has_internet
 
 class Communications:
-    server = "https://alpha.billingko.com/api/"
-    function_path = "technical_unauthenticated_api"
+    server = "http://192.168.10.118:8400/"
+    function_path = "test_action/"
     token = None
     data = {}
     threads = []
@@ -110,23 +110,22 @@ class Communications:
 
             need_data['action'] = action
 
-            url = self.server + self.function_path
+            url = self.server + self.function_path 
             headers = {
                 "Content-Type": "application/json", 
                 "User-Agent": "KivyApp/1.0.0",
             } 
             try:
                 response = self.session.post(url, headers=headers, json=need_data)
-                if response.ok:
+                if response.ok: 
                     data = response.json()
                     message = data.get("text", "")
                     return_data = data.get("data", {})
-                    self.data[key] = {"result" : True, "message" : message , "data" : return_data}
-                else:
-                    # print(response.text)
+                    self.data[key] = {"result" : True, "message" : message , "data" : return_data} 
+                else: 
                     data = response.json()
                     message = data.get("text", "")
-                    self.data[key] = {"result" : False, "message" : message } 
+                    self.data[key] = {"result" : False, "message" : message }  
             except Exception as e:
                     self.data[key] = {"result" : False, "message" : "Error: " + str(e)}
             self.has_thread_running = False

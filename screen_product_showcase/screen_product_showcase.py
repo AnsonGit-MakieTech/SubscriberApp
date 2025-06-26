@@ -1,6 +1,6 @@
-
+ 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -19,7 +19,7 @@ import os
 
 from screen_components import text_input
 from variables import *
-from screen_components import app_button, top_form_buttons, text_input
+from screen_components import app_button, top_form_buttons, text_input, label_clickable
  
 from kivy.uix.widget import Widget
 from kivy.properties import ListProperty
@@ -80,7 +80,7 @@ class ProductShowcaseProduct(
     additional_height = NumericProperty(0.20)
     original_height = NumericProperty(0)
 
-    product_name = ObjectProperty(None)
+    product_name : Label = ObjectProperty(None)
     plan_font_size = NumericProperty(0)
     additional_plan_font_size = NumericProperty(0.10)
     original_plan_font_size = NumericProperty(0)
@@ -88,6 +88,8 @@ class ProductShowcaseProduct(
     select_icon_size = NumericProperty(0)
     selected_icon = StringProperty('')
 
+    parent_event = ObjectProperty(None)
+    plan_id = StringProperty('')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -116,8 +118,12 @@ class ProductShowcaseProduct(
 
     
     def click_event(self, *args):
-        print("clicked")
-        self.is_selected = not self.is_selected
+        print("clicked") 
+        if self.parent_event:
+            self.parent_event(self)
+
+
+    def select(self , *args): 
         if self.is_selected:
             anim = Animation(
                 height=(self.height + (self.height * self.additional_height)), duration=0.2)
@@ -127,7 +133,8 @@ class ProductShowcaseProduct(
                 anim = Animation(font_size=self.plan_font_size + (self.plan_font_size * self.additional_plan_font_size), duration=0.2)
                 anim.start(self.product_name)
 
-        else:
+    def unselect(self, *args):
+        if not self.is_selected:
             anim = Animation(height=self.original_height, duration=0.2)
             anim.start(self)
 
@@ -139,7 +146,6 @@ class ProductShowcaseProduct(
 
 class ProductShowcaseScreen(Screen): 
     circle_widget = ObjectProperty(None)
-    subscribe_button : app_button.AppButton = ObjectProperty(None)
 
     h1_font_size = NumericProperty(30)
     h2_font_size = NumericProperty(20)
@@ -155,6 +161,24 @@ class ProductShowcaseScreen(Screen):
     product_list : MDBoxLayout = ObjectProperty(None)
 
     login_text = StringProperty("[u]Have an account? Tap here.")
+
+    
+
+    category_text = StringProperty('')
+    plan_name = StringProperty('')
+    plan_description = StringProperty('')
+    plan_price = StringProperty('')
+    plan_speed = StringProperty('')
+    additional_text = StringProperty('')
+    additional_1_text = StringProperty('')
+
+    subscribe_button : app_button.AppButton = ObjectProperty(None)
+    alternate_button : label_clickable.LabelClickable = ObjectProperty(None)
+
+
+    products_data = DictProperty({})
+    selected_product = DictProperty({})
+
 
     
     def __init__(self, **kwargs):
@@ -214,10 +238,15 @@ class ProductShowcaseScreen(Screen):
         anim.start(self)
 
         Clock.schedule_once(self.load_connected_screen)
+
+        self.subscribe_button.opacity = 0 # set opacity to 0 because it will be shown later
         return super().on_enter(*args)
 
     def on_leave(self, *args):
         self.opacity = 0
+        self.subscribe_button.opacity = 0
+        self.alternate_button.opacity = 0
+
         return super().on_leave(*args)
     
 
@@ -240,7 +269,12 @@ class ProductShowcaseScreen(Screen):
 
     
     def load_connected_screen(self, *args):
+        
+        self.fetch_all_plan_products() # fetch all products from server
+
         main_app  = MDApp.get_running_app()
+        
+
         if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN) and main_app.is_outside:
             main_app.root_screen_manager.builder_load_screen('screen_login', 'screen_login.kv', LOGIN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(LOGIN_SCREEN)
@@ -255,13 +289,52 @@ class ProductShowcaseScreen(Screen):
             main_app.root_screen_manager.builder_load_screen('screen_add_plan', 'screen_add_plan.kv', ADD_PLAN_SCREEN )
             main_app.root_screen_manager.add_handler_screen(ADD_PLAN_SCREEN) 
 
-        self.fetch_all_plan_products()
+        
+    def display_product(self, selected_widget = None): 
+
+        self.selected_product = self.products_data.get(selected_widget.plan_id, None)
+        print(f"Selected product: {self.selected_product}")
+        if self.selected_product is None:
+            print("Product not found")
+            return
+        
+        self.category_text = self.selected_product.get('category', 'unknown')
+        self.plan_name = self.selected_product.get('name', 'unknown')
+        self.plan_description = self.selected_product.get('description', 'unknown')
+        self.plan_price = f"Monthly : [font=p_extralight]{self.selected_product.get('monthly_text', 'unknown')}"
+        self.plan_speed = f"Speed : [font=p_extralight]{self.selected_product.get('speed_text', 'unknown')}"
+        
+
+        additional_text = self.selected_product.get('additional_text', None)
+        self.additional_text = ''
+        if isinstance(additional_text, list):
+            if len(additional_text ) == 2:
+                self.additional_text = f"{additional_text[0]}: [font=p_extralight]{additional_text[1]}"
+        additional_1_text = self.selected_product.get('additional_1_text', None)
+        self.additional_1_text = ''
+        if isinstance(additional_1_text, list):
+            if len(additional_1_text) == 2:
+                self.additional_1_text = f"{additional_1_text[0]} [font=p_extralight]{additional_1_text[1]}"
+
+        self.subscribe_button.opacity = 1 
+        self.alternate_button.opacity = 1
+
+        if not selected_widget.is_selected:
+
+            for child in self.product_list.children:
+                if child.widget_type == "product":
+                    child.is_selected = False
+                    child.unselect()
+        
+            selected_widget.is_selected = True
+            selected_widget.select()
+
 
 
     def fetch_all_plan_products(self, *args):
         main_app  = MDApp.get_running_app()
         key = "all_plan_products"
-        action = "fetch_all_plan_products"
+        action = "get_product_showcase"
         need_data = {}
         main_app.communications.get_data_action(need_data , key, action)
         
@@ -280,9 +353,45 @@ class ProductShowcaseScreen(Screen):
                 return False
             
             data = com_data.get('data', None)
-            print(f'data: {data}')
+            self.product_list.clear_widgets()
+            self.products_data = {}
+            self.selected_product =  {} 
+            first_product = None
+
+            if len(data) < 1:
+                print("No products found")
+                main_app.process_modal.dismiss()
+                return False
             
-            main_app.process_modal.display_error(com_data.get('message', None))
+            for product in data:
+                ptitle = product.get('title', None)
+                pdata = product.get('products', {})
+
+                ptwidget = ProductShowcaseCategory()
+                ptwidget.text = ptitle
+
+                self.product_list.add_widget(ptwidget) 
+
+                for pdkey, pdvalue in pdata.items(): 
+                    pdwidget = ProductShowcaseProduct()
+                    pdwidget.product_name.text = pdvalue.get('name', 'Unknown')
+                    pdwidget.parent_event = self.display_product
+                    pdwidget.plan_id = str(pdkey)
+                    self.product_list.add_widget(pdwidget)
+                    pdvalue['category'] = ptitle 
+                    self.products_data[str(pdkey)] = pdvalue
+                    
+                    if not first_product: 
+                        first_product = pdwidget
+ 
+            
+            # print(f'all data : f{self.products_data}')
+            print(f'selected product: {self.selected_product}')
+            self.update_sizing()
+            self.display_product(first_product)
+            # main_app.process_modal.display_success(com_data.get('message', None))
+            # Clock.schedule_once(main_app.process_modal.dismiss, 1.5)
+            main_app.process_modal.dismiss()
             return False
         
         print(f'fetch_all_plan_products')
