@@ -347,8 +347,8 @@ class ProductShowcaseScreen(Screen):
         need_data = {}
         main_app.communications.get_data_action(need_data , key, action)
         
-        main_app.process_modal.open()
         main_app.process_modal.proccess_text = "Please wait while we fetch our products"
+        main_app.process_modal.open()
 
         print("thread : ", main_app.communications.threads)
 

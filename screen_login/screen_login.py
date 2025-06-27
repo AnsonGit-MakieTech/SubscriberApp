@@ -46,19 +46,7 @@ class FormLayout(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
-        self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png') 
-        # self.bind(size=self.update_sizing)
-
-    # def on_parent(self, instance, parent):
-    #     main_app = MDApp.get_running_app()
-    #     if parent is None:
-    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-    #     else:
-    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-    #         self.update_sizing()
-    #         self.update_ui()
+        self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')  
     
     def update_ui(self, *args):
         if self.login_button is None or self.username_input is None or self.password_input is None:
@@ -100,8 +88,8 @@ class FormLayout(BoxLayout):
         need_data = main_app.app_data[LOGIN_KEY]
         main_app.communications.post_data_action(need_data , key, action)
         
-        main_app.process_modal.open()
         main_app.process_modal.proccess_text = "Please wait while we verify your account . . ."
+        main_app.process_modal.open()
 
         def check_response(*args):
             com_data = main_app.communications.get_and_remove(key)

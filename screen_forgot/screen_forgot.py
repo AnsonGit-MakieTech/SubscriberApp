@@ -166,8 +166,8 @@ class ForgotAccountScreen(Screen):
         need_data = main_app.app_data[FORGOT_KEY]
         main_app.communications.post_data_action(need_data , key, action)
         
-        main_app.process_modal.open()
         main_app.process_modal.proccess_text = "Please wait while we process your request . . ."
+        main_app.process_modal.open()
 
         def check_response(*args):
             com_data = main_app.communications.get_and_remove(key)

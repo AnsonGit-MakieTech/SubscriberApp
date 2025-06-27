@@ -36,10 +36,10 @@ class AccountInfoWidget(
 ):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
 
-    info_1 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
-    info_2 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
-    info_3 = StringProperty("[font=p_regular]Account No. :[/font] 1063889sdfasdffffffff fffffffffffffffffff ffffffffffffffffffffff9")
-    info_4 = StringProperty("[font=p_regular]Account No. :[/font] 10638899")
+    info_1 = StringProperty("")
+    info_2 = StringProperty("")
+    info_3 = StringProperty("")
+    info_4 = StringProperty("")
     info_font_size = NumericProperty(12)
 
     def __init__(self, **kwargs):
@@ -100,6 +100,25 @@ class AccountLayout(MDBoxLayout):
         if self.secondary is not None:
             self.secondary.info_font_size = self.widget_height_6
 
+    def setup_ui(self, data : dict):
+        name = data.get("name", "None")
+        self.primary.info_1 = f"[font=p_regular]Name :[/font] {name}"
+        account_num = data.get("accountnum", "None")
+        self.primary.info_2 = f"[font=p_regular]Account No. :[/font] {account_num}"
+        email = data.get("email", "None")
+        self.primary.info_3 = f"[font=p_regular]Email :[/font] {email}"
+        usertype = data.get("type", "None")
+        self.primary.info_4 = f"[font=p_regular]User Type :[/font] {usertype}"
+
+        street = data.get("street", "None")
+        self.secondary.info_1 = f"[font=p_regular]Street :[/font] {street}"
+        barangay = data.get("barangay", "None")
+        self.secondary.info_2 = f"[font=p_regular]Barangay :[/font] {barangay}"
+        city = data.get("city", "None")
+        self.secondary.info_3 = f"[font=p_regular]City :[/font] {city}"
+        phone = data.get("phone", "None")
+        self.secondary.info_4 = f"[font=p_regular]Phone :[/font] {phone}"
+ 
 
 
 

@@ -114,6 +114,7 @@ class HomeScreen(Screen):
 
     is_all_loaded = BooleanProperty(False)
 
+    has_server_error = BooleanProperty(False)
 
 
     def __init__(self, **kwargs):
@@ -208,19 +209,25 @@ class HomeScreen(Screen):
         self.is_all_loaded = True
 
         
-        # self.fetch_account_data()
+        self.fetch_all_data()
+
+
+    def fetch_all_data(self, *args):
+        self.fetch_account_data()
 
 
 
     def fetch_account_data(self, *args):
-        main_app  = MDApp.get_running_app()
-        key = "fetch_account_data"
-        action = "fetch_account_data"
-        need_data = {}
-        main_app.communications.get_data_action(need_data , key, action)
+        if not self.is_all_loaded:
+            print("Widgets not loaded yet")
+            return
         
-        main_app.process_modal.open()
-        main_app.process_modal.proccess_text = "Please wait while we fetch your account data"
+        main_app  = MDApp.get_running_app()
+        key = "get_account_info"
+        action = "get_account_info"
+        need_data = {}
+        main_app.communications.post_data_action(need_data , key, action)
+         
 
         def check_response(*args):
             com_data = main_app.communications.get_and_remove(key)
@@ -229,16 +236,20 @@ class HomeScreen(Screen):
                 return True
             
             if not com_data.get('result'):
-                print(f'Error: {com_data.get("message", None)}') 
-                main_app.process_modal.display_error(com_data.get('message', None))
-                return False
+                print(f'Error: {com_data.get("message", None)}')  
+                if not self.has_server_error:
+                    self.has_server_error = True
+                    main_app.process_modal.open()
+                    main_app.process_modal.proccess_text = "Checking server problem . . ."
+                    def display_error(*args):
+                        main_app.process_modal.display_error(com_data.get('message', None))
+                    Clock.schedule_once(display_error, 1)
+                return False  
             
-            data = com_data.get('data', None)
-            print(f'data: {data}')
+            data = com_data.get('data', {})
+            if self.account is not None:
+                self.account.setup_ui(data)
 
-            main_app.process_modal.display_error(com_data.get('message', None))
-            
             return False
-        
-        print(f'fetch_account_data')
+         
         Clock.schedule_interval(check_response, 1)

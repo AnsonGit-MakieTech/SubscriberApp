@@ -95,7 +95,7 @@ class CustomSpinner(Image):
 class ProcessingLayout(ModalView):
     
     spinner : CustomSpinner = ObjectProperty(None)
-    proccess_text : str = StringProperty('')
+    proccess_text : str = StringProperty('Please wait while we complete the process. Do not close the application until it is finished.')
     is_open : bool = BooleanProperty(False)
     setup_font_size = NumericProperty(14)
     main_layout : BoxLayout = ObjectProperty(None)
@@ -144,8 +144,7 @@ class ProcessingLayout(ModalView):
         anim.bind(on_start=self.update_sizing)
         anim.start(self)
 
-        self.spinner.start_spinner()
-        self.proccess_text = "Please wait while we complete the process. Do not close the application until it is finished."
+        self.spinner.start_spinner() 
         self.is_open = True
         
         # Clock.schedule_once(self.display_success , 2)
@@ -169,6 +168,7 @@ class ProcessingLayout(ModalView):
         return super().on_pre_dismiss()
 
     def on_dismiss(self): 
+        self.proccess_text = ""
         if self.close_event:
             self.close_event()
         return super().on_dismiss()
