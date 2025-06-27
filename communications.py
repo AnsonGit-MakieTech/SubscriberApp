@@ -24,6 +24,11 @@ class Communications:
         self.session = requests.Session()
 
 
+    def resession(self): 
+        self.kill_all_threads()
+        self.session.close()
+        self.session = requests.Session()
+
     def kill_all_threads(self):
         for thread in self.threads:
             thread.join()
@@ -71,12 +76,12 @@ class Communications:
                 response = self.session.post(url, headers=headers, json=need_data)
                 if response.ok: 
                     data = response.json()
-                    message = data.get("text", "")
+                    message = data.get("text", "Your request has been processed successfully")
                     return_data = data.get("data", {})
                     self.data[key] = {"result" : True, "message" : message , "data" : return_data} 
                 else: 
                     data = response.json()
-                    message = data.get("text", "")
+                    message = data.get("text", "Server Error : Please try again later")
                     self.data[key] = {"result" : False, "message" : message }  
             except Exception as e:
                     self.data[key] = {"result" : False, "message" : "Error: " + str(e)}

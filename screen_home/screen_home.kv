@@ -483,6 +483,7 @@
             text_size: self.size
             halign: "right"
             valign: "center"
+            on_release: root.add_new_ticket()
 
         Widget:
             size_hint: 0.05, 1
@@ -530,7 +531,8 @@
     theme_shadow_softness: "Custom"
     shadow_softness: 12
     shadow_radius: root.content_background_radius
-    radius: root.content_background_radius
+    radius: root.content_background_radius 
+    md_bg_color: chex("B9B4C7") if root.is_selected else chex("FAF0E6")
 
     Label:
         size_hint: 1, 1
@@ -594,7 +596,7 @@
         font_name: "p_light"
         font_size: root.widget_height_9
         color: chex("#5C5470")
-        text: "[font=p_regular]TICKET NO:[/font] 90DFENA6"
+        text: root.ticketnum_text # "[font=p_regular]TICKET NO:[/font] 90DFENA6"
         halign: "left"
         valign: "middle"
         markup: True
@@ -605,7 +607,7 @@
         font_name: "p_light"
         font_size: root.widget_height_9
         color: chex("#5C5470")
-        text: "[font=p_regular]STATUS:[/font] OPEN"
+        text: root.ticketstatus_text # "[font=p_regular]STATUS:[/font] OPEN"
         halign: "left"
         valign: "middle"
         markup: True
@@ -616,7 +618,7 @@
         font_name: "p_light"
         font_size: root.widget_height_9
         color: chex("#5C5470")
-        text: "[font=p_regular]TYPE:[/font] REPAIR"
+        text: root.tickettype_text # "[font=p_regular]TYPE:[/font] REPAIR"
         halign: "left"
         valign: "middle"
         markup: True
@@ -1235,16 +1237,8 @@
             size_hint: 1, 1
             font_size: root.account_fname_font_size
             font_name: 'p_extrabold'
-            text: "N"
-
-            # canvas.before:
-            #     Color:
-            #         rgba: chex("#5C5470")
-            #     RoundedRectangle:
-            #         pos: self.pos
-            #         size: self.size
-            #         radius: [16]
-
+            text: root.account_letter
+ 
     MDBoxLayout:
         orientation: 'vertical'
         adaptive_size: True

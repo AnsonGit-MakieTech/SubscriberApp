@@ -44,6 +44,7 @@ class AccountHeader(FloatLayout):
     buttons_spacing = NumericProperty(0)
     account_image_size = NumericProperty(100)
     account_fname_font_size = NumericProperty(15)
+    account_letter = StringProperty("")
 
     account_image_radius = ListProperty([0, 0, 0, 0])
  
@@ -115,6 +116,8 @@ class HomeScreen(Screen):
     is_all_loaded = BooleanProperty(False)
 
     has_server_error = BooleanProperty(False)
+    refresh_counter = NumericProperty(5)
+    refresh_hit_counter = NumericProperty(5)
 
 
     def __init__(self, **kwargs):
@@ -176,8 +179,8 @@ class HomeScreen(Screen):
         anim.start(self)
         # print("entering logoin")
         self.account_header.logout_icon.button_event = main_app.logout_modal.open
-        self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
-        self.account_header.refresh_icon.button_event = main_app.process_modal.open
+        # self.account_header.edit_icon.button_event = main_app.add_ticket_modal.open
+        # self.account_header.refresh_icon.button_event = main_app.process_modal.open
 
         Clock.schedule_once(self.load_all_connected_screen)
  
@@ -213,20 +216,26 @@ class HomeScreen(Screen):
 
 
     def fetch_all_data(self, *args):
+        self.has_server_error = False
+        self.refresh_counter = 0
         self.fetch_account_data()
+        self.fetch_ticket_data()
+        self.fetch_wallet_data()
 
 
+ 
 
-    def fetch_account_data(self, *args):
+
+    def fetch_wallet_data(self, *args):
         if not self.is_all_loaded:
             print("Widgets not loaded yet")
             return
         
         main_app  = MDApp.get_running_app()
-        key = "get_account_info"
-        action = "get_account_info"
+        key = "get_wallet"
+        action = "get_wallet"
         need_data = {}
-        main_app.communications.post_data_action(need_data , key, action)
+        main_app.communications.get_data_action(need_data , key, action)
          
 
         def check_response(*args):
@@ -244,12 +253,117 @@ class HomeScreen(Screen):
                     def display_error(*args):
                         main_app.process_modal.display_error(com_data.get('message', None))
                     Clock.schedule_once(display_error, 1)
+                self.refresh_counter = self.refresh_counter + 1
+                return False  
+            data = com_data.get('data', {})
+            if data:
+                unpaid_balance = data.get('unpaid', 0)
+                wallet_balance = data.get('wallet', 0)
+                self.headline.setup_wallet_ui( wallet_balance, unpaid_balance)
+                
+            self.refresh_counter = self.refresh_counter + 1
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
+
+
+
+    def fetch_ticket_data(self, *args):
+        if not self.is_all_loaded:
+            print("Widgets not loaded yet")
+            return
+        
+        main_app  = MDApp.get_running_app()
+        key = "get_tickets"
+        action = "get_tickets"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+         
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                if not self.has_server_error:
+                    self.has_server_error = True
+                    main_app.process_modal.open()
+                    main_app.process_modal.proccess_text = "Checking server problem . . ."
+                    def display_error(*args):
+                        main_app.process_modal.display_error(com_data.get('message', None))
+                    Clock.schedule_once(display_error, 1)
+                self.refresh_counter = self.refresh_counter + 1
+                return False  
+            data = com_data.get('data', {})
+            if self.tickets is not None:
+                self.tickets.setup_ui(data)
+            if self.headline is not None:
+                if data:
+                    for ticket in data:
+                        self.headline.setup_ticket_ui(
+                            ticket_number = data[ticket].get('ticketnum', None),
+                            ticket_type = data[ticket].get('ticketstatus', None),
+                            ticket_status = data[ticket].get('type', None),
+                        )
+                        self.headline.has_pending_ticket = True
+                        break
+                else:
+                    self.headline.setup_ticket_ui(
+                            ticket_number = None,
+                            ticket_type = None,
+                            ticket_status = None,
+                        )
+                    self.headline.has_pending_ticket = False
+            self.refresh_counter = self.refresh_counter + 1
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
+
+
+    def fetch_account_data(self, *args):
+        if not self.is_all_loaded:
+            print("Widgets not loaded yet")
+            return
+        
+        main_app  = MDApp.get_running_app()
+        key = "get_account_info"
+        action = "get_account_info"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+         
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                if not self.has_server_error:
+                    self.has_server_error = True
+                    main_app.process_modal.open()
+                    main_app.process_modal.proccess_text = "Checking server problem . . ."
+                    def display_error(*args):
+                        main_app.process_modal.display_error(com_data.get('message', None))
+                    Clock.schedule_once(display_error, 1)
+                self.refresh_counter = self.refresh_counter + 1
                 return False  
             
             data = com_data.get('data', {})
             if self.account is not None:
                 self.account.setup_ui(data)
-
+            if self.account_header is not None:
+                name = data.get('name', None)
+                if name is not None:
+                    if isinstance(name, str):
+                        self.account_header.account_letter = name[0].upper() if len(name) > 0 else ""
+                        
+            self.refresh_counter = self.refresh_counter + 1
             return False
          
         Clock.schedule_interval(check_response, 1)
+

@@ -2,7 +2,7 @@ from kivy.uix.actionbar import Button
 from kivy.uix.actionbar import Label
 
 
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.behaviors import BackgroundColorBehavior, CommonElevationBehavior
 from kivymd.uix.widget import MDWidget
@@ -38,9 +38,11 @@ class TicketWidget(
     
     content_background_radius = ListProperty([ 16 , 16, 16 , 16 ])
     ticket_number = StringProperty("123456789")
+    ticket_id = StringProperty("")
 
-    
+    click_event = ObjectProperty(None)
     widget_height_10 = NumericProperty(0) 
+    is_selected = BooleanProperty(False)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -61,7 +63,12 @@ class TicketWidget(
         r = min(width, height) * 0.2  # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
 
+    
+    def on_press(self , *args): 
+        if self.click_event:
+            self.click_event(ticket_id = self.ticket_id, ticketwidget=self)
         
+        return super().on_press()
 
     def on_parent(self, instance, value):
         # Widget is now attached to the tree
@@ -85,6 +92,28 @@ class TicketList(ScrollView):
         self.widget_height_5 = int(min( width, height) * 0.02) 
         for child in self.ticket_container.children:
             child.update_sizing()
+    
+    def setup_ui(self, data, click_event):
+        first_ticket = None
+        self.ticket_container.clear_widgets()
+        for tkey , ticket in data.items():
+            ticket_widget = TicketWidget()
+            ticket_widget.ticket_number = str(ticket.get("ticketnum", "None"))
+            ticket_widget.ticket_id = str(ticket.get("id", "None"))
+            ticket_widget.click_event = click_event
+            self.ticket_container.add_widget(ticket_widget)
+
+            if first_ticket is None:
+                first_ticket = ticket_widget
+
+        self.update_sizing()
+        if first_ticket is not None:
+            first_ticket.click_event(first_ticket.ticket_id, first_ticket)
+            
+    
+    def refresh_widget(self , *args):
+        for child in self.ticket_container.children:
+            child.is_selected = False
 
 
 
@@ -100,8 +129,12 @@ class TicketDetailsWidget(
     widget_height_4 = NumericProperty(0) 
     widget_height_9 = NumericProperty(0) 
     widget_height_10 = NumericProperty(0) 
-    widget_height_11 = NumericProperty(0) 
- 
+    widget_height_11 = NumericProperty(0)  
+
+    ticketstatus_text = StringProperty("[font=p_regular]STATUS:[/font] None")
+    tickettype_text = StringProperty("[font=p_regular]TYPE:[/font] None")
+    ticketnum_text = StringProperty("[font=p_regular]TICKET NO:[/font] None")
+
 
 
     def __init__(self, **kwargs):
@@ -125,6 +158,11 @@ class TicketDetailsWidget(
         r = min(width, height) * 0.04 # You can change 0.05 to any fraction
         self.content_background_radius = [r, r, r, r]
 
+    def setup_ui(self, tstatus = None, ttype = None, tnum = None):
+        self.ticketnum_text = "[font=p_regular]TICKET NO:[/font] " + str(tnum) if tnum else "None"
+        self.ticketstatus_text = "[font=p_regular]STATUS:[/font] " + str(tstatus).upper() if tstatus else "None"
+        self.tickettype_text = "[font=p_regular]TYPE:[/font] " + str(ttype).upper() if ttype else "None"
+
 
 class TicketsLayout(MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
@@ -138,6 +176,9 @@ class TicketsLayout(MDBoxLayout):
     widget_height_10 = NumericProperty(0) 
     widget_height_15 = NumericProperty(0) 
     widget_height_100 = NumericProperty(0)
+
+    tickets_data = DictProperty({})
+    selected_ticket = DictProperty({})
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -176,8 +217,33 @@ class TicketsLayout(MDBoxLayout):
         self.widget_height_100 = int(min( width, height) * 0.4) 
 
 
+    def click_event(self, ticket_id , ticketwidget):
+        print("Ticket is ", ticket_id)
+        self.selected_ticket = self.tickets_data.get(ticket_id, {})
+        self.ticket_details.setup_ui(
+            tstatus=self.selected_ticket.get("ticketstatus", "None"),
+            ttype=self.selected_ticket.get("type", "None"),
+            tnum=self.selected_ticket.get("ticketnum", "None")
+        )
+        self.ticket_list.refresh_widget()
+        ticketwidget.is_selected = True
 
 
+    def setup_ui(self, data):
+
+        if self.ticket_details is None or self.ticket_list is None or not data:
+            print("Ticket is None or Widget is not loaded")
+            return
+
+        for key, value in data.items():
+            self.tickets_data[str(key)] = value
+        self.ticket_list.setup_ui(data , self.click_event)
+
+        
+    def add_new_ticket(self, *args):
+        print("Adding new ticket")
+        main_app  = MDApp.get_running_app() 
+        main_app.add_ticket_modal.open()
 
 
 

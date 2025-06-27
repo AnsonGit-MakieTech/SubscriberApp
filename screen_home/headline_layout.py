@@ -31,7 +31,11 @@ class HeadlineLayout(MDBoxLayout):
     widget_height_20 = NumericProperty(0)
     widget_height_35 = NumericProperty(0)
 
- 
+    def add_new_ticket(self, *args):
+        print("Adding new ticket")
+        main_app  = MDApp.get_running_app() 
+        main_app.add_ticket_modal.open()
+
 
 
     def __init__(self, **kwargs):
@@ -56,9 +60,7 @@ class HeadlineLayout(MDBoxLayout):
         self.wallet_icon.sec_icon = os.path.join(parent_dir, 'assets', 'wallet_icon.png')
         # for key, widget in self.ids.items():
         #     print(f"id: {key}, widget: {widget}")
-
-        def additional_event(*args):
-            print("hello rverny")
+ 
 
         self.wallet_icon.setup_additional(
             main_text= "+Add Credit",
@@ -68,7 +70,7 @@ class HeadlineLayout(MDBoxLayout):
 
         self.ticket_icon.setup_additional(
             main_text= "+Add Ticket",
-            additional_event= additional_event,
+            additional_event= self.add_new_ticket,
             has_comming_soon=False
         )
 
@@ -94,9 +96,15 @@ class HeadlineLayout(MDBoxLayout):
         self.widget_height_35 = int(min( width, height) * 0.13)
  
 
+    def setup_ticket_ui(self, ticket_number, ticket_type, ticket_status):
+        self.ticket_number = str(ticket_number).upper() if ticket_number is not None else "It's Empty!"
+        self.ticket_type = str(ticket_type).upper() if ticket_type is not None else "EMPTY"
+        self.ticket_status = str(ticket_status).upper() if ticket_status is not None else "EMPTY"
 
 
-
+    def setup_wallet_ui(self, wallet_balance, unpaid_balance):
+        self.wallet_balance = f"P{wallet_balance:,.2f}"
+        self.unpaid_balance = f"P{unpaid_balance:,.2f}"
 
 
 

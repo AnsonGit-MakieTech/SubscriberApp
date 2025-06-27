@@ -14,7 +14,7 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty , Li
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivy.utils import get_color_from_hex
-
+from variables import *
 
 class CustomButton(
     CommonElevationBehavior,
@@ -66,20 +66,7 @@ class LogoutModal(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        
-        # self.bind(size=self.update_sizing)
-    
-
-    # def on_parent(self, instance, parent):
-    #     main_app = MDApp.get_running_app()
-        
-    #     if parent is None:
-    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-    #     else:
-    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-    #         self.update_sizing()
+         
     
     def on_kv_post(self, base_widget):
         Clock.schedule_once(self.update_sizing, 0.1)
@@ -106,6 +93,39 @@ class LogoutModal(ModalView):
     def on_pre_dismiss(self):
         self.opacity = 0
         return super().on_pre_dismiss()
+    
+
+
+    def logout_account(self, *args): 
+        main_app  = MDApp.get_running_app()
+        key = "logout_account"
+        action = "logout_account"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+        self.dismiss() 
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we log you out"
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                if not self.has_server_error:
+                    self.has_server_error = True
+                    def display_error(*args):
+                        main_app.process_modal.display_error(com_data.get('message', None))
+                    Clock.schedule_once(display_error, 1) 
+                return False  
+            main_app.communications.resession()
+            main_app.process_modal.dismiss()
+            Clock.schedule_once(main_app.show_welcome_popup)
+            main_app.root_screen_manager.change_screen(LOGIN_SCREEN) 
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
 
 kv_logout_modal = '''
 <LogoutModal>:
@@ -170,7 +190,7 @@ kv_logout_modal = '''
                     font_name: "p_bold"
                     font_size: root.content_font_size
                     color: chex("#FFFFFF")
-                    text: "Cancel"
+                    text: "Cancel" 
                     
             Widget:
                 size_hint: 0.1, 1
@@ -178,7 +198,8 @@ kv_logout_modal = '''
             CustomButton:
                 size_hint: 0.4, 1
                 md_bg_color: chex("#A30000")
-                
+                on_release: root.logout_account()
+            
                 Label: 
                     size_hint: 1, 1
                     font_name: "p_bold"
