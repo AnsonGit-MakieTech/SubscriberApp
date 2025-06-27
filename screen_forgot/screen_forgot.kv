@@ -2,8 +2,9 @@
     header_buttons : header_buttons
     username_text_input : username_text_input
     new_password_text_input : new_password_text_input
-    retype_new_password_text_input : retype_new_password_text_input
+    retype_new_password_text_input : retype_new_password_text_input 
     submit_button : submit_button
+
     BoxLayout:
         orientation: 'vertical' 
 
@@ -120,7 +121,9 @@
                         
                         AppButton:
                             id: submit_button
+                            md_bg_color: chex("#352F44")
                             size_hint: 0.4, 1
+                            on_release: root.submit_and_reset_password() 
                             Label:
                                 size_hint: 1, 1
                                 text: "Update Password"

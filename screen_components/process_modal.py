@@ -99,6 +99,9 @@ class ProcessingLayout(ModalView):
     is_open : bool = BooleanProperty(False)
     setup_font_size = NumericProperty(14)
     main_layout : BoxLayout = ObjectProperty(None)
+
+    
+    close_event = ObjectProperty(None)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -141,7 +144,6 @@ class ProcessingLayout(ModalView):
         anim.bind(on_start=self.update_sizing)
         anim.start(self)
 
-        self.auto_dismiss = False
         self.spinner.start_spinner()
         self.proccess_text = "Please wait while we complete the process. Do not close the application until it is finished."
         self.is_open = True
@@ -152,19 +154,24 @@ class ProcessingLayout(ModalView):
 
     def display_success(self, message = None):
         self.spinner.stop_success_spinner()
-        self.proccess_text = "Process completed successfully!" if not message else message
-        Clock.schedule_once(self.dismiss, 2) 
-        self.is_open = False
+        self.proccess_text = "Process completed successfully!" if not message else message 
+        self.auto_dismiss = True 
     
     def display_error(self, message = None):
         self.spinner.stop_error_spinner()
         self.proccess_text = "An error occurred while processing the data." if not message else message
         self.auto_dismiss = True
-        self.is_open = False
+        
 
     def on_pre_dismiss(self):
         self.opacity = 0
+        self.is_open = False
         return super().on_pre_dismiss()
+
+    def on_dismiss(self): 
+        if self.close_event:
+            self.close_event()
+        return super().on_dismiss()
         
 kv_process_modal = '''
 <ProcessingLayout>: 

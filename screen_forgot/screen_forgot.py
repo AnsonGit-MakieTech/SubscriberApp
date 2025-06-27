@@ -1,6 +1,6 @@
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -37,8 +37,8 @@ class ForgotAccountScreen(Screen):
     username_text_input : text_input.OneLineInput = ObjectProperty(None)
     new_password_text_input : text_input.OneLineInput = ObjectProperty(None)
     retype_new_password_text_input : text_input.OneLineInput = ObjectProperty(None)
-    
     submit_button : app_button.AppButton = ObjectProperty(None)
+     
     submit_button_font_size = NumericProperty(14)
     
     h1_font_size = NumericProperty(14)
@@ -48,6 +48,9 @@ class ForgotAccountScreen(Screen):
     widget_35_height = NumericProperty(10)
     widget_300_height = NumericProperty(10)
     login_logo_height = NumericProperty(10)
+
+    is_on_screen = BooleanProperty(False)
+    is_fill_form = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -112,7 +115,12 @@ class ForgotAccountScreen(Screen):
         
         # def on_complete(*args):
 
-        self.submit_button.update_color("#352F44")
+        main_app.app_data[FORGOT_KEY] = {
+            'username' : '',
+            'password' : '',
+            'confirm_password' : '',
+        }
+ 
         self.username_text_input.costumized_input(hint_text="Type your username here . . .")
         self.new_password_text_input.costumized_input(hint_text="Type your new password here . . .")
         self.retype_new_password_text_input.costumized_input(hint_text="Retype your new password here . . .")
@@ -126,24 +134,84 @@ class ForgotAccountScreen(Screen):
         
         
         Clock.schedule_once( self.load_create_account)
-        # print("entering logoin")
+
+        self.is_on_screen = True
+        Clock.schedule_interval(self.realtime_input_validation, 0.1)
         return super().on_enter(*args)
+
+    def realtime_input_validation(self, *args):
+        if self.username_text_input.text_input.text == "" or self.new_password_text_input.text_input.text == "" or self.retype_new_password_text_input.text_input.text == "":
+            print("The input is empty")
+            self.is_fill_form = False
+            self.submit_button.disabled = True
+            self.submit_button.opacity = 0.8
+        else:
+            print("The input is not empty")
+            self.is_fill_form = True
+            self.submit_button.disabled = False
+            self.submit_button.opacity = 1
+        return self.is_on_screen
+
+
+    def submit_and_reset_password(self, *args):
+        if not self.is_fill_form:
+            return
+
+        main_app  = MDApp.get_running_app()
+        key = "all_plan_products"
+        action = "get_product_showcase"
+        main_app.app_data[FORGOT_KEY]['username'] = self.username_text_input.text_input.text
+        main_app.app_data[FORGOT_KEY]['password'] = self.new_password_text_input.text_input.text
+        main_app.app_data[FORGOT_KEY]['confirm_password'] = self.retype_new_password_text_input.text_input.text
+        need_data = main_app.app_data[FORGOT_KEY]
+        main_app.communications.post_data_action(need_data , key, action)
+        
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we process your request . . ."
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                main_app.process_modal.display_error(com_data.get('message', None))
+                return False 
+            
+            message = com_data.get('message', "Please check your email for the reset link")
+            main_app.process_modal.display_success(message)
+            main_app.process_modal.close_event = self.go_back_to_login
+            return False
+        
+        print(f'fetch_all_plan_products')
+        Clock.schedule_interval(check_response, 1)
+
 
 
     def on_leave(self, *args):
         self.opacity = 0
+        self.is_on_screen = False
         return super().on_leave(*args)
 
     def load_create_account(self, *args):
         main_app  = MDApp.get_running_app()
         if not main_app.root_screen_manager.does_screen_exist(FIRST_TIME_SCREEN):
             main_app.root_screen_manager.builder_load_screen('screen_first_time', 'screen_first_time.kv', FIRST_TIME_SCREEN )
-            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN ) 
+            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN )
 
 
     def go_back_to_login(self, *args):
+        print("go_back_to_login")
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.process_modal.close_event = lambda *args: None
+        if main_app.app_data.get(FORGOT_KEY, None):
+            del main_app.app_data[FORGOT_KEY]
+
+
+
         main_app.root_screen_manager.change_screen(LOGIN_SCREEN) 
         
     def go_to_create_account(self, *args): 
@@ -151,5 +219,9 @@ class ForgotAccountScreen(Screen):
         Clock.schedule_once(main_app.show_welcome_popup) 
         if not main_app.root_screen_manager.does_screen_exist(LOGIN_SCREEN):
             main_app.root_screen_manager.builder_load_screen('screen_first_time', 'screen_first_time.kv', FIRST_TIME_SCREEN )
-            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN ) 
+            main_app.root_screen_manager.add_handler_screen(FIRST_TIME_SCREEN )
+
+        if main_app.app_data.get(FORGOT_KEY, None):
+            del main_app.app_data[FORGOT_KEY]
+        
         main_app.root_screen_manager.change_screen(FIRST_TIME_SCREEN)

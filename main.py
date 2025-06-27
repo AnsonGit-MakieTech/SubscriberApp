@@ -59,6 +59,7 @@ from screen_first_time.screen_first_time import FirstTimeScreen
 from screen_product_showcase.screen_product_showcase import ProductShowcaseScreen
 from screen_home.screen_home import HomeScreen
 from screen_add_plan.screen_add_plan import AddPlanScreen
+import time
 
 if platform == "android":
     from android.permissions import request_permissions, Permission
@@ -208,6 +209,11 @@ class SubscriberApp(MDApp):
     is_outside = BooleanProperty(True) # Use to identify if used outside of the screen
 
     app_data = DictProperty({}) # Store app data here while the app is running
+ 
+    last_back_press = 0
+    exit_interval = 0.5  # seconds within which a second press will exit
+
+
 
     def on_start(self):
         """ Check and request storage permission on Android """ 
@@ -257,6 +263,7 @@ class SubscriberApp(MDApp):
         return super().on_pause()
 
     def build(self):
+        Window.bind(on_keyboard=self._handle_back)
         self.theme_cls.primary_dark = get_color_from_hex("#352F44")
 
         # Set App Icon
@@ -396,6 +403,23 @@ class SubscriberApp(MDApp):
         else:
             print("Cache directory does not exist.")
 
+
+    def _handle_back(self, window, key, *largs):
+        """
+        key == 27 is the Escape key on desktop and the Back key on Android.
+        Return True to consume it, False to let default behavior run.
+        """
+        if key == 27:
+            now = time.time()
+            if now - self.last_back_press < self.exit_interval:
+                # second back-press in time window → exit
+                self.stop()
+            else:
+                # first back-press → show hint, reset timer
+                self.last_back_press = now 
+            return True
+        # allow other keys to be handled normally
+        return False
 
 
 if __name__ == '__main__':

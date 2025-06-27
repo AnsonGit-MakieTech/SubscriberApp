@@ -355,7 +355,7 @@ class ProductShowcaseScreen(Screen):
             
             if not com_data.get('result'):
                 print(f'Error: {com_data.get("message", None)}')  
-                main_app.process_modal.display_error(com_data.get('message', None))
+                main_app.process_modal.display_error(com_data.get('message', None)) 
                 return False
             
             data = com_data.get('data', None)
