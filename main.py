@@ -374,6 +374,10 @@ class SubscriberApp(MDApp):
             self.add_ticket_modal = add_ticket_modal.AddTicketModal() 
 
 
+    def delete_key_in_app_data(self, key : str):
+        if key in self.app_data:
+            del self.app_data[key]
+
     def on_window_resize(self, *args):
         if not self._resize_scheduled:
             self._resize_scheduled = True

@@ -38,32 +38,36 @@ class FormLayout(BoxLayout):
     login_button : app_button.AppButton = ObjectProperty(None)
     username_input : text_input.OneLineInput = ObjectProperty(None)
     password_input : text_input.OneLineInput = ObjectProperty(None)
+
+    is_on_screen = BooleanProperty(False)
+    is_fill_form = BooleanProperty(False)
+
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         parent_dir = os.path.dirname(os.path.dirname(__file__))
-        self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png')
-        Clock.schedule_once(self.update_sizing, 0) 
+        self.login_logo = os.path.join(parent_dir, 'assets', 'login_info.png') 
         # self.bind(size=self.update_sizing)
 
-    def on_parent(self, instance, parent):
-        main_app = MDApp.get_running_app()
-        if parent is None:
-            if self.update_sizing in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
-        else:
-            if self.update_sizing not in main_app.on_size_events_of_all_widgets:
-                main_app.on_size_events_of_all_widgets.append(self.update_sizing)
-            self.update_sizing()
-            self.update_ui()
+    # def on_parent(self, instance, parent):
+    #     main_app = MDApp.get_running_app()
+    #     if parent is None:
+    #         if self.update_sizing in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.remove(self.update_sizing)
+    #     else:
+    #         if self.update_sizing not in main_app.on_size_events_of_all_widgets:
+    #             main_app.on_size_events_of_all_widgets.append(self.update_sizing)
+    #         self.update_sizing()
+    #         self.update_ui()
     
     def update_ui(self, *args):
         if self.login_button is None or self.username_input is None or self.password_input is None:
             Clock.schedule_once(self.update_ui, 0.1)
-            return
-        self.login_button.update_color("#352F44")
+            return 
         self.username_input.costumized_input(bgcolor = "#5C5470", hint_text = "Please provide your username here . . .", is_password = False)
         self.password_input.costumized_input(bgcolor = "#5C5470", hint_text = "Please provide your password here . . .", is_password = True)
+        self.is_on_screen = True
+        Clock.schedule_interval(self.realtime_input_validation, 0.1)
 
     
     def update_sizing(self, *args):
@@ -84,9 +88,44 @@ class FormLayout(BoxLayout):
         self.info_content_font_size = int(min( width, height) * 0.02)
         self.link_font_size = int(min( width, height) * 0.025)
 
-    def login_account(self):
-        print("Login button pressed!")
-        self.login_event()
+    def login_account(self):  
+        if not self.is_fill_form:
+            return
+        main_app  = MDApp.get_running_app()
+        key = "login_account"
+        action = "login_account"
+        main_app.app_data[LOGIN_KEY] = {}
+        main_app.app_data[LOGIN_KEY]['username'] = self.username_input.text_input.text
+        main_app.app_data[LOGIN_KEY]['password'] = self.password_input.text_input.text 
+        need_data = main_app.app_data[LOGIN_KEY]
+        main_app.communications.post_data_action(need_data , key, action)
+        
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we verify your account . . ."
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                main_app.process_modal.display_error(com_data.get('message', None))
+                return False 
+            
+            main_app.process_modal.dismiss()
+            Clock.schedule_once(main_app.show_welcome_popup)  
+            if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
+                main_app.load_all_home_screen_modal()
+                main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
+                main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
+            
+            main_app.delete_key_in_app_data(LOGIN_KEY)
+            main_app.root_screen_manager.change_screen(HOME_SCREEN)
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
 
     def register_account(self):
         print("Register button pressed!")
@@ -97,6 +136,23 @@ class FormLayout(BoxLayout):
             main_app.root_screen_manager.add_handler_screen(FORGOT_ACCOUNT_SCREEN)
         main_app.root_screen_manager.change_screen(FORGOT_ACCOUNT_SCREEN)
 
+    def realtime_input_validation(self, *args):
+        if self.username_input.text_input.text == "" or self.password_input.text_input.text == "" :
+            print("The input is empty")
+            self.is_fill_form = False
+            self.login_button.disabled = True
+            self.login_button.opacity = 0.8
+        else:
+            print("The input is not empty")
+            self.is_fill_form = True
+            self.login_button.disabled = False
+            self.login_button.opacity = 1
+        return self.is_on_screen
+
+    def down_realtime_input_validation(self, *args):
+        self.is_on_screen = False
+        self.username_input.text_input.text = ""
+        self.password_input.text_input.text = ""
 
 class LogoLocation(BoxLayout):
 
@@ -145,9 +201,7 @@ class LoginScreen(Screen):
         else:
             if self.update_radius not in main_app.on_size_events_of_all_widgets:
                 main_app.on_size_events_of_all_widgets.append(self.update_radius)
-            self.update_radius()
-        if parent:
-            self.container_box.login_event = self.login_event
+            self.update_radius() 
 
 
     def update_radius(self, *args):
@@ -155,67 +209,30 @@ class LoginScreen(Screen):
             width, height = self.container_box.size
             r = min(width, height) * 0.05  # You can change 0.05 to any fraction
             self.adaptive_radius = [r, r, 0, 0]
+            self.container_box.update_sizing()
 
     def on_enter(self, *args):
-        main_app  = MDApp.get_running_app()
-        # Clock.schedule_once( lambda *args : main_app.logout_modal.open() , 2)
-        # Clock.schedule_once( lambda *args : main_app.process_modal.display_error("Successfully Processed") , 4)
-        # Clock.schedule_once( lambda *args : main_app.add_ticket_modal.open() , 2)
-        # main_app.on_window_resize() 
+        main_app  = MDApp.get_running_app() 
         anim = Animation(opacity=1, duration=0.5)
         anim.bind(on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
-        anim.start(self) 
-        # print("entering logoin")
+        anim.start(self)  
         Clock.schedule_once(self.load_connected_screen)
+        if self.container_box is not None:
+            Clock.schedule_once(self.container_box.update_ui)
         return super().on_enter(*args)
 
 
     def on_leave(self, *args):
         self.opacity = 0
+        if self.container_box is not None:
+            self.container_box.down_realtime_input_validation()
         return super().on_leave(*args)
 
-    def login_event(self):
-        print("login event")
-        if self.is_logging_in:
-            return
-        self.is_logging_in = True
-        main_app  = MDApp.get_running_app()
-        key = "all_plan_products"
-        action = "fetch_all_plan_products"
-        need_data = {}
-        main_app.communications.post_data_action(need_data , key, action)
-        
-        def check_response(*args):
-            com_data = main_app.communications.get_and_remove(key)
-            if com_data is None: 
-                print("No data received")
-                return True
-            
-            # if not com_data.get('result'):
-            #     print(f'Error: {com_data.get("message", None)}') 
-                # main_app.process_modal.open()
-                # main_app.process_modal.proccess_text = ""
-                # Clock.schedule_once(lambda x : main_app.process_modal.display_error(com_data.get('message', None)), 0.5)
-                # self.is_logging_in = False
-                # return False
-            
-            data = com_data.get('data', None)
-            print(f'data: {data}')
-    
-            Clock.schedule_once(main_app.show_welcome_popup)  
-            if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):
-                main_app.root_screen_manager.builder_load_screen('screen_home', 'screen_home.kv', HOME_SCREEN )
-                main_app.root_screen_manager.add_handler_screen(HOME_SCREEN)
-            main_app.root_screen_manager.change_screen(HOME_SCREEN)
-            
-            self.is_logging_in = False
-            return False
-        Clock.schedule_interval(check_response, 1)
-
-
+ 
     
 
     def load_connected_screen(self, *args):
+        
         main_app  = MDApp.get_running_app()
         
         if not main_app.root_screen_manager.does_screen_exist(HOME_SCREEN):

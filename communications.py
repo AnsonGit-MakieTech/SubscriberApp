@@ -40,56 +40,7 @@ class Communications:
         if len(self.threads) > 0:
             return True
         return False
-
-    def create_session(self, need_data = {}):
-        key = "CHECK_PIN"
-        def event(self_thread):
-            while self.has_thread_running:
-                time.sleep(0.5)
-            self.has_thread_running = True
-            self.key_running.append(key)
-
-            if not has_internet():
-                self.data[key] = {"result" : False, "message" : "No Internet Connection"}
-                self.has_thread_running = False
-                self.key_running.remove(key) 
-                if self_thread in self.threads:
-                    self.threads.remove(self_thread) 
-                return
-
-            need_data['action'] = "technical_register_system_user" 
-             
-            url = self.server + self.function_path
-            headers = {
-                "Content-Type": "application/json", 
-                "User-Agent": "KivyApp/1.0.0",
-            } 
-            try:
-                response = self.session.post(url, headers=headers, json=need_data)
-                if response.ok:
-                    data = response.json()
-                    message = data.get("text", "")
-                    return_data = data.get("data", {})
-                    self.data[key] = {"result" : True, "message" : message , "data" : return_data}
-                else:
-                    # print(response.text)
-                    data = response.json()
-                    message = data.get("text", "")
-                    self.data[key] = {"result" : False, "message" : message }
-                
-            except Exception as e:
-                    self.data[key] = {"result" : False, "message" : "Error: " + str(e)}
-            self.has_thread_running = False
-            self.key_running.remove(key)
-
-            if self_thread in self.threads:
-                self.threads.remove(self_thread)
-            
-        
-        thread = threading.Thread(target=lambda: event(thread))
-        self.threads.append(thread)
-        thread.start()
-
+    
 
     def get_data_action(self, need_data = {} , key = "" , action = ""): 
         # This use for get data from server only that need to have a return data as possible

@@ -70,7 +70,7 @@
         
         LabelClickable:
             size_hint: (0.5, 1)
-            text: '[u]Create or Forgot account?[/u]'
+            text: '[u]Forgot or Create account?[/u]'
             font_name: 'p_italic'
             font_size: root.link_font_size
             markup: True
@@ -81,6 +81,7 @@
         AppButton:
             id: login_button
             size_hint: (0.5, 1)
+            md_bg_color: chex("352F44")
             # background_down: ''
             # background_color: (0 , 0 , 0 , 0)
             on_release: root.login_account()

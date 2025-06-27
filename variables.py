@@ -1,5 +1,4 @@
-
-
+APP_VERSION = "1.0.0"
 
 
 FIRST_TIME_SCREEN = 'first_time_screen'
@@ -19,5 +18,6 @@ DEFAULT_LON = 123.62151820
 
 CREATE_KEY = 'create_key'
 FORGOT_KEY = 'forgot_key'
+LOGIN_KEY = 'login_key'
 
 

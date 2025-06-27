@@ -208,7 +208,7 @@ class HomeScreen(Screen):
         self.is_all_loaded = True
 
         
-        self.fetch_account_data()
+        # self.fetch_account_data()
 
 
 
