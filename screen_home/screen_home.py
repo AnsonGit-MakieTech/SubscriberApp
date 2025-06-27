@@ -37,7 +37,7 @@ class TappableImage(ButtonBehavior, Image):
             self.button_event()
 
 class AccountHeader(FloatLayout):
-    edit_icon : TappableImage = ObjectProperty(None)
+    # edit_icon : TappableImage = ObjectProperty(None)
     logout_icon : TappableImage = ObjectProperty(None)
     refresh_icon : TappableImage = ObjectProperty(None)
 
@@ -70,14 +70,14 @@ class AccountHeader(FloatLayout):
 
     def on_kv_post(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
-        self.edit_icon.source = os.path.join(parent_dir, 'assets', 'edit_icon.png')
+        # self.edit_icon.source = os.path.join(parent_dir, 'assets', 'edit_icon.png')
         self.logout_icon.source = os.path.join(parent_dir, 'assets', 'logout_icon.png')
         self.refresh_icon.source = os.path.join(parent_dir, 'assets', 'refresh_icon.png')
         
     
     def update_sizing(self, width, height ):
         multiplier = 0.08
-        self.edit_icon.size = (width * multiplier, width * multiplier)
+        # self.edit_icon.size = (width * multiplier, width * multiplier)
         self.logout_icon.size = (width * multiplier, width * multiplier)
         self.refresh_icon.size = (width * multiplier, width * multiplier)
         self.buttons_spacing = width * 0.01
@@ -221,9 +221,49 @@ class HomeScreen(Screen):
         self.fetch_account_data()
         self.fetch_ticket_data()
         self.fetch_wallet_data()
+        self.fetch_my_plans_data()
 
 
  
+
+    def fetch_my_plans_data(self, *args):
+        if not self.is_all_loaded:
+            print("Widgets not loaded yet")
+            return
+        
+        main_app  = MDApp.get_running_app()
+        key = "get_plans"
+        action = "get_plans"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+         
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')  
+                if not self.has_server_error:
+                    self.has_server_error = True
+                    main_app.process_modal.open()
+                    main_app.process_modal.proccess_text = "Checking server problem . . ."
+                    def display_error(*args):
+                        main_app.process_modal.display_error(com_data.get('message', None))
+                    Clock.schedule_once(display_error, 1)
+                self.refresh_counter = self.refresh_counter + 1
+                return False  
+            data = com_data.get('data', {}) 
+
+            if self.router is not None:
+                self.router.setup_ui(data)
+            self.refresh_counter = self.refresh_counter + 1
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
+
 
 
     def fetch_wallet_data(self, *args):

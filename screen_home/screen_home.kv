@@ -984,7 +984,7 @@
             font_name: "p_light"
             font_size: root.widget_height_8
             color: chex("#352F44")
-            text: "    Registering"
+            text: root.status #"    Registering"
             halign: "left"
             valign: "middle" 
             text_size: self.size
@@ -997,7 +997,7 @@
             font_name: "p_bold"
             font_size: root.widget_height_10
             color: chex("#352F44")
-            text: "Home Plan"
+            text: root.planname # "Home Plan"
 
         Widget:
             size_hint: 1, 0.15
@@ -1012,7 +1012,7 @@
                 font_name: "p_light"
                 font_size: root.widget_height_8
                 color: chex("#352F44")
-                text: "    [font=p_regular]Monthly:[/font] P 1,500"
+                text: root.monthly #"    [font=p_regular]Monthly:[/font] P 1,500"
                 halign: "left"
                 valign: "middle" 
                 text_size: self.size
@@ -1223,7 +1223,7 @@
 
 <AccountHeader>:
     logout_icon : logout_icon
-    edit_icon : edit_icon
+    # edit_icon : edit_icon
     refresh_icon : refresh_icon
     
     AppButton:
@@ -1253,10 +1253,10 @@
             allow_stretch: True
 
         
-        TappableImage:
-            id: edit_icon
-            size_hint: (None , None)
-            allow_stretch: True
+        # TappableImage:
+        #     id: edit_icon
+        #     size_hint: (None , None)
+        #     allow_stretch: True
 
         
         TappableImage:

@@ -155,6 +155,12 @@ class PlanWidget(
 
     click_event_open = ObjectProperty(None)
     click_event_close = ObjectProperty(None)
+    status = StringProperty("    None")
+    planname = StringProperty("None")
+    monthly = StringProperty("    [font=p_regular]Monthly:[/font] P 0")
+    plan_id = StringProperty("")
+
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -215,6 +221,12 @@ class PlanWidget(
         self.widget_height_10 = int(min( width, height) * 0.03) 
         self.widget_height_13 = int(min( width, height) * 0.04)
 
+
+    def setup_ui(self, plan_name, plan_status, plan_monthly ):
+        self.planname = str(plan_name) if plan_name is not None else "None"
+        self.status = f"    {str(plan_status).title()}" if plan_status is not None else "    None"
+        self.monthly = f"    [font=p_regular]Monthly:[/font] P{plan_monthly:,.2f}" if isinstance(plan_monthly, (int, float)) else f"    [font=p_regular]Monthly:[/font] P 0"
+        
 
 class AddPlanWidget(
     CommonElevationBehavior,
@@ -361,6 +373,28 @@ class ListOfPlans(ScrollView):
 
         width, height = Window.size
         self.update_sizing(width , height)
+    
+
+    def display_plans(self , plans_list : dict):
+        
+        self.container_layout.clear_widgets()
+
+        for pkey, plan in plans_list.items():
+            plan_widget = PlanWidget()
+            plan_widget.click_event_open = self.plan_click_event_open
+            plan_widget.click_event_close = self.plan_click_event_close
+            self.container_layout.add_widget(plan_widget)
+            plan_widget.update_sizing()
+            plan_name = plan.get("plan_name", None)
+            plan_status = plan.get("status", None)
+            plan_monthly = plan.get("monthly", None)
+            plan_widget.plan_id = str(plan.get("id", ""))
+            plan_widget.setup_ui(plan_name, plan_status, plan_monthly)
+        
+  
+        add_plan = AddPlanWidget()
+        add_plan.update_sizing()
+        self.container_layout.add_widget(add_plan)
  
 
 
@@ -419,7 +453,9 @@ class RouterLayout(MDBoxLayout):
     widget_height_80 = NumericProperty(0)
     widget_height_180 = NumericProperty(0)
 
+    plans_data = DictProperty({})
     selected_plan_data = DictProperty({})
+    
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -442,7 +478,7 @@ class RouterLayout(MDBoxLayout):
 
         self.plan_list.plan_click_event_open = self.open_selected_layout
         self.plan_list.plan_click_event_close = self.close_selected_layout
-        self.plan_list.test_adding_widget()
+        # self.plan_list.test_adding_widget()
 
     def update_sizing(self, width, height):
         self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
@@ -500,7 +536,14 @@ class RouterLayout(MDBoxLayout):
 
 
 
-
+    def setup_ui(self, data : dict):
+        if self.plan_list is None:
+            print("Plan list is not set")
+            return
+        
+        for pkey, pdata in data.items(): 
+            self.plans_data[str(pkey)] = pdata
+        self.plan_list.display_plans(data)
 
 
 
