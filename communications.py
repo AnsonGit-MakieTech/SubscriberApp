@@ -97,6 +97,7 @@ class Communications:
             
             while self.has_thread_running:
                 time.sleep(0.5)
+                print("Waiting for thread to finish")
             self.has_thread_running = True
             self.key_running.append(key)
             

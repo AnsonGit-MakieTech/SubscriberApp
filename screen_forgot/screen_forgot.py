@@ -210,6 +210,9 @@ class ForgotAccountScreen(Screen):
         if main_app.app_data.get(FORGOT_KEY, None):
             del main_app.app_data[FORGOT_KEY]
 
+        self.username_text_input.text_input.text = ""
+        self.new_password_text_input.text_input.text = ""
+        self.retype_new_password_text_input.text_input.text = ""
 
 
         main_app.root_screen_manager.change_screen(LOGIN_SCREEN) 

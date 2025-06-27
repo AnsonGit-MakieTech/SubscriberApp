@@ -14,6 +14,7 @@ from kivy.uix.screenmanager import SlideTransition, FadeTransition, SwapTransiti
 from kivymd.app import MDApp 
 from kivy.utils import get_color_from_hex
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivy.uix.scrollview import ScrollView
 
 import os
 
@@ -159,6 +160,7 @@ class ProductShowcaseScreen(Screen):
     product_subscribe_icon = StringProperty('')
 
     product_list : MDBoxLayout = ObjectProperty(None)
+    scroll_view : ScrollView = ObjectProperty(None)
 
     login_text = StringProperty("[u]Have an account? Tap here.")
 
@@ -304,6 +306,7 @@ class ProductShowcaseScreen(Screen):
             print("Product not found")
             return
          
+        self.scroll_view.scroll_to(selected_widget, padding=10, animate=True)
         self.category_text = self.selected_product.get('category', 'unknown')
         self.plan_name = self.selected_product.get('name', 'unknown')
         self.plan_description = self.selected_product.get('description', 'unknown')
@@ -347,7 +350,10 @@ class ProductShowcaseScreen(Screen):
         main_app.process_modal.open()
         main_app.process_modal.proccess_text = "Please wait while we fetch our products"
 
+        print("thread : ", main_app.communications.threads)
+
         def check_response(*args):
+            
             com_data = main_app.communications.get_and_remove(key)
             if com_data is None: 
                 print("No data received")
@@ -362,7 +368,9 @@ class ProductShowcaseScreen(Screen):
             self.product_list.clear_widgets()
             self.products_data = {}
             self.selected_product =  {} 
-            first_product = None
+
+            selected_product = None         
+            old_plan_id = main_app.app_data[CREATE_KEY].get('plan_id', None)
 
             if len(data) < 1:
                 print("No products found")
@@ -387,14 +395,19 @@ class ProductShowcaseScreen(Screen):
                     pdvalue['category'] = ptitle 
                     self.products_data[str(pdkey)] = pdvalue
                     
-                    if not first_product: 
-                        first_product = pdwidget
+                    if pdvalue.get('id', None) is not None and not selected_product:
+                        if str(old_plan_id) ==  str(pdvalue.get('id', None)):
+                            selected_product = pdwidget
+
+                    if not selected_product and not old_plan_id: 
+                        selected_product = pdwidget
+                    
  
             
             # print(f'all data : f{self.products_data}')
             print(f'selected product: {self.selected_product}')
             self.update_sizing()
-            self.display_product(first_product)
+            self.display_product(selected_product)
             # main_app.process_modal.display_success(com_data.get('message', None))
             # Clock.schedule_once(main_app.process_modal.dismiss, 1.5)
             main_app.process_modal.dismiss()
