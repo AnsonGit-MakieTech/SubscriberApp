@@ -180,6 +180,11 @@ class SingleMarkerMapView(MapView):
 
         return super().on_touch_up(touch)
 
+    def remove_marker(self, *args):
+        if self.current_marker:
+            self.remove_widget(self.current_marker)
+            self.current_marker = None
+
 
 class AddPlanScreen(Screen):
     
@@ -312,8 +317,9 @@ class AddPlanScreen(Screen):
         main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
     
     def go_to_home(self, *args):
+        self.map_view.remove_marker()
         main_app  = MDApp.get_running_app()
-        Clock.schedule_once(main_app.show_welcome_popup)
+        Clock.schedule_once(main_app.show_welcome_popup) 
         main_app.root_screen_manager.change_screen(HOME_SCREEN)
 
 
