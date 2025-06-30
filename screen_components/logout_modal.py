@@ -120,6 +120,7 @@ class LogoutModal(ModalView):
                     Clock.schedule_once(display_error, 1) 
                 return False  
             main_app.communications.resession()
+            main_app.log_out_user()
             main_app.process_modal.dismiss()
             Clock.schedule_once(main_app.show_welcome_popup)
             main_app.root_screen_manager.change_screen(LOGIN_SCREEN) 

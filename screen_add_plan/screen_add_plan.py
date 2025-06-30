@@ -1,7 +1,7 @@
 
 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -56,7 +56,9 @@ class AddPlanInformation(
     bag_icon = StringProperty("")
 
     plan_name_label : Label = ObjectProperty(None)
-    plan_name_text = StringProperty("Home Plan")
+    plan_monthly_label : Label = ObjectProperty(None)
+    plan_speed_label : Label = ObjectProperty(None)
+
 
     max_content_font_size = NumericProperty(11)
     min_content_font_size = NumericProperty(1)
@@ -70,6 +72,11 @@ class AddPlanInformation(
         parent_dir = os.path.dirname(os.path.dirname(__file__))
         self.bag_icon = os.path.join(parent_dir, 'assets', 'bag_black_icon.png')
  
+    def setup_ui(self, plan_name, plan_monthly, plan_speed):
+        self.plan_name_label.text = plan_name
+        self.plan_monthly_label.text = plan_monthly
+        self.plan_speed_label.text = plan_speed
+        
 
     def update_sizing(self, *args):
         width , height = self.size 
@@ -83,26 +90,31 @@ class AddPlanInformation(
         if self.header_font_size > 13:
             self.header_font_size = 13
 
-        self.update_content_font_size()
-
-
-    def update_content_font_size(self, *args):
-        width , height = self.size 
         if self.plan_name_label is not None:
+            self.update_content_font_size(self.plan_name_label) 
+        if self.plan_monthly_label is not None:
+            self.update_content_font_size(self.plan_monthly_label)
+        if self.plan_speed_label is not None:
+            self.update_content_font_size(self.plan_speed_label)
+
+
+    def update_content_font_size(self, widget_label ):
+        width , height = self.size 
+        if widget_label is not None:
             # 1) start with your old “responsive” guess
             fs = int(width * 0.03)
             fs = min(fs, self.max_content_font_size)
             fs = max(fs, self.min_content_font_size)
 
             # 2) now shrink until the text actually fits
-            text = self.plan_name_label.text or ""
+            text = widget_label.text or ""
             avail = max(width - 2 * self.padding_x, 0)
 
             while fs > self.min_content_font_size:
                 # measure via CoreLabel
                 probe = CoreLabel(
                     text=text,
-                    font_name=self.plan_name_label.font_name,
+                    font_name=widget_label.font_name,
                     font_size=fs,
                 )
                 probe.refresh()
@@ -115,7 +127,7 @@ class AddPlanInformation(
             self.content_font_size = fs
 
             # (optional) force the label to reflow
-            self.plan_name_label.texture_update()
+            widget_label.texture_update()
 
  
     def proceed_to_payment(self, *args):
@@ -132,11 +144,16 @@ class SingleMarkerMapView(MapView):
     current_marker : MapMarker = ObjectProperty(None)
     current_marker_size : int = NumericProperty(20)
 
-    is_map_clicked_not_colliding = ObjectProperty(None)
+    check_is_map_clicked_not_colliding = ObjectProperty(None)
     
 
     def on_touch_up(self, touch): 
-        if self.collide_point(*touch.pos) and self.is_map_clicked_not_colliding():
+        print("Is colliding", self.collide_point(*touch.pos))
+        print("Is colliding next step", self.check_is_map_clicked_not_colliding())
+        print()
+        print()
+        print()
+        if self.collide_point(*touch.pos) and self.check_is_map_clicked_not_colliding():
             # convert screen xy → lat, lon
             lat, lon = self.get_latlon_at(*touch.pos)
 
@@ -167,7 +184,7 @@ class SingleMarkerMapView(MapView):
 class AddPlanScreen(Screen):
     
     holder = ObjectProperty(None)
-    map_view = ObjectProperty(None)
+
     is_map_labeled = BooleanProperty(True)
 
     button_timeout = NumericProperty(2)
@@ -185,13 +202,20 @@ class AddPlanScreen(Screen):
 
     selected_city = StringProperty('Click here to select available city')
     header_font_size = NumericProperty(12)
-    selected_plan = StringProperty('Find the best plan for you')
+    selected_plan_text = StringProperty('Find the best plan for you')
     
     is_map_clicked_not_colliding = BooleanProperty(False)
 
+    map_view : SingleMarkerMapView = ObjectProperty(None)
+    has_map = BooleanProperty(False)
+    lat_data = NumericProperty(0)
+    lon_data = NumericProperty(0)
 
     add_plan_information : AddPlanInformation = ObjectProperty(None)
     footer_height  = NumericProperty(200)
+
+
+    selected_plan = DictProperty({})
 
     def __init__(self, **kwargs):
         super(AddPlanScreen, self).__init__(**kwargs)
@@ -237,7 +261,9 @@ class AddPlanScreen(Screen):
             for child in self.holder.children:
                 if child is not self.mapview and child.collide_point(*touch.pos):
                     self.is_map_clicked_not_colliding = False
-                    
+                    print(f"Colliding with {child}")
+                
+        print(f"on_touch_down : is_map_clicked_not_colliding: {self.is_map_clicked_not_colliding}")
         return super().on_touch_down(touch)
 
     
@@ -246,6 +272,7 @@ class AddPlanScreen(Screen):
         return super().on_leave(*args)
 
     def on_enter(self, *args):
+        self.is_map_clicked_not_colliding = True
         main_app  = MDApp.get_running_app() 
         anim = Animation(opacity=1, duration=0.5)
         anim.bind( on_start= main_app.on_window_resize , on_complete = main_app.close_welcome_popup)
@@ -254,7 +281,20 @@ class AddPlanScreen(Screen):
 
         Clock.schedule_once(self.load_connected_screen)
 
+        self.selected_plan = main_app.app_data.get(APP_DATA_PLAN_KEY, {})
+        self.display_selected_plan()
         return super().on_enter(*args)
+
+    def display_selected_plan(self, *args):
+        plan_name = self.selected_plan.get('name', "None")
+        plan_monthly = f"{float(self.selected_plan.get('monthly', 0)):,.2f}" if self.selected_plan.get('monthly', 0) > 0 else "None"
+        plan_speed = str(self.selected_plan.get('speed', "None"))
+        self.add_plan_information.setup_ui(
+            plan_name, 
+            plan_monthly, 
+            plan_speed
+        )
+        self.selected_plan_text = self.selected_plan.get('name', "Find the best plan for you")
 
     def load_connected_screen(self, *args):
         main_app  = MDApp.get_running_app()
@@ -278,6 +318,7 @@ class AddPlanScreen(Screen):
 
 
     def check_is_map_clicked_not_colliding(self, *args):
+        print(f"is_map_clicked_not_colliding: {self.is_map_clicked_not_colliding}")
         return self.is_map_clicked_not_colliding
 
     def load_map_view(self, *args):
@@ -285,57 +326,60 @@ class AddPlanScreen(Screen):
             Clock.schedule_once(self.load_map_view, 0.2)
             return
         
-        if self.map_view is None:
-            self.mapview = SingleMarkerMapView(
-                lat=DEFAULT_LAT, 
-                lon=DEFAULT_LON, 
-                zoom=25,
-                map_source=map_source_labeled,
-                size_hint=(1, 1),
-                pos_hint={"center_x": 0.5, "center_y": 0.5}
-            ) 
-            self.mapview.is_map_clicked_not_colliding = self.check_is_map_clicked_not_colliding
-            self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
-            self.holder.add_widget(self.mapview, index=len(self.holder.children))
+        if self.has_map:
+            print("Already loaded map view")
+            return
+        print("Loading map view <=====================")
+        self.mapview = SingleMarkerMapView(
+            lat=DEFAULT_LAT, 
+            lon=DEFAULT_LON, 
+            zoom=25,
+            map_source=map_source_labeled,
+            size_hint=(1, 1),
+            pos_hint={"center_x": 0.5, "center_y": 0.5}
+        ) 
+        self.mapview.check_is_map_clicked_not_colliding = self.check_is_map_clicked_not_colliding
+        self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
+        self.holder.add_widget(self.mapview, index=len(self.holder.children))
+        self.has_map = True
+        print("Mapview object : ", self.map_view)
 
-            if platform == "android":
-                try:
-                    gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
-                    gps.start(minTime=1000, minDistance=1)
-                except NotImplementedError:
-                    print("GPS not implemented on this platform")
-                    self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
-                except Exception as e:
-                    print(f"Error starting GPS: {e}")
-                    self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
-            else:
+        if platform == "android":
+            try:
+                gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
+                gps.start(minTime=1000, minDistance=1)
+            except NotImplementedError:
+                print("GPS not implemented on this platform")
                 self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
-
+            except Exception as e:
+                print(f"Error starting GPS: {e}")
+                self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
+        else:
+            self.go_to_location(DEFAULT_LAT, DEFAULT_LON) 
             # Clock.schedule_interval(self.change_map_source, 1)
 
     def change_map_source(self, *args):
-        if self.mapview is None:
-            return
-        
-        if self.is_okey_to_click == False:
+        if not self.mapview or not self.is_okey_to_click:
             return 
-        
         self.is_okey_to_click = False
         Clock.schedule_once( self.update_is_okey_to_click , self.button_timeout)
         # self.mapview.pause_on_action = False
         if self.is_map_labeled:
-            self.mapview.map_source = map_source_satlite
-            self.is_map_labeled = False
-            
+            new_src = map_source_satlite
         else:
-            self.mapview.map_source = map_source_labeled
-            self.is_map_labeled = True
+            new_src = map_source_labeled
+        self.is_map_labeled = not self.is_map_labeled
+
+        # swap and clamp zoom
+        self.mapview.map_source = new_src
+        z = self.mapview.zoom
+        z = max(new_src.min_zoom, min(new_src.max_zoom, z))
+        self.mapview.zoom = z
+
         self.mapview.remove_all_tiles()
-        self.mapview.trigger_update(full=True)  #– this tells MapView “please re‐build everything” :contentReference[oaicite:1]{index=1}
+        self.mapview.trigger_update(full=True)
         print("change_map_source")
-        # self.mapview.pause_on_action = True  # (optionally) restore original behavior
-        # new_zoom = max(self.mapview.min_zoom, self.mapview.zoom - 1)
-        # self.mapview.zoom = new_zoom
+
 
 
     def update_is_okey_to_click(self, *args):

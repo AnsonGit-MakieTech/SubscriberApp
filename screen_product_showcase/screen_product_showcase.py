@@ -274,6 +274,7 @@ class ProductShowcaseScreen(Screen):
             main_app.root_screen_manager.change_screen(CREATE_ACCOUNT_SCREEN)
         else: 
             main_app.root_screen_manager.change_screen(ADD_PLAN_SCREEN)
+            main_app.app_data[APP_DATA_PLAN_KEY] = self.selected_product
 
     
     def load_connected_screen(self, *args):
@@ -419,6 +420,46 @@ class ProductShowcaseScreen(Screen):
         Clock.schedule_interval(check_response, 1)
 
 
+    def fetch_my_plans_data(self, *args):
+        main_app  = MDApp.get_running_app()
+        key = "get_plans"
+        action = "get_plans"
+        need_data = {}
+        main_app.communications.get_data_action(need_data , key, action)
+         
+
+        def check_response(*args):
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')   
+                main_app.process_modal.open()
+                main_app.process_modal.proccess_text = "Checking server problem . . ."
+                def display_error(*args):
+                    main_app.process_modal.display_error(com_data.get('message', None))
+                Clock.schedule_once(display_error, 1) 
+                return False  
+            data = com_data.get('data', {}) 
+            self.plans_data = com_data.get('data', {})
+             
+            if self.router is not None:
+                self.router.setup_ui(data)
+             
+            if self.tickets is not None and self.headline is not None:
+                for _ , plan in data.items():
+                    tplan = {
+                        'id' : str(plan.get('id', "None")),
+                        'name' : plan.get('planname', "None"),
+                    }
+                    self.tickets.available_plans[str(plan.get('id', "None"))] = tplan.copy()
+                    self.headline.available_plans[str(plan.get('id', "None"))] = tplan.copy()
+ 
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
 
 
 

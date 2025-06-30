@@ -20,4 +20,8 @@ CREATE_KEY = 'create_key'
 FORGOT_KEY = 'forgot_key'
 LOGIN_KEY = 'login_key'
 UPLOAD_TICKET_KEY = 'upload_ticket_key'
+ADD_PLAN_KEY = 'add_plan_key'
+
+
+APP_DATA_PLAN_KEY = 'app_data_plan_key'
 

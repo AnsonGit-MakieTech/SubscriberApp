@@ -48,7 +48,7 @@
 
                     Label:
                         size_hint: 1, 1
-                        text: root.selected_plan
+                        text: root.selected_plan_text
                         font_size: root.header_font_size
                         color: chex("#26221F")
                         font_name: 'p_light'
@@ -147,6 +147,8 @@
 <AddPlanInformation>:
     
     plan_name_label : plan_name_label
+    plan_monthly_label : plan_monthly_label
+    plan_speed_label : plan_speed_label
 
     theme_elevation_level: "Custom"
     elevation_level: 2
@@ -169,14 +171,7 @@
         text_size: self.size
         halign: 'left'
         valign: 'middle'
-        pos_hint: {'x' : 0.05}
-
-        # canvas.before:
-        #     Color:
-        #         rgba: chex("#EF5555")
-        #     Rectangle:
-        #         pos: self.pos
-        #         size: self.size
+        pos_hint: {'x' : 0.05} 
     
     Widget:
         size_hint: (1 , 0.05)
@@ -197,8 +192,7 @@
         Widget:
             size_hint: 0.05 , 1
         
-        Label:
-            id: plan_name_label
+        Label: 
             size_hint: None , 1 
             text: "Name :"
             font_size: root.header_font_size
@@ -214,8 +208,7 @@
             
         Label:
             id: plan_name_label
-            size_hint: 0.83, 1
-            text: root.plan_name_text 
+            size_hint: 0.83, 1 
             font_size: root.header_font_size
             color: chex("#352F44")
             font_name: 'p_light'
@@ -240,14 +233,14 @@
             allow_stretch: False
             keep_ratio: True
             source: root.bag_icon
+            opacity: 0
         
         Widget:
             size_hint: 0.05 , 1
         
-        Label:
-            id: plan_name_label
+        Label: 
             size_hint: None , 1 
-            text: "Name :"
+            text: "Monthly :"
             font_size: root.header_font_size
             color: chex("#352F44")
             font_name: 'p_bold'
@@ -260,9 +253,8 @@
             size_hint: 0.02 , 1
             
         Label:
-            id: plan_name_label
-            size_hint: 0.83, 1
-            text: root.plan_name_text 
+            id: plan_monthly_label
+            size_hint: 0.83, 1 
             font_size: root.header_font_size
             color: chex("#352F44")
             font_name: 'p_light'
@@ -287,14 +279,14 @@
             allow_stretch: False
             keep_ratio: True
             source: root.bag_icon
+            opacity: 0
         
         Widget:
             size_hint: 0.05 , 1
         
-        Label:
-            id: plan_name_label
+        Label: 
             size_hint: None , 1 
-            text: "Name :"
+            text: "Speed :"
             font_size: root.header_font_size
             color: chex("#352F44")
             font_name: 'p_bold'
@@ -307,9 +299,8 @@
             size_hint: 0.02 , 1
             
         Label:
-            id: plan_name_label
-            size_hint: 0.83, 1
-            text: root.plan_name_text 
+            id: plan_speed_label
+            size_hint: 0.83, 1 
             font_size: root.header_font_size
             color: chex("#352F44")
             font_name: 'p_light'

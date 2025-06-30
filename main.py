@@ -378,6 +378,10 @@ class SubscriberApp(MDApp):
         if key in self.app_data:
             del self.app_data[key]
 
+    def log_out_user(self, *args):
+        self.app_data = {}
+        
+
     def on_window_resize(self, *args):
         if not self._resize_scheduled:
             self._resize_scheduled = True
