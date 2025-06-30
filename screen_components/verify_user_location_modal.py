@@ -70,8 +70,7 @@ class UserVerificationMapModal(ModalView):
     location_input : text_input.OneLineInput  = ObjectProperty(None)
     is_valid_location : bool = BooleanProperty(False)
     mapview : MapView = ObjectProperty(None)
-
-    parent_event = ObjectProperty(None)
+ 
     submit_event = ObjectProperty(None)
 
     layout_spacing = NumericProperty(10)
@@ -83,7 +82,8 @@ class UserVerificationMapModal(ModalView):
     h2_font_size = NumericProperty(18) 
 
     map_marker = ObjectProperty(None)
- 
+    
+    parent_obj = ObjectProperty(None)
 
 
 
@@ -150,11 +150,27 @@ class UserVerificationMapModal(ModalView):
         return super().on_dismiss()
 
     def on_open(self, *args):
+        main_app = MDApp.get_running_app()
         self.location_input.costumized_input(hint_text="Enter Your Copied Location", halign="center")
         anim = Animation(opacity=1, duration=0.3)
         anim.bind(on_start=self.update_sizing, on_progress=self.location_input.setup_layout)
         anim.start(self)
 
+        if main_app.app_data.get(CREATE_KEY, None): 
+            geolocation = main_app.app_data.get(CREATE_KEY, {}).get("geolocation", None)
+            if not geolocation:
+                self.gps_locate()
+            else:
+                self.go_to_location(
+                    new_lat=geolocation[0],
+                    new_lon=geolocation[1]
+                )
+        else:
+            self.gps_locate()
+        return super().on_open(*args)
+
+    
+    def gps_locate(self, *args): 
         if platform == "android":
             try:
                 gps.configure(on_location=self.gps_callback, on_status=self.gps_status)
@@ -166,7 +182,8 @@ class UserVerificationMapModal(ModalView):
                 print(f"Error starting GPS: {e}")
                 self.go_to_location(DEFAULT_LAT, DEFAULT_LON)
         else:
-            self.go_to_location(DEFAULT_LAT, DEFAULT_LON)  # fallback
+            self.go_to_location(DEFAULT_LAT, DEFAULT_LON)  
+
 
     def gps_status(self, status_type, status):
         # print(f"GPS Status → {status_type}: {status}")
@@ -217,10 +234,7 @@ class UserVerificationMapModal(ModalView):
         """ Called when user pans the map. """
         if self.mapview:
             self.lat_data = self.mapview.lat
-            self.lon_data = self.mapview.lon 
-            # print(f"📍 Map center updated → Lat: {self.lat_data}, Lon: {self.lon_data}")
-            if self.parent_event is not None:
-                self.parent_event(self.lat_data, self.lon_data)
+            self.lon_data = self.mapview.lon  
             lat = f"{round(self.lat_data, 25)}.." if len(str(self.lat_data)) > 25 else self.lat_data
             lon = f"{round(self.lon_data, 25)}.." if len(str(self.lon_data)) > 25 else self.lon_data
             self.lat = f"[font=p_bold]Latitude :[/font] [font=p_light]{lat}[/font]"
@@ -250,6 +264,7 @@ class UserVerificationMapModal(ModalView):
     
     def submit(self, *args):
         if self.submit_event is not None:
+            self.parent_obj.update_location(self.lat_data, self.lon_data)
             self.submit_event()
             self.dismiss()
 

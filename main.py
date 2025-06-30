@@ -183,6 +183,9 @@ class ScreenHandler(BoxLayout):  # Acts as ScreenManager
             return
         self.handler.current = screen_name
 
+    def get_current_screen(self):
+        return self.handler.current
+    
     def remove_screen(self, screen_name):
         if screen_name in self.handler.screen_names:
             self.handler.remove_widget(self.handler.get_screen(screen_name))

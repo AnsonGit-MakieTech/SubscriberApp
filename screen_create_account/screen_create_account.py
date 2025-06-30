@@ -24,6 +24,7 @@ from variables import *
 from screen_components import app_button, top_form_buttons, text_input
 from utils.app_utils import *
 
+from kivymd.app import MDApp
 
 from kivy import platform
 import os
@@ -77,6 +78,7 @@ class AccountRegistrationFormLayout(
     password_input: text_input.OneLineInput = ObjectProperty(None)
     confirm_password_input: text_input.OneLineInput = ObjectProperty(None)
     date_of_birth_input: app_button.AppButton = ObjectProperty(None)
+    register_button : app_button.AppButton = ObjectProperty(None)
     
     picker = ObjectProperty(None)
 
@@ -94,6 +96,9 @@ class AccountRegistrationFormLayout(
     parent_size = ListProperty([0, 0])
 
     register_event = ObjectProperty(None)
+
+    is_fill_form = BooleanProperty(False)
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -189,6 +194,49 @@ class AccountRegistrationFormLayout(
         print(f"widget_125_height: {self.widget_125_height}")
         print(f"width: {width}, height: {height}, cwidth: {cwidth}, cheight: {cheight}")
  
+    def realtime_validation(self, *args):
+        main_app = MDApp.get_running_app()
+        if main_app.root_screen_manager.get_current_screen() != CREATE_ACCOUNT_SCREEN:
+            return False
+        
+        if main_app.app_data.get(CREATE_KEY, None) is None:
+            return False
+        
+        firstname = self.first_name_input.get_text()
+        lastname = self.last_name_input.get_text()
+        middlename = self.middle_name_input.get_text()
+        email = self.email_input.get_text()
+        street = self.street_input.get_text()
+        barangay = self.barangay_input.get_text()
+        phone1 = self.phone1_input.get_text()
+        phone2 = self.phone2_input.get_text()
+        phone3 = self.phone3_input.get_text()
+        username = self.username_input.get_text()
+        password = self.password_input.get_text()
+        confirm_password = self.confirm_password_input.get_text()
+
+        if firstname != "" or lastname != "" or middlename != "" or email != "" or street != "" or barangay != "" or phone1 != "" or username != "" or password != "" or confirm_password != "":
+            
+            
+            self.is_fill_form = True
+  
+
+        
+
+        if not self.is_fill_form :  
+            self.login_button.disabled = True
+            self.login_button.opacity = 0.8
+            self.login_button.elevation_level = 0
+            self.login_button.shadow_offset = (0, 0)
+            self.login_button.shadow_softness = 0
+        else: 
+            self.login_button.disabled = False
+            self.login_button.opacity = 1
+            self.login_button.elevation_level = 2
+            self.login_button.shadow_offset = (0, -3)
+            self.login_button.shadow_softness = 12 
+
+        return True
 
     def select_date(self, *args):
         
@@ -418,12 +466,18 @@ class CreateAccountScreen(Screen):
             
             Clock.schedule_once(display_registration_form, 0.2)
 
+    def update_location(self, lat = None, lon = None):
+        main_app = MDApp.get_running_app()
+        if main_app.app_data.get(CREATE_KEY, None) is None:
+            return
+        main_app.app_data[CREATE_KEY]["geolocation"] = [lat, lon]
 
     def find_my_location(self, *args):
         
         main_app = MDApp.get_running_app()
         if main_app.user_map_verification_modal is not None:
-            main_app.user_map_verification_modal.parent_event = self.update_location
+            main_app.user_map_verification_modal.parent_event = self.update_location 
+            main_app.user_map_verification_modal.parent_obj = self
             main_app.user_map_verification_modal.submit_event = self.display_registration_form
             main_app.user_map_verification_modal.open()
     
