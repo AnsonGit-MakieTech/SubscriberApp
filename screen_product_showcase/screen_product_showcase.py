@@ -369,8 +369,10 @@ class ProductShowcaseScreen(Screen):
             self.products_data = {}
             self.selected_product =  {} 
 
-            selected_product = None         
-            old_plan_id = main_app.app_data[CREATE_KEY].get('plan_id', None)
+            selected_product = None
+            old_plan_id = None
+            if main_app.app_data.get(CREATE_KEY, None) is not None:
+                old_plan_id = main_app.app_data[CREATE_KEY].get('plan_id', None)
 
             if len(data) < 1:
                 print("No products found")
