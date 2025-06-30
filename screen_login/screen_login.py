@@ -41,6 +41,7 @@ class FormLayout(BoxLayout):
 
     is_on_screen = BooleanProperty(False)
     is_fill_form = BooleanProperty(False)
+    is_button_clicked = BooleanProperty(False)
 
     
     def __init__(self, **kwargs):
@@ -77,8 +78,9 @@ class FormLayout(BoxLayout):
         self.link_font_size = int(min( width, height) * 0.025)
 
     def login_account(self):  
-        if not self.is_fill_form:
+        if not self.is_fill_form or self.is_button_clicked:
             return
+        self.is_button_clicked = True
         main_app  = MDApp.get_running_app()
         key = "login_account"
         action = "login_account"
@@ -100,6 +102,7 @@ class FormLayout(BoxLayout):
             if not com_data.get('result'):
                 print(f'Error: {com_data.get("message", None)}')  
                 main_app.process_modal.display_error(com_data.get('message', None))
+                self.is_button_clicked = False
                 return False 
             
             main_app.process_modal.dismiss()
@@ -111,6 +114,7 @@ class FormLayout(BoxLayout):
             
             main_app.delete_key_in_app_data(LOGIN_KEY)
             main_app.root_screen_manager.change_screen(HOME_SCREEN)
+            self.is_button_clicked = False
             return False
          
         Clock.schedule_interval(check_response, 1)

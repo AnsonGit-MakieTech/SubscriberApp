@@ -268,8 +268,8 @@ class HomeScreen(Screen):
                         'id' : str(plan.get('id', "None")),
                         'name' : plan.get('planname', "None"),
                     }
-                    self.tickets.available_plans[str(plan.get('id', "None"))] = tplan
-                    self.headline.available_plans[str(plan.get('id', "None"))] = tplan
+                    self.tickets.available_plans[str(plan.get('id', "None"))] = tplan.copy()
+                    self.headline.available_plans[str(plan.get('id', "None"))] = tplan.copy()
 
             self.refresh_counter = self.refresh_counter + 1
             return False

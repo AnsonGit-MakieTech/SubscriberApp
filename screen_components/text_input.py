@@ -122,10 +122,8 @@ text_input_kv = '''
         foreground_color: 1, 1, 1, 1
         cursor_color: 1, 1, 1, 1
         hint_text_color: 1, 1, 1, 0.6
-        font_size: root.setup_font_size
-        # valign does nothing here—remove it
-        # valign: "middle"
-        text_size: self.size  # this can stay if you want horizontal alignment
+        font_size: root.setup_font_size 
+        text_size: self.size 
         hint_text: root.hint_text
         password: root.is_password
 

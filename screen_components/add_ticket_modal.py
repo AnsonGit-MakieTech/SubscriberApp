@@ -6,7 +6,7 @@ from kivy.animation import Animation
 from kivymd.app import MDApp
 import os
 
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty, BooleanProperty
  
 from kivy.uix.dropdown import DropDown
 
@@ -18,6 +18,9 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 from kivy.properties import ListProperty
 from kivy.core.window import Window
 
+from kivy.clock import Clock
+from variables import *
+
 
 class AddTicketModalDetailsTextInput(
     # CommonElevationBehavior,
@@ -25,6 +28,8 @@ class AddTicketModalDetailsTextInput(
     MDBoxLayout):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     details_font_size = NumericProperty(0)
+
+    text_input = ObjectProperty(None)
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.md_bg_color = get_color_from_hex("#352F44")
@@ -35,6 +40,15 @@ class AddTicketModalDetailsTextInput(
         self.details_font_size = int(min(width, height) * 0.05)
         # print(f"width: {width}, height: {height}, font_size: {self.details_font_size}")
 
+    def get_text(self):
+        if self.text_input is None:
+            return ""
+        return self.text_input.text
+
+    def clear_text(self):
+        if self.text_input is None:
+            return
+        self.text_input.text = ""
 
 class DropdownButton(app_button.AppButton):
     text = StringProperty("Plan 1")
@@ -79,7 +93,14 @@ class AddTicketModal(ModalView):
 
     dropdown : DropDown = ObjectProperty(None)
 
-    selected_plan = StringProperty("Click Here To Select")
+    selected_plan = StringProperty("Click here to select plan") # This is the id of the plan 
+    selected_value = StringProperty("None")
+
+    is_fill_form = BooleanProperty(False)
+    is_open = BooleanProperty(False)
+    is_button_clicked = BooleanProperty(False)
+    # drop_down_max_height = NumericProperty(150)
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -93,8 +114,9 @@ class AddTicketModal(ModalView):
      
 
     def on_select(self, instance, value):
-        
+        print("instance ", instance.children[0].children)
         self.selected_plan = value.text
+        self.selected_value = value.value
         print(f"Selected option: {value.text}")
         print(value)
         pass 
@@ -105,6 +127,10 @@ class AddTicketModal(ModalView):
         self.h2_font_size = int(min(width, height) * 0.04)
         self.widget_height_2 = int(min(width, height) * 0.009)
         self.widget_height_34 = int(min(width, height) * 0.12)
+
+        if self.dropdown is not None:
+            self.dropdown.max_height = int(width * 0.38)
+
         self.details_input.update_sizing()
  
     
@@ -112,6 +138,8 @@ class AddTicketModal(ModalView):
         anim = Animation(opacity=1, d=0.3)
         anim.bind(on_start=self.update_sizing)
         anim.start(self) 
+        self.is_open = True
+        Clock.schedule_interval(self.realtime_data_checker, 0.1)
         return super().on_open()
 
     def setup_data(self, plans = None):
@@ -131,13 +159,80 @@ class AddTicketModal(ModalView):
             btn.bind(on_release=lambda btn: self.dropdown.select(btn))
             self.dropdown.add_widget(btn)
             print(f"pkey: {pkey}, pvalue: {pvalue}")
-          
-
+           
+        self.update_sizing()
 
     def on_pre_dismiss(self):
         self.opacity = 0
+        self.is_open = False
+        self.is_button_clicked = False
+        self.selected_value = "None"
+        self.selected_plan = "Click here to select plan"
+        if self.details_input is not None:
+            self.details_input.clear_text()
         return super().on_pre_dismiss()
     
+    def realtime_data_checker(self, *args):
+        
+        if self.details_input is None:
+            self.is_fill_form = False
+
+        elif self.selected_value == "None" or self.details_input.get_text() == "":
+            # print("The input is empty")
+            self.is_fill_form = False
+            self.submit_btn.disabled = True
+            self.submit_btn.opacity = 0.8
+            self.submit_btn.elevation_level = 0
+            self.submit_btn.shadow_offset = (0, 0)
+            self.submit_btn.shadow_softness = 0
+
+        else:
+            # print("The input is not empty")
+            self.is_fill_form = True
+            self.submit_btn.disabled = False
+            self.submit_btn.opacity = 1
+            self.submit_btn.elevation_level = 2
+            self.submit_btn.shadow_offset = (0, -3)
+            self.submit_btn.shadow_softness = 12 
+
+        return self.is_open
+
+    def activate_events(self):
+        if not self.is_fill_form or self.is_button_clicked:
+            return
+        self.is_button_clicked = True
+        main_app  = MDApp.get_running_app()
+        key = UPLOAD_TICKET_KEY
+        action = "add_ticket"
+        need_data = {
+            "plan_id": self.selected_value,
+            "details": self.details_input.get_text()
+        }
+        main_app.communications.post_data_action(need_data , key, action)
+        self.dismiss() 
+        main_app.process_modal.open()
+        main_app.process_modal.proccess_text = "Please wait while we report your ticket . . ."
+
+        def check_response(*args): 
+            com_data = main_app.communications.get_and_remove(key)
+            if com_data is None: 
+                print("No data received")
+                return True
+            
+            if not com_data.get('result'):
+                print(f'Error: {com_data.get("message", None)}')   
+                def display_error(*args):
+                    main_app.process_modal.display_error(com_data.get('message', None))
+                Clock.schedule_once(display_error, 1) 
+                self.is_button_clicked = False
+                return False
+            message = com_data.get("message", "Sucessfully submitted your ticket report, please wait for a response")
+            main_app.process_modal.display_success(message=message, with_dismiss=True)
+
+            return False
+         
+        Clock.schedule_interval(check_response, 1)
+
 
 
 
@@ -262,6 +357,7 @@ kv_add_ticket_modal = '''
             AppButton:
                 size_hint: 0.3, 1
                 id: submit_btn
+                on_release: root.activate_events()
                 
                 Label:
                     size_hint: 1, 1
@@ -289,13 +385,16 @@ kv_add_ticket_modal = '''
     # shadow_radius: root.content_background_radius
     radius: root.content_background_radius
 
+    text_input : text_input
+    
     TextInput:
+        id: text_input
         size_hint: 1, 1
         hint_text: "Provide additional information about the problem . . ." 
         multiline: True 
         background_color: 0, 0, 0, 0  # Transparent
         foreground_color: chex("#FFFFFF")  # This is the actual text color
-        cursor_color: chex("#26231F")  # Optional, to see the cursor better
+        cursor_color: 1, 1, 1, 1
         font_name: 'p_regular'
         font_size: root.details_font_size
         padding: [15]  # Add padding for readability 

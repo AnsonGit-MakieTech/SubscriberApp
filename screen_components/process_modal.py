@@ -40,9 +40,8 @@ class CustomSpinner(Image):
         
 
     def stop_success_spinner(self, *args):
-        if self.anim:
-            self.anim.cancel(self)
-
+        if self.anim: 
+            Animation.cancel_all(self )
             # Animate shrink first
             anim = Animation(size_hint_x=0.0, size_hint_y=0.0, duration=0.5)
             anim.bind(on_complete=self.display_done)
@@ -61,8 +60,8 @@ class CustomSpinner(Image):
         anim.start(self)
     
     def stop_error_spinner(self, *args):
-        if self.anim:
-            self.anim.cancel(self)
+        if self.anim: 
+            Animation.cancel_all(self )
             # Animate shrink first
             anim = Animation(size_hint_x=0.0, size_hint_y=0.0, duration=0.5)
             anim.bind(on_complete=self.display_error)
@@ -151,16 +150,21 @@ class ProcessingLayout(ModalView):
         
         return super().on_open()
 
-    def display_success(self, message = None):
+    def display_success(self, message = None, with_dismiss = False):
         self.spinner.stop_success_spinner()
         self.proccess_text = "Process completed successfully!" if not message else message 
         self.auto_dismiss = True 
+        if with_dismiss:
+            Clock.schedule_once(self.dismiss, 3)
     
-    def display_error(self, message = None):
+    def display_error(self, message = None, with_dismiss = False):
         self.spinner.stop_error_spinner()
         self.proccess_text = "An error occurred while processing the data." if not message else message
         self.auto_dismiss = True
-        
+
+        if with_dismiss:
+            Clock.schedule_once(self.dismiss, 3)
+            
 
     def on_pre_dismiss(self):
         self.opacity = 0

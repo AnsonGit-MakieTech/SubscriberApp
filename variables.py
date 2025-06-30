@@ -19,5 +19,5 @@ DEFAULT_LON = 123.62151820
 CREATE_KEY = 'create_key'
 FORGOT_KEY = 'forgot_key'
 LOGIN_KEY = 'login_key'
-
+UPLOAD_TICKET_KEY = 'upload_ticket_key'
 
