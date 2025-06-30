@@ -16,6 +16,7 @@ from kivy.utils import get_color_from_hex
 from kivymd.uix.boxlayout import MDBoxLayout 
 from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehavior
 from kivy.properties import ListProperty
+from kivy.core.window import Window
 
 
 class AddTicketModalDetailsTextInput(
@@ -38,7 +39,7 @@ class AddTicketModalDetailsTextInput(
 class DropdownButton(app_button.AppButton):
     text = StringProperty("Plan 1")
     text_font_size = NumericProperty(16)
-    value = StringProperty("Plan 1")
+    value = StringProperty("None")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -83,48 +84,55 @@ class AddTicketModal(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opacity = 0
-        self.dropdown = DropDown(max_height=150) 
-        # Bind button from KV to open dropdown
+        self.dropdown = DropDown(max_height=150)   
         self.dropdown_btn.bind(on_release=self.dropdown.open)
         self.dropdown.bind(on_select=self.on_select)
         self.dropdown_btn.update_color("#5C5470")
         self.canncel_btn.update_color("#A30000")
         self.submit_btn.update_color("#5C5470")
-        
+     
 
     def on_select(self, instance, value):
+        
         self.selected_plan = value.text
         print(f"Selected option: {value.text}")
         print(value)
         pass 
 
     def update_sizing(self, *args):
-        width, height = self.size
+        width, height = Window.size
         self.h1_font_size = int(min(width, height) * 0.05)
         self.h2_font_size = int(min(width, height) * 0.04)
         self.widget_height_2 = int(min(width, height) * 0.009)
-        self.widget_height_34 = int(min(width, height) * 0.14)
+        self.widget_height_34 = int(min(width, height) * 0.12)
         self.details_input.update_sizing()
  
     
     def on_open(self):
         anim = Animation(opacity=1, d=0.3)
         anim.bind(on_start=self.update_sizing)
-        anim.start(self)
+        anim.start(self) 
+        return super().on_open()
 
+    def setup_data(self, plans = None):
+        if plans is None:
+            return
         
+        self.dropdown.clear_widgets()
+        
+        self.update_sizing()
         # Create dropdown options
-        for option in ["Click Here To Select", "Option 1", "Option 2", "Option 3", "Option 4"]:
+        for pkey, pvalue in plans.items():
             widget = Widget(size_hint_y=None, height=self.widget_height_2)
             self.dropdown.add_widget(widget)
             btn = DropdownButton(size_hint_y=None, height=self.widget_height_34)
-            btn.text = option
-            btn.value = option
+            btn.text = pvalue.get("name") 
+            btn.value = pvalue.get("id")
             btn.bind(on_release=lambda btn: self.dropdown.select(btn))
             self.dropdown.add_widget(btn)
+            print(f"pkey: {pkey}, pvalue: {pvalue}")
+          
 
-
-        return super().on_open()
 
     def on_pre_dismiss(self):
         self.opacity = 0

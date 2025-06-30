@@ -1,5 +1,5 @@
 
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.clock import Clock
@@ -31,9 +31,11 @@ class HeadlineLayout(MDBoxLayout):
     widget_height_20 = NumericProperty(0)
     widget_height_35 = NumericProperty(0)
 
-    def add_new_ticket(self, *args):
-        print("Adding new ticket")
+    available_plans = DictProperty({})
+
+    def add_new_ticket(self, *args): 
         main_app  = MDApp.get_running_app() 
+        main_app.add_ticket_modal.setup_data(self.available_plans)
         main_app.add_ticket_modal.open()
 
 

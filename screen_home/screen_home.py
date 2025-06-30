@@ -1,7 +1,6 @@
-
-
+ 
 from kivy.uix.screenmanager import Screen
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty
+from kivy.properties import ObjectProperty, NumericProperty, StringProperty , ListProperty, BooleanProperty, DictProperty
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout 
 from kivy.animation import Animation
@@ -118,6 +117,8 @@ class HomeScreen(Screen):
     has_server_error = BooleanProperty(False)
     refresh_counter = NumericProperty(5)
     refresh_hit_counter = NumericProperty(5)
+
+    plans_data = DictProperty()
 
 
     def __init__(self, **kwargs):
@@ -256,9 +257,20 @@ class HomeScreen(Screen):
                 self.refresh_counter = self.refresh_counter + 1
                 return False  
             data = com_data.get('data', {}) 
-
+            self.plans_data = com_data.get('data', {})
+             
             if self.router is not None:
                 self.router.setup_ui(data)
+             
+            if self.tickets is not None and self.headline is not None:
+                for _ , plan in data.items():
+                    tplan = {
+                        'id' : str(plan.get('id', "None")),
+                        'name' : plan.get('planname', "None"),
+                    }
+                    self.tickets.available_plans[str(plan.get('id', "None"))] = tplan
+                    self.headline.available_plans[str(plan.get('id', "None"))] = tplan
+
             self.refresh_counter = self.refresh_counter + 1
             return False
          

@@ -179,6 +179,8 @@ class TicketsLayout(MDBoxLayout):
 
     tickets_data = DictProperty({})
     selected_ticket = DictProperty({})
+
+    available_plans = DictProperty({})
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
@@ -240,9 +242,9 @@ class TicketsLayout(MDBoxLayout):
         self.ticket_list.setup_ui(data , self.click_event)
 
         
-    def add_new_ticket(self, *args):
-        print("Adding new ticket")
+    def add_new_ticket(self, *args): 
         main_app  = MDApp.get_running_app() 
+        main_app.add_ticket_modal.setup_data(self.available_plans)
         main_app.add_ticket_modal.open()
 
 
