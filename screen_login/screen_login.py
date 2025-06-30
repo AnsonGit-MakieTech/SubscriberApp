@@ -130,11 +130,17 @@ class FormLayout(BoxLayout):
             self.is_fill_form = False
             self.login_button.disabled = True
             self.login_button.opacity = 0.8
+            self.login_button.elevation_level = 0
+            self.login_button.shadow_offset = (0, 0)
+            self.login_button.shadow_softness = 0
         else:
             print("The input is not empty")
             self.is_fill_form = True
             self.login_button.disabled = False
             self.login_button.opacity = 1
+            self.login_button.elevation_level = 2
+            self.login_button.shadow_offset = (0, -3)
+            self.login_button.shadow_softness = 12 
         return self.is_on_screen
 
     def down_realtime_input_validation(self, *args):

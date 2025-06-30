@@ -43,6 +43,10 @@ class PlansAddsOnsWidget(
     widget_height_8 = NumericProperty(8)
     widget_height_15 = NumericProperty(8)
 
+    plan_name = StringProperty("None")
+    monthly = StringProperty("[font=p_bold]Monthly:[/font] P 0")
+    plan_id = StringProperty("")
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -76,7 +80,11 @@ class PlansInstallmentWidget(
 ):
     content_background_radius = ListProperty([ 8 , 8, 8 , 8 ])
     widget_type = StringProperty("addons") 
-
+    total = StringProperty("[font=p_bold]Total Amount:[/font] P 0")
+    remaining  = StringProperty("[font=p_bold]Months Remaining[/font] None")
+    month2pay  = StringProperty("[font=p_bold]Months To Pay:[/font] None")
+    monthly  = StringProperty("[font=p_bold]Monthly:[/font] P 0") 
+    planname  = StringProperty("None")
     
     widget_height_5 = NumericProperty(8)
     widget_height_7 = NumericProperty(8)
@@ -127,8 +135,12 @@ class AdditionalPlanList(ScrollView):
         
         for widget in self.plan_list_container.children:
             widget.update_sizing()
-        
- 
+     
+    
+    def display_plan_list(self, plan_widget = None):
+        if plan_widget is not None and self.plan_list_container is not None:
+             self.plan_list_container.add_widget(plan_widget)
+         
 
 class PlanClickableImage(ButtonBehavior, Image):
     pass
@@ -191,7 +203,7 @@ class PlanWidget(
         if self.is_selected:
             self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_selected.png')
             if self.click_event_open is not None:
-                self.click_event_open()
+                self.click_event_open(self)
         else:
             self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_not_selected.png')
             if self.click_event_close is not None:
@@ -203,6 +215,10 @@ class PlanWidget(
         # for key, widget in self.ids.items():
         #     print(f"id: {key}, widget: {widget}")
 
+    def open_image_plan(self, *args):
+        parent_dir = os.path.dirname(os.path.dirname(__file__))
+        self.view_icon.source = os.path.join(parent_dir, 'assets', 'plan_selected.png')
+        self.is_selected = True
 
     def close_image_plan(self, *args):
         parent_dir = os.path.dirname(os.path.dirname(__file__))
@@ -225,7 +241,7 @@ class PlanWidget(
     def setup_ui(self, plan_name, plan_status, plan_monthly ):
         self.planname = str(plan_name) if plan_name is not None else "None"
         self.status = f"    {str(plan_status).title()}" if plan_status is not None else "    None"
-        self.monthly = f"    [font=p_regular]Monthly:[/font] P{plan_monthly:,.2f}" if isinstance(plan_monthly, (int, float)) else f"    [font=p_regular]Monthly:[/font] P 0"
+        self.monthly = f"    [font=p_regular]Monthly:[/font] P{float(plan_monthly):,.2f}" if isinstance(plan_monthly, (int, float)) else f"    [font=p_regular]Monthly:[/font] P 0"
         
 
 class AddPlanWidget(
@@ -340,11 +356,6 @@ class ListOfPlans(ScrollView):
                 print(f"widget: {widget} , widget.size: {widget.size}")
                 widget.update_sizing()
     
-    def close_unselected_plans(self, *args):
-        for widget in self.container_layout.children:
-            if widget.widget_type == "plan":
-                widget.close_image_plan()
-    
     def test_adding_widget(self , *args):
         plan = PlanWidget()
         plan.update_sizing()
@@ -385,7 +396,7 @@ class ListOfPlans(ScrollView):
             plan_widget.click_event_close = self.plan_click_event_close
             self.container_layout.add_widget(plan_widget)
             plan_widget.update_sizing()
-            plan_name = plan.get("plan_name", None)
+            plan_name = plan.get("planname", None)
             plan_status = plan.get("status", None)
             plan_monthly = plan.get("monthly", None)
             plan_widget.plan_id = str(plan.get("id", ""))
@@ -395,7 +406,12 @@ class ListOfPlans(ScrollView):
         add_plan = AddPlanWidget()
         add_plan.update_sizing()
         self.container_layout.add_widget(add_plan)
- 
+
+    def close_all_plans(self):
+        for widget in self.container_layout.children:
+            if widget.widget_type == "plan":
+                widget.close_image_plan()
+        # self.plan_click_event_close()
 
 
 class AdditionalPlansList(MDBoxLayout):
@@ -413,14 +429,29 @@ class AdditionalPlansList(MDBoxLayout):
     
     def update_container(self , additional_plan_list = None , installment_plan_list = None):
         if self.selected_additional_plan_list is not None:
-            # self.selected_additional_plan_list.clear_list_content()
-            print("Display the additional plans")
+            self.selected_additional_plan_list.clear_list_content()
+            print("Display the additional plans : ", additional_plan_list)
+            for pkey , plan in additional_plan_list.items():
+                plan_widget = PlansAddsOnsWidget()
+                plan_widget.plan_name = plan.get("name", "None")
+                plan_widget.plan_id = str(plan.get("id", "None"))
+                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get("monthly", 0)):,.2f}" 
+                self.selected_additional_plan_list.display_plan_list(plan_widget)
+                plan_widget.update_sizing()
         
         if self.selected_installment_plan_list is not None:
-            # self.selected_installment_plan_list.clear_list_content()
-            print("Display the installment plans")
+            self.selected_installment_plan_list.clear_list_content()
+            print("Display the installment plans : ", installment_plan_list)
+            for pkey , plan in installment_plan_list.items():
+                plan_widget = PlansInstallmentWidget() 
+                plan_widget.planname = plan.get("name", "None")
+                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get("monthly", 0)):,.2f}"
+                plan_widget.remaining = f"[font=p_bold]Months Remaining:[/font] {plan.get('month_remaining', 0)}"
+                plan_widget.month2pay = f"[font=p_bold]Months To Pay:[/font] {plan.get('month_to_pay', 0)}"
+                plan_widget.total = f"[font=p_bold]Total Amount:[/font] P {float(plan.get('total_amount', 0)):,.2f}"
+                self.selected_installment_plan_list.display_plan_list(plan_widget)
+                plan_widget.update_sizing()
         
-        print(f"additional_plan_list: {additional_plan_list} ,\n installment_plan_list: {installment_plan_list}")
     
     def update_sizing(self, *args):
         width , height = Window.size 
@@ -480,10 +511,11 @@ class RouterLayout(MDBoxLayout):
         self.plan_list.plan_click_event_close = self.close_selected_layout
         # self.plan_list.test_adding_widget()
 
-    def update_sizing(self, width, height):
-        self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
-        r = min(width, height) * 0.035  # You can change 0.05 to any fraction
-        self.content_background_radius = [r, r, r, r]
+    def update_sizing(self, width = None, height = None):
+        if width is not None and height is not None: 
+            self.spacing = max(4, int(width * 0.03))  # 3% of width, with min fallback
+            r = min(width, height) * 0.035  # You can change 0.05 to any fraction
+            self.content_background_radius = [r, r, r, r]
         width , height = Window.size
         if self.router_icon is not None:
             self.router_icon.update_sizing(width, height)
@@ -502,27 +534,50 @@ class RouterLayout(MDBoxLayout):
         self.widget_height_10 = int(min( width, height) * 0.04) 
         self.widget_height_15 = int(min( width, height) * 0.055) 
         self.widget_height_80 = int(min( width, height) * 0.28)
-        self.widget_height_180 = int(min( width, height) * 0.5)
+        self.widget_height_180 = int(min( width, height) * 0.8)
 
 
 
-    def open_selected_layout(self, *args):
+    def open_selected_layout(self, selected_widget = None):
         anime = Animation(height=self.widget_height_180,  duration=0.3)
-        anime.bind(on_complete=self.on_selected_animation_complete)
+        # anime.bind(on_complete=self.on_selected_animation_complete)
+        if selected_widget is not None and self.plan_list is not None:
+            self.plan_list.close_all_plans()
+            plan_id = selected_widget.plan_id
+            selected_widget.open_image_plan()
+
+            self.selected_plan_data = self.plans_data.get(plan_id, {})
+            print("Selected Plan Data : ", self.selected_plan_data)
+
+            anime.bind(on_complete=self.on_selected_animation_complete)
+
         anime.start(self.selected_plan_layout)
+
     
     def on_selected_animation_complete(self, *args):
         if len(self.selected_plan_layout.children) < 1:
             self.additional_plans_list = AdditionalPlansList()
             self.additional_plans_list.update_sizing()
 
-            print("Updating content of selected layout using : ", self.selected_plan_data)
-
+            print("Setting up  selected layout using : ", self.selected_plan_data)
+            # print()
+            # print() 
             self.selected_plan_layout.add_widget(self.additional_plans_list)
+            
         else:
             # Just update the content of the selected layout
-            print("Updating content of selected layout using : ", self.selected_plan_data)
+            # print("Updating content of selected layout using : ", self.selected_plan_data)
+            print()
+            print()
             
+        addons = self.selected_plan_data.get('addons', {})
+        installments = self.selected_plan_data.get('installments', {})
+        self.additional_plans_list.update_container(
+            additional_plan_list = addons , 
+            installment_plan_list = installments
+        )
+        self.update_sizing()
+
             
     
     def close_selected_layout(self, *args):
@@ -533,6 +588,7 @@ class RouterLayout(MDBoxLayout):
     def on_unselected_animation_complete(self, *args): 
         self.selected_plan_layout.clear_widgets()
         self.selected_plan_data = {}
+        print("Is this actully happen?")
 
 
 
@@ -542,7 +598,8 @@ class RouterLayout(MDBoxLayout):
             return
         
         for pkey, pdata in data.items(): 
-            self.plans_data[str(pkey)] = pdata
+            self.plans_data[str(pdata.get("id", ""))] = pdata
+            print("Adding plan : ", pkey)
         self.plan_list.display_plans(data)
 
 
