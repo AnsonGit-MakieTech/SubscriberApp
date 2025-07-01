@@ -53,6 +53,22 @@ p4a.python_version = 3.10
 log_level = 2
 android.logcat_filters = *:S python:D
 
+
+# keytool -genkeypair ^
+#   -alias charlessubscribers ^
+#   -keyalg RSA ^
+#   -keysize 2048 ^
+#   -keystore releasekey.jks ^
+#   -storepass Subscriber98appCharles ^
+#   -keypass Subscriber98appCharles ^
+#   -validity 10000 ^
+#   -dname "CN=Your Name, OU=Development, O=Your Company, L=Manila, ST=Metro Manila, C=PH"
+
+android.release_keystore = releasekey.jks
+android.release_keyalias = charlessubscribers
+android.release_keystore_password = Subscriber98appCharles
+android.release_keyalias_password = Subscriber98appCharles
+
 [buildozer]
 log_level = 2
 warn_on_root = 0

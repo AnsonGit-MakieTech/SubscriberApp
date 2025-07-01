@@ -21,6 +21,8 @@ venv/
 .vscode/
 .idea/
 
+spec
+
 cache/
 test/
 test.py
