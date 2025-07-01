@@ -1,4 +1,6 @@
 [app]
+# Strip debug symbols from your .so files to make them less fingerprint-y:
+android.strip = True
 
 title = Subscriber App
 package.name = billingko.subscriber
@@ -32,6 +34,7 @@ orientation = portrait
 icon.filename = assets/app_logo.png
 presplash.filename = assets/splash.png
 android.presplash_color = #352F44
+
 
 android.api = 34
 android.minapi = 28
