@@ -435,7 +435,7 @@ class AdditionalPlansList(MDBoxLayout):
                 plan_widget = PlansAddsOnsWidget()
                 plan_widget.plan_name = plan.get("name", "None")
                 plan_widget.plan_id = str(plan.get("id", "None"))
-                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get("monthly", 0)):,.2f}" 
+                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get('monthly', 0)):,.2f}" 
                 self.selected_additional_plan_list.display_plan_list(plan_widget)
                 plan_widget.update_sizing()
         
@@ -445,7 +445,7 @@ class AdditionalPlansList(MDBoxLayout):
             for pkey , plan in installment_plan_list.items():
                 plan_widget = PlansInstallmentWidget() 
                 plan_widget.planname = plan.get("name", "None")
-                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get("monthly", 0)):,.2f}"
+                plan_widget.monthly = f"[font=p_bold]Monthly:[/font] P {float(plan.get('monthly', 0)):,.2f}"
                 plan_widget.remaining = f"[font=p_bold]Months Remaining:[/font] {plan.get('month_remaining', 0)}"
                 plan_widget.month2pay = f"[font=p_bold]Months To Pay:[/font] {plan.get('month_to_pay', 0)}"
                 plan_widget.total = f"[font=p_bold]Total Amount:[/font] P {float(plan.get('total_amount', 0)):,.2f}"

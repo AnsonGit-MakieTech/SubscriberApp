@@ -21,6 +21,7 @@ from kivymd.uix.behaviors import CommonElevationBehavior, RectangularRippleBehav
 from kivy.core.text import Label as CoreLabel
 from kivy.uix.label import Label
 from variables import *
+from kivy.uix.widget import Widget
 import os
 if platform == "android":
     from plyer import gps 
@@ -159,7 +160,7 @@ class SingleMarkerMapView(MapView):
 
             # remove existing marker
             if self.current_marker:
-                self.remove_widget(self.current_marker)
+                self.remove_custom_marker()
             
             parent_dir = os.path.dirname(os.path.dirname(__file__))
 
@@ -180,10 +181,10 @@ class SingleMarkerMapView(MapView):
 
         return super().on_touch_up(touch)
 
-    def remove_marker(self, *args):
-        if self.current_marker:
+    def remove_custom_marker(self, *args):
+        if isinstance(self.current_marker, MapMarker):
             self.remove_widget(self.current_marker)
-            self.current_marker = None
+            self.current_marker = Widget()
 
 
 class AddPlanScreen(Screen):
@@ -221,6 +222,8 @@ class AddPlanScreen(Screen):
 
 
     selected_plan = DictProperty({})
+    
+    is_verified = BooleanProperty(False)
 
     def __init__(self, **kwargs):
         super(AddPlanScreen, self).__init__(**kwargs)
@@ -261,10 +264,10 @@ class AddPlanScreen(Screen):
 
     def on_touch_down(self, touch):
         self.is_map_clicked_not_colliding = True
-        if self.mapview and self.mapview.collide_point(*touch.pos):
+        if self.map_view and self.map_view.collide_point(*touch.pos):
             # 2) …give each overlaid widget a shot at it 
             for child in self.holder.children:
-                if child is not self.mapview and child.collide_point(*touch.pos):
+                if child is not self.map_view and child.collide_point(*touch.pos):
                     self.is_map_clicked_not_colliding = False
                     print(f"Colliding with {child}")
                 
@@ -274,6 +277,8 @@ class AddPlanScreen(Screen):
     
     def on_leave(self, *args):
         self.opacity = 0
+        self.is_verified = False
+
         return super().on_leave(*args)
 
     def on_enter(self, *args):
@@ -317,9 +322,10 @@ class AddPlanScreen(Screen):
         main_app.root_screen_manager.change_screen(PRODUCT_SHOWCASE_SCREEN)
     
     def go_to_home(self, *args):
-        self.map_view.remove_marker()
+        self.map_view.remove_custom_marker()
         main_app  = MDApp.get_running_app()
         Clock.schedule_once(main_app.show_welcome_popup) 
+        main_app.app_data[APP_DATA_PLAN_KEY] = {}
         main_app.root_screen_manager.change_screen(HOME_SCREEN)
 
 
@@ -336,7 +342,7 @@ class AddPlanScreen(Screen):
             print("Already loaded map view")
             return
         print("Loading map view <=====================")
-        self.mapview = SingleMarkerMapView(
+        self.map_view = SingleMarkerMapView(
             lat=DEFAULT_LAT, 
             lon=DEFAULT_LON, 
             zoom=25,
@@ -344,9 +350,9 @@ class AddPlanScreen(Screen):
             size_hint=(1, 1),
             pos_hint={"center_x": 0.5, "center_y": 0.5}
         ) 
-        self.mapview.check_is_map_clicked_not_colliding = self.check_is_map_clicked_not_colliding
-        self.mapview.bind(lat=self.on_map_move, lon=self.on_map_move)
-        self.holder.add_widget(self.mapview, index=len(self.holder.children))
+        self.map_view.check_is_map_clicked_not_colliding = self.check_is_map_clicked_not_colliding
+        self.map_view.bind(lat=self.on_map_move, lon=self.on_map_move)
+        self.holder.add_widget(self.map_view, index=len(self.holder.children))
         self.has_map = True
         print("Mapview object : ", self.map_view)
 
@@ -365,11 +371,11 @@ class AddPlanScreen(Screen):
             # Clock.schedule_interval(self.change_map_source, 1)
 
     def change_map_source(self, *args):
-        if not self.mapview or not self.is_okey_to_click:
+        if not self.map_view or not self.is_okey_to_click:
             return 
         self.is_okey_to_click = False
         Clock.schedule_once( self.update_is_okey_to_click , self.button_timeout)
-        # self.mapview.pause_on_action = False
+        # self.map_view.pause_on_action = False
         if self.is_map_labeled:
             new_src = map_source_satlite
         else:
@@ -377,13 +383,13 @@ class AddPlanScreen(Screen):
         self.is_map_labeled = not self.is_map_labeled
 
         # swap and clamp zoom
-        self.mapview.map_source = new_src
-        z = self.mapview.zoom
+        self.map_view.map_source = new_src
+        z = self.map_view.zoom
         z = max(new_src.min_zoom, min(new_src.max_zoom, z))
-        self.mapview.zoom = z
+        self.map_view.zoom = z
 
-        self.mapview.remove_all_tiles()
-        self.mapview.trigger_update(full=True)
+        self.map_view.remove_all_tiles()
+        self.map_view.trigger_update(full=True)
         print("change_map_source")
 
 
@@ -394,9 +400,9 @@ class AddPlanScreen(Screen):
 
     def on_map_move(self, *args):
         """ Called when user pans the map. """
-        if self.mapview:
-            self.lat_data = self.mapview.lat
-            self.lon_data = self.mapview.lon  
+        if self.map_view:
+            self.lat_data = self.map_view.lat
+            self.lon_data = self.map_view.lon  
             lat = f"{round(self.lat_data, 25)}.." if len(str(self.lat_data)) > 25 else self.lat_data
             lon = f"{round(self.lon_data, 25)}.." if len(str(self.lon_data)) > 25 else self.lon_data 
             print(f"📍 Map center updated → Lat: {lat}, Lon: {lon}")
@@ -404,19 +410,19 @@ class AddPlanScreen(Screen):
 
     def get_center_coords(self):
         """ Call this when you want to access the map center directly. """
-        if self.mapview:
-            return self.mapview.lat, self.mapview.lon
+        if self.map_view:
+            return self.map_view.lat, self.map_view.lon
         return None, None
 
     def go_to_location(self , new_lat , new_lon): 
         self.lat_data = new_lat
         self.lon_data = new_lon
         try:
-            if self.mapview:
-                self.mapview.center_on(new_lat, new_lon)
-                self.mapview.zoom = 16  # Optional: adjust zoom for better clarity
-                self.mapview.min_zoom = 1
-                self.mapview.max_zoom = 17
+            if self.map_view:
+                self.map_view.center_on(new_lat, new_lon)
+                self.map_view.zoom = 16  # Optional: adjust zoom for better clarity
+                self.map_view.min_zoom = 1
+                self.map_view.max_zoom = 17
             else:
                 Clock.schedule_once(self.load_map, 0.3)
                 Clock.schedule_once( lambda *args: self.go_to_location(new_lat, new_lon), 0.3)

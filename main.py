@@ -443,12 +443,12 @@ if __name__ == '__main__':
     LabelBase.register(name="p_italic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-Italic.ttf'))
     LabelBase.register(name="p_mediumitalic", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-MediumItalic.ttf'))
     LabelBase.register(name="p_semibold", fn_regular=os.path.join(os.path.dirname(__file__), 'fonts', 'Poppins-SemiBold.ttf'))
+    SubscriberApp().run()
     
-    
-    try:
-        SubscriberApp().run()
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt detected. Exiting...")
-    except Exception as e:
-        print(f"Error: {e}")
+    # try:
+    #     SubscriberApp().run()
+    # except KeyboardInterrupt:
+    #     print("KeyboardInterrupt detected. Exiting...")
+    # except Exception as e:
+    #     print(f"Error: {e}")
     
